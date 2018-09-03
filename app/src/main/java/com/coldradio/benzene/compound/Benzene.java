@@ -8,5 +8,7 @@ public class Benzene extends Compound {
             carbons[ii] = new Carbon();
         }
         //TODO: set up link between carbons
+
+        mGeometry.setCycloHexaneGeometry();
     }
 }

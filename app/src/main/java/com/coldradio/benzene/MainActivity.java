@@ -3,7 +3,6 @@ package com.coldradio.benzene;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.text.Layout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
-import com.coldradio.benzene.compound.Benzene;
-import com.coldradio.benzene.drawer.CanvasView;
-import com.coldradio.benzene.project.Project;
-
-import java.util.Arrays;
-import java.util.List;
+import com.coldradio.benzene.view.CanvasView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -60,22 +51,22 @@ public class MainActivity extends AppCompatActivity
             canvas_layout.addView(canvasView);
         }
         // initialize AutoCompleteTextView
-        final String[] predefined_compounds = {
-                "Propane", "Benzene", "Toluene"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, predefined_compounds);
-        AutoCompleteTextView textView = findViewById(R.id.compound_name);
-        textView.setThreshold(0);
-        textView.setAdapter(adapter);
-        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                List predefined_compound_list = Arrays.asList(predefined_compounds);
-                if(id == predefined_compound_list.indexOf("Benzene")) {
-                    Project.instance().addCompound(new Benzene());
-                }
-            }
-        });
+//        final String[] predefined_compounds = {
+//                "Propane", "Benzene", "Toluene"
+//        };
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, predefined_compounds);
+//        AutoCompleteTextView textView = findViewById(R.id.compound_name);
+//        textView.setThreshold(0);
+//        textView.setAdapter(adapter);
+//        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                List predefined_compound_list = Arrays.asList(predefined_compounds);
+//                if(id == predefined_compound_list.indexOf("Benzene")) {
+//                    Project.instance().addCompound(new Benzene());
+//                }
+//            }
+//        });
     }
 
     @Override
