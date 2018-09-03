@@ -4,8 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.coldradio.benzene.compound.Alkane;
 import com.coldradio.benzene.compound.Benzene;
-import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener{
@@ -14,8 +15,11 @@ public class CanvasView extends View implements View.OnTouchListener{
         setOnTouchListener(this);
         // TODO: delete this line later
         Benzene bz = new Benzene();
-        bz.getGeometry().setOffset(500, 500);
+        bz.getGeometry().offset(500, 500);
         Project.instance().addCompound(bz);
+        Alkane alkane = new Alkane(4);
+        alkane.getGeometry().offset(200, 200);
+        Project.instance().addCompound(alkane);
     }
 
     @Override

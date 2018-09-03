@@ -7,15 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class Geometry {
-    private PointF mOffset;
     private List<PointF> mPoints = new ArrayList<>();
 
-    public void setOffset(float x, float y) {
-        mOffset = new PointF(x, y);
-    }
-
-    public final PointF getOffset() {
-        return mOffset;
+    public void offset(float x, float y) {
+        for(PointF point : mPoints) {
+            point.offset(x, y);
+        }
     }
 
     public void setCycloHexaneGeometry() {
@@ -23,12 +20,25 @@ public class Geometry {
         PointF currentPoint = new PointF(0, 0);
         // the first point shall be always (0, 0), and will be interpreted according to the mStartingPoint
 
+        mPoints.clear();
         for(int ii = 0; ii < 6; ++ii) {
             mPoints.add(currentPoint);
             currentPoint = rotatePointByDegree(currentPoint, center, 60);
         }
         // in case of cyclo compound, the starting point is duplicated once to the end
         mPoints.add(new PointF(0, 0));
+    }
+
+    public void setupAlkaneGeometry(int carbonLength, boolean upDirection) {
+        PointF currentPoint = new PointF(0, 0);
+
+        mPoints.clear();
+        for(int ii = 0; ii < carbonLength; ++ii) {
+            mPoints.add(currentPoint);
+            currentPoint = new PointF(MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
+                                        Configuration.LINE_LENGTH / 2.0f * (upDirection ? -1 : 1) + currentPoint.y);
+            upDirection = !upDirection;
+        }
     }
 
     private PointF rotatePointByDegree(PointF current, PointF center, float degree) {
@@ -59,8 +69,8 @@ public class Geometry {
             float distanceToLine = distanceFromPointToLine(touchedPoint, mPoints.get(ii), mPoints.get(ii+1));
 
             if(distanceToLine < Configuration.SELECT_RANGE
-                    && distanceFromPointToPoint(touchedPoint, mPoints.get(ii)) < Configuration.SELECT_RANGE
-                    && distanceFromPointToPoint(touchedPoint, mPoints.get(ii+1)) < Configuration.SELECT_RANGE) {
+                    && distanceFromPointToPoint(touchedPoint, mPoints.get(ii)) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)
+                    && distanceFromPointToPoint(touchedPoint, mPoints.get(ii+1)) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)) {
                 return true;
             }
         }

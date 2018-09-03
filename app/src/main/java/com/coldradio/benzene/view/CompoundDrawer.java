@@ -30,10 +30,9 @@ public class CompoundDrawer {
         }
 
         List<PointF> points = compound.getGeometry().getPoints();
-        PointF offset = compound.getGeometry().getOffset();
 
         for(int ii = 0; ii < points.size() - 1; ++ii) {
-            canvas.drawLine(points.get(ii).x + offset.x, points.get(ii).y + offset.y, points.get(ii + 1).x + offset.x, points.get(ii+1).y + offset.y, mPaint);
+            canvas.drawLine(points.get(ii).x, points.get(ii).y, points.get(ii + 1).x, points.get(ii+1).y, mPaint);
         }
     }
 }

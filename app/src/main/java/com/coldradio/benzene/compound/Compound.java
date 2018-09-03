@@ -22,6 +22,10 @@ public class Compound {
         return mSelected;
     }
 
+    public void setSelected(boolean selected) {
+        mSelected = selected;
+    }
+
     public boolean select(float x, float y) {
         return mSelected = mGeometry.select(x, y);
     }

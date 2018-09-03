@@ -30,11 +30,16 @@ public class Project {
     }
 
     public boolean selectComponent(float x, float y) {
+        boolean anySelected = false;
+
         for(Compound compound : mCompoundList) {
-            if(compound.select(x, y)) {
-                return true;
+            if(anySelected == false) {
+                anySelected = compound.select(x, y);
+            }
+            else {
+                compound.setSelected(false);
             }
         }
-        return false;
+        return anySelected;
     }
 }
