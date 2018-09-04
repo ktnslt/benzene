@@ -3,7 +3,8 @@ package com.coldradio.benzene.view;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
+
+import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Configuration;
 
@@ -17,7 +18,6 @@ public class CompoundDrawer {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
     }
-
     public static CompoundDrawer instance() {
         return instance;
     }
@@ -29,10 +29,13 @@ public class CompoundDrawer {
             mPaint.setColor(Color.BLACK);
         }
 
-        List<PointF> points = compound.getGeometry().getPoints();
+        List<Atom> atoms = compound.getAtoms();
 
-        for(int ii = 0; ii < points.size() - 1; ++ii) {
-            canvas.drawLine(points.get(ii).x, points.get(ii).y, points.get(ii + 1).x, points.get(ii+1).y, mPaint);
+        for(int ii = 0; ii < atoms.size() - 1; ++ii) {
+            canvas.drawLine(atoms.get(ii).getPoint().x, atoms.get(ii).getPoint().y, atoms.get(ii + 1).getPoint().x, atoms.get(ii+1).getPoint().y, mPaint);
+        }
+        if(compound.isCyclo()) {
+            canvas.drawLine(atoms.get(atoms.size()-1).getPoint().x, atoms.get(atoms.size()-1).getPoint().y, atoms.get(0).getPoint().x, atoms.get(0).getPoint().y, mPaint);
         }
     }
 }

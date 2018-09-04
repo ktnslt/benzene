@@ -15,10 +15,10 @@ public class CanvasView extends View implements View.OnTouchListener{
         setOnTouchListener(this);
         // TODO: delete this line later
         Benzene bz = new Benzene();
-        bz.getGeometry().offset(500, 500);
+        bz.offset(500, 500);
         Project.instance().addCompound(bz);
         Alkane alkane = new Alkane(4);
-        alkane.getGeometry().offset(200, 200);
+        alkane.offset(200, 200);
         Project.instance().addCompound(alkane);
     }
 

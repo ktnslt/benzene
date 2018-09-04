@@ -1,20 +1,16 @@
 package com.coldradio.benzene.compound;
 
+import com.coldradio.benzene.geometry.Geometry;
+
 public class Benzene extends Compound {
-    Carbon[] carbons = new Carbon[6];
-
     public Benzene() {
-        for(int ii = 0; ii < carbons.length; ++ii) {
-            carbons[ii] = new Carbon();
-        }
+        fillCarbon(6);
         // set up link between carbons
-        carbons[0].doubleBond(carbons[1]);
-        carbons[0].singleBond(carbons[5]);
-        for(int ii = 1; ii < carbons.length; ++ii) {
-            carbons[ii].doubleBond(carbons[(ii+1) % carbons.length]);
-            carbons[ii].singleBond(carbons[ii-1]);
+        for(int ii = 0; ii < 6; ++ii) {
+            mAtoms.get(ii).singleBond(mAtoms.get(ii == 0 ? 5 : ii-1));
+            mAtoms.get(ii).doubleBond(mAtoms.get((ii+1) % 6));
         }
 
-        mGeometry.setCycloHexaneGeometry();
+        Geometry.cycloHexaneGeometry(mAtoms);
     }
 }
