@@ -2,7 +2,7 @@ package com.coldradio.benzene.compound;
 
 public class Bond {
     public enum BondType {
-        NO_BOND, SINGLE_BOND, DOUBLE_BOND, TRIPLE_BOND
+        NONE, SINGLE, DOUBLE, TRIPLE
     }
     Atom mAtom;
     BondType mBondType;
@@ -16,7 +16,7 @@ public class Bond {
             return mBondType;
         }
         else {
-            return BondType.NO_BOND;
+            return BondType.NONE;
         }
     }
 }

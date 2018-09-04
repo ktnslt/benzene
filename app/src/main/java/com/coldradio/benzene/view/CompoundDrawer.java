@@ -5,14 +5,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.Benzene;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundDrawer {
+    interface IComponentDrawer {
+        boolean draw(Compound compound, Canvas canvas, Paint paint);
+        String getID();
+    }
     private Paint mPaint;
     private static CompoundDrawer instance = new CompoundDrawer();
+    private List<IComponentDrawer> mComponentDrawer = new ArrayList<>();
+    private GenericDrawer mGenericDrawer = new GenericDrawer();
 
     private CompoundDrawer() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -21,21 +29,35 @@ public class CompoundDrawer {
     public static CompoundDrawer instance() {
         return instance;
     }
+    public void addComponentDrawer(IComponentDrawer newComponentDrawer) {
+        boolean unregistered = true;
+
+        for(IComponentDrawer componentDrawer : mComponentDrawer) {
+            if(componentDrawer.getID() == newComponentDrawer.getID()) {
+                unregistered = false;
+                break;
+            }
+        }
+        if(unregistered) {
+            mComponentDrawer.add(newComponentDrawer);
+        }
+    }
     public void draw(Compound compound, Canvas canvas) {
+        mPaint.setStyle(Paint.Style.STROKE);
         if(compound.isSelected()) {
             mPaint.setColor(Color.GREEN);
         }
         else {
             mPaint.setColor(Color.BLACK);
         }
-
-        List<Atom> atoms = compound.getAtoms();
-
-        for(int ii = 0; ii < atoms.size() - 1; ++ii) {
-            canvas.drawLine(atoms.get(ii).getPoint().x, atoms.get(ii).getPoint().y, atoms.get(ii + 1).getPoint().x, atoms.get(ii+1).getPoint().y, mPaint);
+        boolean drawn = false;
+        for(IComponentDrawer componentDrawer : mComponentDrawer) {
+            if(drawn = componentDrawer.draw(compound, canvas, mPaint)) {
+                break;
+            }
         }
-        if(compound.isCyclo()) {
-            canvas.drawLine(atoms.get(atoms.size()-1).getPoint().x, atoms.get(atoms.size()-1).getPoint().y, atoms.get(0).getPoint().x, atoms.get(0).getPoint().y, mPaint);
+        if(drawn == false) {
+            mGenericDrawer.draw(compound, canvas, mPaint);
         }
     }
 }
