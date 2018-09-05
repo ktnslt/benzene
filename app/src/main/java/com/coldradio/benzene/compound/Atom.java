@@ -10,10 +10,16 @@ public class Atom {
     private List<Bond> mBonds = new ArrayList<>();
 
     public void doubleBond(Atom bondTo) {
-        mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
+        if(hasBond(bondTo) == Bond.BondType.NONE) {
+            mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
+            bondTo.doubleBond(this);
+        }
     }
     public void singleBond(Atom bondTo) {
-        mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
+        if(hasBond(bondTo) == Bond.BondType.NONE) {
+            mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
+            bondTo.singleBond(this);
+        }
     }
     public void setPoint(PointF point) {
         mPoint.set(point);
@@ -21,7 +27,7 @@ public class Atom {
     public PointF getPoint() {
         return mPoint;
     }
-    public Bond.BondType bondTo(Atom atom) {
+    public Bond.BondType hasBond(Atom atom) {
         for(Bond bond : mBonds) {
             Bond.BondType bondType = bond.hasBondTo(atom);
 

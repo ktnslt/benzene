@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Benzene;
+import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.project.Configuration;
@@ -18,22 +19,14 @@ public class BenzeneDrawer implements CompoundDrawer.IComponentDrawer {
             PointF benzeneCenter = benzene.center();
             List<Atom> atoms = compound.getAtoms();
 
-            for (int ii = 0; ii < atoms.size() - 1; ++ii) {
-                PointF p1 = atoms.get(ii).getPoint(), p2 = atoms.get(ii + 1).getPoint();
+            for (int ii = 0; ii < atoms.size(); ++ii) {
+                Atom curAtom = atoms.get(ii), nextAtom = atoms.get((ii+1) % 6);
+                PointF p1 = curAtom.getPoint(), p2 = nextAtom.getPoint();
 
                 canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-                if(benzene.getDrawingMode() == Benzene.DrawingMode.ODD_LINE && (ii % 2) == 0) {
-                    drawDoubleBond(p1.x, p1.y, p2.x, p2.y, benzeneCenter, canvas, paint);
-                } else if(benzene.getDrawingMode() == Benzene.DrawingMode.EVEN_LINE && (ii % 2) == 1) {
+                if(benzene.getDrawingMode() == Benzene.DrawingMode.LINE && curAtom.hasBond(nextAtom) == Bond.BondType.DOUBLE) {
                     drawDoubleBond(p1.x, p1.y, p2.x, p2.y, benzeneCenter, canvas, paint);
                 }
-            }
-            PointF p1 = atoms.get(atoms.size() - 1).getPoint(), p2 = atoms.get(0).getPoint();
-
-            canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-
-            if(benzene.getDrawingMode() == Benzene.DrawingMode.EVEN_LINE) {
-                drawDoubleBond(p1.x, p1.y, p2.x, p2.y, benzeneCenter, canvas, paint);
             }
 
             if(benzene.getDrawingMode() == Benzene.DrawingMode.CIRCLE) {

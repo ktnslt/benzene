@@ -47,7 +47,7 @@ public class Compound {
         return Collections.unmodifiableList(mAtoms);
     }
     public boolean isCyclo() {
-        return mAtoms.get(0).bondTo(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
+        return mAtoms.get(0).hasBond(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
     }
     public PointF center() {
         RectF region = rectRegion();

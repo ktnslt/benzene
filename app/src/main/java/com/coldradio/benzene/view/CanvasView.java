@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.coldradio.benzene.compound.Alkane;
 import com.coldradio.benzene.compound.Benzene;
+import com.coldradio.benzene.compound.CycloHexane;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener{
@@ -21,11 +22,14 @@ public class CanvasView extends View implements View.OnTouchListener{
         setOnTouchListener(this);
         // TODO: delete this line later
         Benzene bz = new Benzene();
-        bz.offset(500, 500);
+        bz.offset(500, 800);
         Project.instance().addCompound(bz);
         Alkane alkane = new Alkane(4);
         alkane.offset(200, 200);
         Project.instance().addCompound(alkane);
+        CycloHexane cycloHexane = new CycloHexane();
+        cycloHexane.offset(400, 400);
+        Project.instance().addCompound(cycloHexane);
     }
     @Override
     protected void onDraw(Canvas canvas) {
