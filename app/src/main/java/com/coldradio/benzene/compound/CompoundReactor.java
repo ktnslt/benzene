@@ -1,5 +1,5 @@
 package com.coldradio.benzene.compound;
 
-public class CompoundFactory {
+public class CompoundReactor {
 
 }

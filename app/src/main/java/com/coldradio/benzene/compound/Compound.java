@@ -6,15 +6,23 @@ import android.graphics.RectF;
 import com.coldradio.benzene.geometry.Geometry;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class Compound {
     protected Atom mHeadAtom;
-    protected List<Atom> mAtoms = new ArrayList<>();
+    protected List<Atom> mAtoms;
     boolean mSelected = false;
 
+    public Compound() {
+        mAtoms = new ArrayList<>();
+    }
+    public Compound(List<Atom> atoms) {
+        mAtoms = atoms;
+    }
+    public int size() {
+        return mAtoms.size();
+    }
     public void offset(float x, float y) {
         for(Atom atom : mAtoms) {
             atom.getPoint().offset(x, y);
@@ -33,7 +41,7 @@ public class Compound {
         mSelected = selected;
     }
     public boolean select(float x, float y) {
-        return mSelected = Geometry.select(x, y, this);
+        return mSelected = Geometry.isSelected(x, y, this);
     }
     public List<Atom> getAtoms() {
         return Collections.unmodifiableList(mAtoms);
@@ -59,5 +67,19 @@ public class Compound {
         }
 
         return new RectF(left, top, right, bottom);
+    }
+    public Compound decomposition(float x, float y) {
+        int leftSelectedIndex = Geometry.leftSelectedIndex(x, y, this);
+
+        if(leftSelectedIndex >= 0) {
+            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
+
+            mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
+            mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
+
+            return cutCompound;
+        } else {
+            return null;
+        }
     }
 }

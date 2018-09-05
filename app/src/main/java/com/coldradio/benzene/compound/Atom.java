@@ -2,6 +2,7 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Atom {
@@ -29,5 +30,17 @@ public class Atom {
             }
         }
         return Bond.BondType.NONE;
+    }
+    public boolean cutBond(Atom bondTo) {
+        for(Iterator<Bond> it = mBonds.iterator(); it.hasNext(); ) {
+            Bond bond = it.next();
+
+            if(bond.hasBondTo(bondTo) != Bond.BondType.NONE) {
+                it.remove();
+                bondTo.cutBond(this);
+                return true;
+            }
+        }
+        return false;
     }
 }

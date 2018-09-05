@@ -41,7 +41,15 @@ public class Geometry {
     private static float distanceFromPointToLine(PointF p0, PointF p1, PointF p2) {
         return Math.abs((p2.y - p1.y) * p0.x - (p2.x - p1.x) * p0.y + p2.x * p1.y - p2.y * p1.x) / distanceFromPointToPoint(p1, p2);
     }
-    public static boolean select(float x, float y, Compound compound) {
+    public static boolean isSelected(float x, float y, Compound compound) {
+        return leftSelectedIndex(x, y, compound) >= 0;
+    }
+    public static PointF zoomOut(float x, float y, PointF center, float ratio) {
+        float x_dot = x - center.x, y_dot = y - center.y;
+
+        return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);
+    }
+    public static int leftSelectedIndex(float x, float y, Compound compound) {
         PointF touchedPoint = new PointF(x, y);
         List<Atom> atoms = compound.getAtoms();
 
@@ -53,15 +61,10 @@ public class Geometry {
                 if (distanceToLine < Configuration.SELECT_RANGE
                         && distanceFromPointToPoint(touchedPoint, p1) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)
                         && distanceFromPointToPoint(touchedPoint, p2) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)) {
-                    return true;
+                    return ii;
                 }
             }
         }
-        return false;
-    }
-    public static PointF zoomOut(float x, float y, PointF center, float ratio) {
-        float x_dot = x - center.x, y_dot = y - center.y;
-
-        return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);
+        return -1;
     }
 }
