@@ -57,7 +57,11 @@ public class Geometry {
                 }
             }
         }
-
         return false;
+    }
+    public static PointF zoomOut(float x, float y, PointF center, float ratio) {
+        float x_dot = x - center.x, y_dot = y - center.y;
+
+        return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);
     }
 }

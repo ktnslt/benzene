@@ -8,7 +8,7 @@ public class Benzene extends Compound {
     public enum DrawingMode {
         CIRCLE, ODD_LINE, EVEN_LINE
     }
-    DrawingMode mDrawingMode = DrawingMode.CIRCLE;
+    DrawingMode mDrawingMode = DrawingMode.EVEN_LINE;
 
     public Benzene() {
         fillCarbon(6);
