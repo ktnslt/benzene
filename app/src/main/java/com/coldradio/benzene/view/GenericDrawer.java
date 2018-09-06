@@ -26,8 +26,10 @@ public class GenericDrawer implements CompoundDrawer.IComponentDrawer {
                         DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
                         break;
                     case TRIPLE:
-                        canvas.drawLine(p1.x, p1.y + 10, p2.x, p2.y + 10, paint);
-                        canvas.drawLine(p1.x, p1.y - 10, p2.x, p2.y - 10, paint);
+                        PointF center = centerForDoubleBond(a1, a2);
+
+                        DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
+                        DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
                         break;
                 }
             }
