@@ -6,16 +6,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.coldradio.benzene.compound.Alkane;
+import com.coldradio.benzene.compound.ChainCompound;
 import com.coldradio.benzene.compound.Benzene;
 import com.coldradio.benzene.compound.CycloHexane;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener{
     enum Mode {
-        SELECT, SYNTHESIS, DECOMPOSITION
+        SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
-    Mode mMode = Mode.DECOMPOSITION;
+    Mode mMode = Mode.CYCLE_BOND_TYPE;
 
     public CanvasView(Context context) {
         super(context);
@@ -24,9 +24,9 @@ public class CanvasView extends View implements View.OnTouchListener{
         Benzene bz = new Benzene();
         bz.offset(500, 800);
         Project.instance().addCompound(bz);
-        Alkane alkane = new Alkane(4);
-        alkane.offset(200, 200);
-        Project.instance().addCompound(alkane);
+        ChainCompound chainCompound = new ChainCompound(4);
+        chainCompound.offset(200, 200);
+        Project.instance().addCompound(chainCompound);
         CycloHexane cycloHexane = new CycloHexane();
         cycloHexane.offset(400, 400);
         Project.instance().addCompound(cycloHexane);
@@ -48,6 +48,9 @@ public class CanvasView extends View implements View.OnTouchListener{
                 case DECOMPOSITION:
                     Project.instance().decomposition(event.getX(), event.getY());
                     Toast.makeText(getContext(), "Total " + Project.instance().compoundNumber() + " Compounds", Toast.LENGTH_SHORT).show();
+                    break;
+                case CYCLE_BOND_TYPE:
+                    Project.instance().cycleBondType(event.getX(), event.getY());
                     break;
             }
             invalidate();

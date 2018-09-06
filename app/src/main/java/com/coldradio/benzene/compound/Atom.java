@@ -1,6 +1,7 @@
 package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,43 +11,68 @@ public class Atom {
     private List<Bond> mBonds = new ArrayList<>();
 
     public void doubleBond(Atom bondTo) {
-        if(hasBond(bondTo) == Bond.BondType.NONE) {
+        if (getBondType(bondTo) == Bond.BondType.NONE) {
             mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
             bondTo.doubleBond(this);
         }
     }
+
     public void singleBond(Atom bondTo) {
-        if(hasBond(bondTo) == Bond.BondType.NONE) {
+        if (getBondType(bondTo) == Bond.BondType.NONE) {
             mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
             bondTo.singleBond(this);
         }
     }
+
     public void setPoint(PointF point) {
         mPoint.set(point);
     }
+
     public PointF getPoint() {
         return mPoint;
     }
-    public Bond.BondType hasBond(Atom atom) {
-        for(Bond bond : mBonds) {
-            Bond.BondType bondType = bond.hasBondTo(atom);
 
-            if(bondType != Bond.BondType.NONE) {
+    public Bond.BondType getBondType(Atom atom) {
+        for (Bond bond : mBonds) {
+            Bond.BondType bondType = bond.getBondType(atom);
+
+            if (bondType != Bond.BondType.NONE) {
                 return bondType;
             }
         }
         return Bond.BondType.NONE;
     }
-    public boolean cutBond(Atom bondTo) {
-        for(Iterator<Bond> it = mBonds.iterator(); it.hasNext(); ) {
+
+    public boolean cutBond(Atom atom) {
+        for (Iterator<Bond> it = mBonds.iterator(); it.hasNext(); ) {
             Bond bond = it.next();
 
-            if(bond.hasBondTo(bondTo) != Bond.BondType.NONE) {
+            if (bond.hasBondTo(atom)) {
                 it.remove();
-                bondTo.cutBond(this);
+                atom.cutBond(this);
                 return true;
             }
         }
         return false;
+    }
+
+    public void setBond(Atom atom, Bond.BondType bondType) {
+        for (Bond bond : mBonds) {
+            if(bond.hasBondTo(atom)) {
+                bond.setBondType(bondType);
+                break;
+            }
+        }
+    }
+
+    public Atom getBoundAtomExcept(Atom atom) {
+        if (mBonds.size() == 2) {
+            for (Bond bond : mBonds) {
+                if (bond.getBoundAtom() != atom) {
+                    return bond.getBoundAtom();
+                }
+            }
+        }
+        return null;
     }
 }

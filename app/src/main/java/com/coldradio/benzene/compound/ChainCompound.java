@@ -2,8 +2,8 @@ package com.coldradio.benzene.compound;
 
 import com.coldradio.benzene.geometry.Geometry;
 
-public class Alkane extends Compound{
-    public Alkane(int carbonLength) {
+public class ChainCompound extends Compound{
+    public ChainCompound(int carbonLength) {
         fillCarbon(carbonLength);
         // set up link between carbons
         for(int ii = 0; ii < carbonLength - 1; ++ii) {

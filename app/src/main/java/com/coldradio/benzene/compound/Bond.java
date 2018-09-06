@@ -4,6 +4,7 @@ public class Bond {
     public enum BondType {
         NONE, SINGLE, DOUBLE, TRIPLE
     }
+
     Atom mAtom;
     BondType mBondType;
 
@@ -11,12 +12,24 @@ public class Bond {
         mAtom = bondTo;
         mBondType = bondType;
     }
-    public BondType hasBondTo(Atom bondTo) {
-        if(mAtom == bondTo) {
+
+    public BondType getBondType(Atom atom) {
+        if (hasBondTo(atom)) {
             return mBondType;
-        }
-        else {
+        } else {
             return BondType.NONE;
         }
+    }
+
+    public boolean hasBondTo(Atom atom) {
+        return mAtom == atom;
+    }
+
+    public void setBondType(BondType bondType) {
+        mBondType = bondType;
+    }
+
+    public Atom getBoundAtom() {
+        return mAtom;
     }
 }

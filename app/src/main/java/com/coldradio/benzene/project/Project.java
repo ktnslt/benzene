@@ -65,4 +65,12 @@ public class Project {
     public int compoundNumber() {
         return mCompoundList.size();
     }
+    public boolean cycleBondType(float x, float y) {
+        for(Compound compound : mCompoundList) {
+            if(compound.cycleBondType(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -17,47 +17,58 @@ public class Compound {
     public Compound() {
         mAtoms = new ArrayList<>();
     }
+
     public Compound(List<Atom> atoms) {
         mAtoms = atoms;
     }
+
     public int size() {
         return mAtoms.size();
     }
+
     public void offset(float x, float y) {
-        for(Atom atom : mAtoms) {
+        for (Atom atom : mAtoms) {
             atom.getPoint().offset(x, y);
         }
     }
+
     public void fillCarbon(int carbonNumber) {
         mAtoms.clear();
-        for(int ii = 0; ii < carbonNumber; ++ii) {
+        for (int ii = 0; ii < carbonNumber; ++ii) {
             mAtoms.add(new Carbon());
         }
     }
+
     public boolean isSelected() {
         return mSelected;
     }
+
     public void setSelected(boolean selected) {
         mSelected = selected;
     }
+
     public boolean select(float x, float y) {
         return mSelected = Geometry.isSelected(x, y, this);
     }
+
     public List<Atom> getAtoms() {
         return Collections.unmodifiableList(mAtoms);
     }
+
     public boolean isCyclo() {
-        return mAtoms.get(0).hasBond(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
+        return mAtoms.get(0).getBondType(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
     }
+
     public PointF center() {
         RectF region = rectRegion();
 
         return new PointF((region.left + region.right) / 2, (region.top + region.bottom) / 2);
     }
-    public RectF rectRegion() {
-        float left = (float)10e10, top = (float)10e10, right = 0, bottom = 0;
 
-        for(Atom atom : mAtoms) {
+    public RectF rectRegion() {
+        float left = (float) 10e10, top = (float) 10e10, right = 0, bottom = 0;
+
+        for (Atom atom : mAtoms) {
             PointF p = atom.getPoint();
 
             left = Math.min(left, p.x);
@@ -68,10 +79,11 @@ public class Compound {
 
         return new RectF(left, top, right, bottom);
     }
+
     public Compound decomposition(float x, float y) {
         int leftSelectedIndex = Geometry.leftSelectedIndex(x, y, this);
 
-        if(leftSelectedIndex >= 0) {
+        if (leftSelectedIndex >= 0) {
             Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
 
             mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
@@ -81,5 +93,27 @@ public class Compound {
         } else {
             return null;
         }
+    }
+
+    public boolean cycleBondType(float x, float y) {
+        int leftSelectedIndex = Geometry.leftSelectedIndex(x, y, this);
+
+        if (leftSelectedIndex >= 0) {
+            Atom leftAtom = mAtoms.get(leftSelectedIndex), rightAtom = mAtoms.get((leftSelectedIndex + 1) % mAtoms.size());
+            Bond.BondType bondType = leftAtom.getBondType(rightAtom);
+            switch (bondType) {
+                case SINGLE:
+                    leftAtom.setBond(rightAtom, Bond.BondType.DOUBLE);
+                    break;
+                case DOUBLE:
+                    leftAtom.setBond(rightAtom, Bond.BondType.TRIPLE);
+                    break;
+                case TRIPLE:
+                    leftAtom.setBond(rightAtom, Bond.BondType.SINGLE);
+                    break;
+            }
+            return true;
+        }
+        return false;
     }
 }
