@@ -9,7 +9,7 @@ public class CycloCompound extends Compound {
         for(int ii = 0; ii < carbonNumber; ++ii) {
             mAtoms.get(ii).singleBond(mAtoms.get((ii+1) % carbonNumber));
         }
-        // TODO: shall be refactored to cycloCompoundGeometry
+
         Geometry.cycloGeometry(mAtoms);
     }
 }

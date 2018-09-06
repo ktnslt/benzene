@@ -10,13 +10,28 @@ import java.util.List;
 
 public class Geometry {
     public static void cycloGeometry(List<Atom> atoms) {
-        PointF center = new PointF(0, Configuration.LINE_LENGTH);
-        PointF currentPoint = new PointF(0, 0);
-        // the first point shall be always (0, 0), and will be interpreted according to the mStartingPoint
+        if (atoms.size() >= 3) {
+            PointF currentPoint = new PointF(0, 0);
+            PointF nextPoint = new PointF();
+            float interiorAngle = Geometry.interiorAngleOfPolygon(atoms.size());
 
-        for (Atom atom : atoms) {
-            atom.setPoint(currentPoint);
-            currentPoint = rotatePointByDegree(currentPoint, center, 360.0f / atoms.size());
+            if (atoms.size() == 6 || atoms.size() % 2 == 1) {
+                nextPoint.set(Configuration.LINE_LENGTH * (float) Math.sin(Math.toRadians(interiorAngle / 2)),
+                        Configuration.LINE_LENGTH * (float) Math.cos(Math.toRadians(interiorAngle / 2)));
+            } else { // even number of sides polygon except hexagon
+                nextPoint.set(Configuration.LINE_LENGTH, 0);
+            }
+
+            atoms.get(0).setPoint(currentPoint);
+            atoms.get(1).setPoint(nextPoint);
+
+            for (int ii = 2; ii < atoms.size(); ++ii) {
+                PointF nextNextPoint = Geometry.rotatePointByDegree(currentPoint, nextPoint, 360 - interiorAngle);
+
+                atoms.get(ii).setPoint(nextNextPoint);
+                currentPoint = nextPoint;
+                nextPoint = nextNextPoint;
+            }
         }
     }
 
@@ -110,5 +125,9 @@ public class Geometry {
         }
 
         return args;
+    }
+
+    public static float interiorAngleOfPolygon(int numberOfSide) {
+        return (180.0f * numberOfSide - 360) / numberOfSide;
     }
 }

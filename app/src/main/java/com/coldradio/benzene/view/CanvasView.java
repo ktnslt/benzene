@@ -21,25 +21,45 @@ public class CanvasView extends View implements View.OnTouchListener{
         super(context);
         setOnTouchListener(this);
         // TODO: delete this line later
-        ChainCompound chainCompound = new ChainCompound(4);
-        chainCompound.offset(200, 100);
-        Project.instance().addCompound(chainCompound);
+//        ChainCompound chainCompound = new ChainCompound(4);
+//        chainCompound.offset(200, 100);
+//        Project.instance().addCompound(chainCompound);
+//
+//        CycloCompound hexane = new CycloCompound(6);
+//        hexane.offset(100, 100);
+//        Project.instance().addCompound(hexane);
+//
+//        CycloCompound triangle = new CycloCompound(3);
+//        triangle.offset(400, 100);
+//        Project.instance().addCompound(triangle);
+//
+//        CycloCompound rect = new CycloCompound(4);
+//        rect.offset(700, 100);
+//        Project.instance().addCompound(rect);
+//
+//        Benzene bz = new Benzene();
+//        bz.offset(100, 400);
+//        Project.instance().addCompound(bz);
+//
+//        CycloCompound heptane = new CycloCompound(7);
+//        heptane.offset(400, 400);
+//        Project.instance().addCompound(heptane);
+//
+//        CycloCompound octane = new CycloCompound(8);
+//        octane.offset(700, 400);
+//        Project.instance().addCompound(octane);
+//
+//        CycloCompound pentane = new CycloCompound(5);
+//        pentane.offset(100, 700);
+//        Project.instance().addCompound(pentane);
+//
+//        CycloCompound nonane = new CycloCompound(9);
+//        nonane.offset(400, 700);
+//        Project.instance().addCompound(nonane);
 
-        CycloCompound hexane = new CycloCompound(6);
-        hexane.offset(400, 100);
-        Project.instance().addCompound(hexane);
-
-        Benzene bz = new Benzene();
-        bz.offset(400, 400);
-        Project.instance().addCompound(bz);
-
-        CycloCompound heptane = new CycloCompound(7);
-        heptane.offset(400, 700);
-        Project.instance().addCompound(heptane);
-
-        CycloCompound octane = new CycloCompound(8);
-        octane.offset(600, 100);
-        Project.instance().addCompound(octane);
+        CycloCompound decane = new CycloCompound(10);
+        decane.offset(700, 700);
+        Project.instance().addCompound(decane);
     }
     @Override
     protected void onDraw(Canvas canvas) {
