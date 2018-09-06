@@ -9,14 +9,14 @@ import com.coldradio.benzene.project.Configuration;
 import java.util.List;
 
 public class Geometry {
-    public static void cycloHexaneGeometry(List<Atom> atoms) {
+    public static void cycloGeometry(List<Atom> atoms) {
         PointF center = new PointF(0, Configuration.LINE_LENGTH);
         PointF currentPoint = new PointF(0, 0);
         // the first point shall be always (0, 0), and will be interpreted according to the mStartingPoint
 
         for (Atom atom : atoms) {
             atom.setPoint(currentPoint);
-            currentPoint = rotatePointByDegree(currentPoint, center, 60);
+            currentPoint = rotatePointByDegree(currentPoint, center, 360.0f / atoms.size());
         }
     }
 

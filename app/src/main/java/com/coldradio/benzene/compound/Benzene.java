@@ -1,11 +1,6 @@
 package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.geometry.Geometry;
-import com.coldradio.benzene.view.BenzeneDrawer;
-import com.coldradio.benzene.view.CompoundDrawer;
-
-public class Benzene extends Compound {
-    // TODO: Benzene shall inherit CycloHexane, and CycloHexane shall be renamed to CycloCompound
+public class Benzene extends CycloCompound {
     public enum DrawingMode {
         CIRCLE, LINE
     }
@@ -13,18 +8,13 @@ public class Benzene extends Compound {
     DrawingMode mDrawingMode = DrawingMode.LINE;
 
     public Benzene() {
-        fillCarbon(6);
+        super(6);
         // set up link between carbons
         for (int ii = 0; ii < 6; ++ii) {
             if (ii % 2 == 0) {
-                mAtoms.get(ii).doubleBond(mAtoms.get((ii + 1) % 6));
-            } else {
-                mAtoms.get(ii).singleBond(mAtoms.get((ii + 1) % 6));
+                mAtoms.get(ii).setBond(mAtoms.get(ii + 1), Bond.BondType.DOUBLE);
             }
         }
-
-        Geometry.cycloHexaneGeometry(mAtoms);
-        CompoundDrawer.instance().addComponentDrawer(new BenzeneDrawer());
     }
 
     public DrawingMode getDrawingMode() {
