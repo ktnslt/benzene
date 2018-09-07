@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         }
         // initialize AutoCompleteTextView
 //        final String[] predefined_compounds = {
-//                "Propane", "Benzene", "Toluene"
+//                "Propane", "ConjuatedCyclicCompound", "Toluene"
 //        };
 //        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, predefined_compounds);
 //        AutoCompleteTextView textView = findViewById(R.id.compound_name);
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                List predefined_compound_list = Arrays.asList(predefined_compounds);
-//                if(id == predefined_compound_list.indexOf("Benzene")) {
-//                    Project.instance().addCompound(new Benzene());
+//                if(id == predefined_compound_list.indexOf("ConjuatedCyclicCompound")) {
+//                    Project.instance().addCompound(new ConjuatedCyclicCompound());
 //                }
 //            }
 //        });

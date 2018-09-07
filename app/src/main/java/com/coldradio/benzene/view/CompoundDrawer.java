@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.Benzene;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Configuration;
 
