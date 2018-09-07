@@ -45,10 +45,14 @@ public class GenericDrawer implements CompoundDrawer.IComponentDrawer {
         if (before_a1 != null && after_a2 != null) {
             PointF before_a1p = before_a1.getPoint(), after_a2p = after_a2.getPoint();
 
-            if (Geometry.sameSideOfLine(before_a1p, after_a2p, a1p, a2p)) {
-                return Geometry.centerPoint(before_a1p, after_a2p);
+            if (before_a1 == after_a2) {    // propane case, returns the center of the triangle
+                return new PointF((a1p.x + a2p.x + before_a1p.x) / 3, (a1p.y + a2p.y + before_a1p.y) / 3);
             } else {
-                return Geometry.centerPoint(before_a1p, Geometry.symmetricPointToLine(after_a2p, a1p, a2p));
+                if (Geometry.sameSideOfLine(before_a1p, after_a2p, a1p, a2p)) {
+                    return Geometry.centerPoint(before_a1p, after_a2p);
+                } else {
+                    return Geometry.centerPoint(before_a1p, Geometry.symmetricPointToLine(after_a2p, a1p, a2p));
+                }
             }
         } else if (before_a1 == null && after_a2 == null) {
             return null;
@@ -56,12 +60,11 @@ public class GenericDrawer implements CompoundDrawer.IComponentDrawer {
             PointF after_a2p = after_a2.getPoint();
 
             return Geometry.centerPoint(Geometry.rotatePointByDegree(a2p, a1p, 120), after_a2p);
-        } else if (after_a2 == null) {
+        } else { // here after_a2 is null
             PointF before_a1p = before_a1.getPoint();
 
             return Geometry.centerPoint(before_a1p, Geometry.rotatePointByDegree(a1p, a2p, 120));
         }
-        return null;
     }
 
     @Override
