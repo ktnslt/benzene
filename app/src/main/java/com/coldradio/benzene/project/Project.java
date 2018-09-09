@@ -3,15 +3,18 @@ package com.coldradio.benzene.project;
 import android.graphics.Canvas;
 
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.view.CompoundDrawer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
+    private CompoundReactor mCompoundReactor = new CompoundReactor();
 
     public static Project instance() {
         return project;
@@ -21,6 +24,7 @@ public class Project {
         for (Compound compound : mCompoundList) {
             CompoundDrawer.instance().draw(compound, canvas);
         }
+        CompoundDrawer.instance().drawSynthesis(mCompoundReactor, canvas);
     }
 
     public void addCompound(Compound compound) {
@@ -79,5 +83,10 @@ public class Project {
             }
         }
         return false;
+    }
+
+    public boolean synthesis(float x, float y) {
+        mCompoundReactor.synthesis(x, y, Collections.unmodifiableList(mCompoundList));
+        return true;
     }
 }

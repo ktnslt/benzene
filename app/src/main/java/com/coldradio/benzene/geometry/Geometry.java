@@ -130,4 +130,13 @@ public class Geometry {
     public static float interiorAngleOfPolygon(int numberOfSide) {
         return (180.0f * numberOfSide - 360) / numberOfSide;
     }
+
+    public static Atom selectAtom(float x, float y, Compound compound) {
+        for(Atom atom : compound.getAtoms()) {
+            if (distanceFromPointToPoint(atom.getPoint(), new PointF(x, y)) < Configuration.SELECT_RANGE) {
+                return atom;
+            }
+        }
+        return null;
+    }
 }

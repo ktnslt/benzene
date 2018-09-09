@@ -15,7 +15,7 @@ public class CanvasView extends View implements View.OnTouchListener{
     enum Mode {
         SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
-    Mode mMode = Mode.CYCLE_BOND_TYPE;
+    Mode mMode = Mode.SYNTHESIS;
 
     public CanvasView(Context context) {
         super(context);
@@ -29,37 +29,37 @@ public class CanvasView extends View implements View.OnTouchListener{
         hexane.offset(100, 100);
         Project.instance().addCompound(hexane);
 
-        CyclicCompound triangle = new ConjuatedCyclicCompound(3);
-        triangle.offset(400, 100);
-        Project.instance().addCompound(triangle);
-
-        CyclicCompound rect = new ConjuatedCyclicCompound(4);
-        rect.offset(700, 100);
-        Project.instance().addCompound(rect);
-
-        ConjuatedCyclicCompound bz = new ConjuatedCyclicCompound(6);
-        bz.offset(100, 400);
-        Project.instance().addCompound(bz);
-
-        CyclicCompound heptane = new ConjuatedCyclicCompound(7);
-        heptane.offset(400, 400);
-        Project.instance().addCompound(heptane);
-
-        CyclicCompound octane = new ConjuatedCyclicCompound(8);
-        octane.offset(700, 400);
-        Project.instance().addCompound(octane);
-
-        CyclicCompound pentane = new ConjuatedCyclicCompound(5);
-        pentane.offset(100, 700);
-        Project.instance().addCompound(pentane);
-
-        CyclicCompound nonane = new ConjuatedCyclicCompound(9);
-        nonane.offset(400, 700);
-        Project.instance().addCompound(nonane);
-
-        CyclicCompound decane = new ConjuatedCyclicCompound(10);
-        decane.offset(700, 700);
-        Project.instance().addCompound(decane);
+//        CyclicCompound triangle = new ConjuatedCyclicCompound(3);
+//        triangle.offset(400, 100);
+//        Project.instance().addCompound(triangle);
+//
+//        CyclicCompound rect = new ConjuatedCyclicCompound(4);
+//        rect.offset(700, 100);
+//        Project.instance().addCompound(rect);
+//
+//        ConjuatedCyclicCompound bz = new ConjuatedCyclicCompound(6);
+//        bz.offset(100, 400);
+//        Project.instance().addCompound(bz);
+//
+//        CyclicCompound heptane = new ConjuatedCyclicCompound(7);
+//        heptane.offset(400, 400);
+//        Project.instance().addCompound(heptane);
+//
+//        CyclicCompound octane = new ConjuatedCyclicCompound(8);
+//        octane.offset(700, 400);
+//        Project.instance().addCompound(octane);
+//
+//        CyclicCompound pentane = new ConjuatedCyclicCompound(5);
+//        pentane.offset(100, 700);
+//        Project.instance().addCompound(pentane);
+//
+//        CyclicCompound nonane = new ConjuatedCyclicCompound(9);
+//        nonane.offset(400, 700);
+//        Project.instance().addCompound(nonane);
+//
+//        CyclicCompound decane = new ConjuatedCyclicCompound(10);
+//        decane.offset(700, 700);
+//        Project.instance().addCompound(decane);
     }
     @Override
     protected void onDraw(Canvas canvas) {
@@ -74,6 +74,7 @@ public class CanvasView extends View implements View.OnTouchListener{
                     Project.instance().selectComponent(event.getX(), event.getY());
                     break;
                 case SYNTHESIS:
+                    Project.instance().synthesis(event.getX(), event.getY());
                     break;
                 case DECOMPOSITION:
                     Project.instance().decomposition(event.getX(), event.getY());

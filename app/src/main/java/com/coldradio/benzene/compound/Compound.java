@@ -4,6 +4,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.project.Project;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class Compound {
     protected Atom mHeadAtom;
+    // TODO: compound may be able to have sub-compounds
     protected List<Atom> mAtoms;
     boolean mSelected = false;
 
@@ -115,5 +117,10 @@ public class Compound {
             return true;
         }
         return false;
+    }
+
+    public void merge(Compound compound) {
+        mAtoms.addAll(compound.getAtoms());
+        Project.instance().removeCompound(compound);
     }
 }
