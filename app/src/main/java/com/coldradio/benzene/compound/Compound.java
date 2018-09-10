@@ -105,13 +105,13 @@ public class Compound {
             Bond.BondType bondType = leftAtom.getBondType(rightAtom);
             switch (bondType) {
                 case SINGLE:
-                    leftAtom.setBond(rightAtom, Bond.BondType.DOUBLE);
+                    leftAtom.doubleBond(rightAtom);
                     break;
                 case DOUBLE:
-                    leftAtom.setBond(rightAtom, Bond.BondType.TRIPLE);
+                    leftAtom.tripleBond(rightAtom);
                     break;
                 case TRIPLE:
-                    leftAtom.setBond(rightAtom, Bond.BondType.SINGLE);
+                    leftAtom.singleBond(rightAtom);
                     break;
             }
             return true;

@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,17 +11,54 @@ public class Atom {
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
 
-    public void doubleBond(Atom bondTo) {
-        if (getBondType(bondTo) == Bond.BondType.NONE) {
-            mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
-            bondTo.doubleBond(this);
+    private void setBondOnlyForMe(Atom atom, Bond.BondType bondType) {
+        for (Bond bond : mBonds) {
+            if(bond.hasBondTo(atom)) {
+                bond.setBondType(bondType);
+                break;
+            }
         }
     }
 
     public void singleBond(Atom bondTo) {
-        if (getBondType(bondTo) == Bond.BondType.NONE) {
-            mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
-            bondTo.singleBond(this);
+        switch(getBondType(bondTo)) {
+            case NONE:
+                mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
+                bondTo.singleBond(this);
+                break;
+            case DOUBLE:
+            case TRIPLE:
+                setBondOnlyForMe(bondTo, Bond.BondType.SINGLE);
+                bondTo.singleBond(this);
+                break;
+        }
+    }
+
+    public void doubleBond(Atom bondTo) {
+        switch(getBondType(bondTo)) {
+            case NONE:
+                mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
+                bondTo.doubleBond(this);
+                break;
+            case SINGLE:
+            case TRIPLE:
+                setBondOnlyForMe(bondTo, Bond.BondType.DOUBLE);
+                bondTo.doubleBond(this);
+                break;
+        }
+    }
+
+    public void tripleBond(Atom bondTo) {
+        switch(getBondType(bondTo)) {
+            case NONE:
+                mBonds.add(new Bond(bondTo, Bond.BondType.TRIPLE));
+                bondTo.tripleBond(this);
+                break;
+            case SINGLE:
+            case DOUBLE:
+                setBondOnlyForMe(bondTo, Bond.BondType.TRIPLE);
+                bondTo.tripleBond(this);
+                break;
         }
     }
 
@@ -56,15 +94,6 @@ public class Atom {
         return false;
     }
 
-    public void setBond(Atom atom, Bond.BondType bondType) {
-        for (Bond bond : mBonds) {
-            if(bond.hasBondTo(atom)) {
-                bond.setBondType(bondType);
-                break;
-            }
-        }
-    }
-
     public Atom getBoundAtomExcept(Atom atom) {
         if (mBonds.size() == 2) {
             for (Bond bond : mBonds) {
@@ -74,5 +103,9 @@ public class Atom {
             }
         }
         return null;
+    }
+
+    public List<Bond> getBonds() {
+        return Collections.unmodifiableList(mBonds);
     }
 }

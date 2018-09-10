@@ -21,6 +21,10 @@ public class Bond {
         }
     }
 
+    public BondType getBondType() {
+        return mBondType;
+    }
+
     public boolean hasBondTo(Atom atom) {
         return mAtom == atom;
     }
