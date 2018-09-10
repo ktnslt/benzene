@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundDrawer {
-    interface IComponentDrawer {
+    interface ICompoundDrawer {
         boolean draw(Compound compound, Canvas canvas, Paint paint);
 
         String getID();
@@ -21,7 +21,7 @@ public class CompoundDrawer {
 
     private Paint mPaint;
     private static CompoundDrawer instance = new CompoundDrawer();
-    private List<IComponentDrawer> mComponentDrawer = new ArrayList<>();
+    private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
     private GenericDrawer mGenericDrawer = new GenericDrawer();
 
     private CompoundDrawer() {
@@ -33,17 +33,17 @@ public class CompoundDrawer {
         return instance;
     }
 
-    public void addComponentDrawer(IComponentDrawer newComponentDrawer) {
+    public void addCompoundDrawer(ICompoundDrawer newCompoundDrawer) {
         boolean unregistered = true;
 
-        for (IComponentDrawer componentDrawer : mComponentDrawer) {
-            if (componentDrawer.getID() == newComponentDrawer.getID()) {
+        for (ICompoundDrawer componentDrawer : mCompoundDrawer) {
+            if (componentDrawer.getID() == newCompoundDrawer.getID()) {
                 unregistered = false;
                 break;
             }
         }
         if (unregistered) {
-            mComponentDrawer.add(newComponentDrawer);
+            mCompoundDrawer.add(newCompoundDrawer);
         }
     }
 
@@ -55,7 +55,7 @@ public class CompoundDrawer {
             mPaint.setColor(Color.BLACK);
         }
         boolean drawn = false;
-        for (IComponentDrawer componentDrawer : mComponentDrawer) {
+        for (ICompoundDrawer componentDrawer : mCompoundDrawer) {
             if (drawn = componentDrawer.draw(compound, canvas, mPaint)) {
                 break;
             }

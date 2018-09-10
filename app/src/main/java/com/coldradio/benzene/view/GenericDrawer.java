@@ -10,7 +10,7 @@ import com.coldradio.benzene.geometry.Geometry;
 
 import java.util.List;
 
-public class GenericDrawer implements CompoundDrawer.IComponentDrawer {
+public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
         List<Atom> atoms = compound.getAtoms();
