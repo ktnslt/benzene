@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Compound {
-    protected Atom mHeadAtom;
-    // TODO: compound may be able to have sub-compounds
     protected List<Atom> mAtoms;
     boolean mSelected = false;
 

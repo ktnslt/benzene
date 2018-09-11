@@ -35,7 +35,7 @@ public class CompoundReactor {
             destination.first.merge(source.first);
             destination.second.singleBond(source.second);
         } else {    // this will be cyclic
-
+            destination.second.singleBond(source.second);
         }
 
         mSynthesisSource = null;

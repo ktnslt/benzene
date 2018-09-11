@@ -12,11 +12,18 @@ public class Atom {
     private List<Bond> mBonds = new ArrayList<>();
 
     private void setBondOnlyForMe(Atom atom, Bond.BondType bondType) {
-        for (Bond bond : mBonds) {
-            if(bond.hasBondTo(atom)) {
-                bond.setBondType(bondType);
+        switch(getBondType(atom)) {
+            case NONE:
+                mBonds.add(new Bond(atom, bondType));
                 break;
-            }
+            default:
+                for (Bond bond : mBonds) {
+                    if (bond.hasBondTo(atom)) {
+                        bond.setBondType(bondType);
+                        break;
+                    }
+                    break;
+                }
         }
     }
 
@@ -24,12 +31,12 @@ public class Atom {
         switch(getBondType(bondTo)) {
             case NONE:
                 mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
-                bondTo.singleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.SINGLE);
                 break;
             case DOUBLE:
             case TRIPLE:
                 setBondOnlyForMe(bondTo, Bond.BondType.SINGLE);
-                bondTo.singleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.SINGLE);
                 break;
         }
     }
@@ -38,12 +45,12 @@ public class Atom {
         switch(getBondType(bondTo)) {
             case NONE:
                 mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
-                bondTo.doubleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.DOUBLE);
                 break;
             case SINGLE:
             case TRIPLE:
                 setBondOnlyForMe(bondTo, Bond.BondType.DOUBLE);
-                bondTo.doubleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.DOUBLE);
                 break;
         }
     }
@@ -52,12 +59,12 @@ public class Atom {
         switch(getBondType(bondTo)) {
             case NONE:
                 mBonds.add(new Bond(bondTo, Bond.BondType.TRIPLE));
-                bondTo.tripleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.TRIPLE);
                 break;
             case SINGLE:
             case DOUBLE:
                 setBondOnlyForMe(bondTo, Bond.BondType.TRIPLE);
-                bondTo.tripleBond(this);
+                bondTo.setBondOnlyForMe(this, Bond.BondType.TRIPLE);
                 break;
         }
     }

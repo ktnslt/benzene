@@ -32,8 +32,8 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
     }
 
     private void drawRecursive(Atom atom, HashMap<Atom, Atom> visitedEdge, Canvas canvas, Paint paint) {
-        for(Bond bond : atom.getBonds()) {
-            if(visitedEdge.get(atom) != bond.getBoundAtom() && visitedEdge.get(bond.getBoundAtom()) != atom) {
+        for (Bond bond : atom.getBonds()) {
+            if (visitedEdge.get(atom) != bond.getBoundAtom() && visitedEdge.get(bond.getBoundAtom()) != atom) {
                 // the edge is not visited
                 drawBond(atom, bond, canvas, paint);
                 visitedEdge.put(atom, bond.getBoundAtom());
@@ -57,7 +57,7 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
         Atom before_a1 = a1.getBoundAtomExcept(a2);
         Atom after_a2 = a2.getBoundAtomExcept(a1);
 
-        if(before_a1 != null && after_a2 != null && before_a1 == after_a2) {
+        if (before_a1 != null && after_a2 != null && before_a1 == after_a2) {
             // propane case, returns the center of the triangle
             PointF before_a1p = before_a1.getPoint();
 
@@ -69,7 +69,7 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
             // carbonBound == 1 is the primary carbon and the chain ends. == 2 means it has one additional branch, and before_a1 != null
             if (carbonBound_a1 == 2) {
                 return Geometry.sameSideOfLine(before_a1.getPoint(), centers[0], a1p, a2p) ? centers[0] : centers[1];
-            } else if(carbonBound_a2 == 2) {
+            } else if (carbonBound_a2 == 2) {
                 return Geometry.sameSideOfLine(after_a2.getPoint(), centers[0], a1p, a2p) ? centers[0] : centers[1];
             } else {
                 return centers[0];
