@@ -139,4 +139,8 @@ public class Geometry {
         }
         return null;
     }
+
+    public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
+        return new PointF[]{rotatePointByDegree(p1, p2, 60), rotatePointByDegree(p1, p2, -60)};
+    }
 }

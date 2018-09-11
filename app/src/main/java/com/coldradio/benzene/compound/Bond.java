@@ -36,4 +36,8 @@ public class Bond {
     public Atom getBoundAtom() {
         return mAtom;
     }
+
+    public boolean isCarbonBond() {
+        return mAtom instanceof Carbon;
+    }
 }

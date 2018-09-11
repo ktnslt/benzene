@@ -108,4 +108,15 @@ public class Atom {
     public List<Bond> getBonds() {
         return Collections.unmodifiableList(mBonds);
     }
+
+    public int carbonBoundNumber() {
+        int boundCarbons = 0;
+
+        for (Bond bond : mBonds) {
+            if(bond.isCarbonBond()) {
+                ++boundCarbons;
+            }
+        }
+        return boundCarbons;
+    }
 }
