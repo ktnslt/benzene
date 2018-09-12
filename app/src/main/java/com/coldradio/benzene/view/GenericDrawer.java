@@ -3,6 +3,7 @@ package com.coldradio.benzene.view;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Pair;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
@@ -10,6 +11,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.geometry.Geometry;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
@@ -31,12 +33,16 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
         }
     }
 
-    private void drawRecursive(Atom atom, HashMap<Atom, Atom> visitedEdge, Canvas canvas, Paint paint) {
+    private void drawRecursive(Atom atom, HashSet<String> visitedEdge, Canvas canvas, Paint paint) {
         for (Bond bond : atom.getBonds()) {
-            if (visitedEdge.get(atom) != bond.getBoundAtom() && visitedEdge.get(bond.getBoundAtom()) != atom) {
+            /*  TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
+                I have tried to use hashCode of the atom as a key, but it doesn't work.
+            */
+            if (!visitedEdge.contains(atom.getPoint().toString() + bond.getBoundAtom().getPoint())
+                    && !visitedEdge.contains(bond.getBoundAtom().getPoint().toString() + atom.getPoint())) {
                 // the edge is not visited
                 drawBond(atom, bond, canvas, paint);
-                visitedEdge.put(atom, bond.getBoundAtom());
+                visitedEdge.add(atom.getPoint().toString() + bond.getBoundAtom().getPoint());
                 drawRecursive(bond.getBoundAtom(), visitedEdge, canvas, paint);
             }
         }
@@ -45,7 +51,7 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
         List<Atom> atoms = compound.getAtoms();
-        HashMap<Atom, Atom> visitedEdge = new HashMap<>();
+        HashSet<String> visitedEdge = new HashSet<>();
 
         drawRecursive(atoms.get(0), visitedEdge, canvas, paint);
 
