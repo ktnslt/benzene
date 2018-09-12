@@ -11,62 +11,37 @@ public class Atom {
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
 
-    private void setBondOnlyForMe(Atom atom, Bond.BondType bondType) {
-        switch(getBondType(atom)) {
-            case NONE:
-                mBonds.add(new Bond(atom, bondType));
-                break;
-            default:
-                for (Bond bond : mBonds) {
-                    if (bond.hasBondTo(atom)) {
-                        bond.setBondType(bondType);
-                        break;
-                    }
-                    break;
-                }
+    private Bond findBond(Atom atom) {
+        for (Bond bond : mBonds) {
+            if (bond.hasBondTo(atom)) {
+                return bond;
+            }
+        }
+        return null;
+    }
+
+    private void setBond(Atom atom, Bond.BondType bondType) {
+        Bond bond = findBond(atom);
+
+        if (bond == null) {
+            mBonds.add(new Bond(atom, bondType));
+            atom.setBond(this, bondType);
+        } else if (bond.getBondType() != bondType) {
+            bond.setBondType(bondType);
+            atom.setBond(this, bondType);
         }
     }
 
-    public void singleBond(Atom bondTo) {
-        switch(getBondType(bondTo)) {
-            case NONE:
-                mBonds.add(new Bond(bondTo, Bond.BondType.SINGLE));
-                bondTo.setBondOnlyForMe(this, Bond.BondType.SINGLE);
-                break;
-            case DOUBLE:
-            case TRIPLE:
-                setBondOnlyForMe(bondTo, Bond.BondType.SINGLE);
-                bondTo.setBondOnlyForMe(this, Bond.BondType.SINGLE);
-                break;
-        }
+    public void singleBond(Atom atom) {
+        setBond(atom, Bond.BondType.SINGLE);
     }
 
-    public void doubleBond(Atom bondTo) {
-        switch(getBondType(bondTo)) {
-            case NONE:
-                mBonds.add(new Bond(bondTo, Bond.BondType.DOUBLE));
-                bondTo.setBondOnlyForMe(this, Bond.BondType.DOUBLE);
-                break;
-            case SINGLE:
-            case TRIPLE:
-                setBondOnlyForMe(bondTo, Bond.BondType.DOUBLE);
-                bondTo.setBondOnlyForMe(this, Bond.BondType.DOUBLE);
-                break;
-        }
+    public void doubleBond(Atom atom) {
+        setBond(atom, Bond.BondType.DOUBLE);
     }
 
-    public void tripleBond(Atom bondTo) {
-        switch(getBondType(bondTo)) {
-            case NONE:
-                mBonds.add(new Bond(bondTo, Bond.BondType.TRIPLE));
-                bondTo.setBondOnlyForMe(this, Bond.BondType.TRIPLE);
-                break;
-            case SINGLE:
-            case DOUBLE:
-                setBondOnlyForMe(bondTo, Bond.BondType.TRIPLE);
-                bondTo.setBondOnlyForMe(this, Bond.BondType.TRIPLE);
-                break;
-        }
+    public void tripleBond(Atom atom) {
+        setBond(atom, Bond.BondType.TRIPLE);
     }
 
     public void setPoint(PointF point) {
@@ -78,14 +53,13 @@ public class Atom {
     }
 
     public Bond.BondType getBondType(Atom atom) {
-        for (Bond bond : mBonds) {
-            Bond.BondType bondType = bond.getBondType(atom);
+        Bond bond = findBond(atom);
 
-            if (bondType != Bond.BondType.NONE) {
-                return bondType;
-            }
+        if (bond != null) {
+            return bond.getBondType();
+        } else {
+            return Bond.BondType.NONE;
         }
-        return Bond.BondType.NONE;
     }
 
     public boolean cutBond(Atom atom) {
@@ -108,6 +82,8 @@ public class Atom {
                     return bond.getBoundAtom();
                 }
             }
+        } else {
+            // TODO: this case needs to be addressed.
         }
         return null;
     }
@@ -120,7 +96,7 @@ public class Atom {
         int boundCarbons = 0;
 
         for (Bond bond : mBonds) {
-            if(bond.isCarbonBond()) {
+            if (bond.isCarbonBond()) {
                 ++boundCarbons;
             }
         }

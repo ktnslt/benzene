@@ -12,7 +12,9 @@ public class ConjuatedCyclicCompound extends CyclicCompound {
         // set up link between carbons
         for (int ii = 0; ii < carbonNumber; ++ii) {
             if (ii % 2 == 0) {
-                if(carbonNumber % 2 == 1 && ii == carbonNumber -1) break;   // skip the last one for odd number cyclic compound
+                if(carbonNumber % 2 == 1 && ii == carbonNumber -1) {
+                    break;   // skip the last one for odd number cyclic compound
+                }
                 mAtoms.get(ii).doubleBond(mAtoms.get((ii+1) % carbonNumber));
             }
         }

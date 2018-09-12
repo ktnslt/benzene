@@ -27,21 +27,21 @@ public class CanvasView extends View implements View.OnTouchListener {
 //
 //        Project.instance().addCompound(CompoundFactory.butane(500, 100));
 
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(3, 100, 300));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(4, 400, 300));
-//
+        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(3, 100, 300));
+
+        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(4, 400, 300));
+
 //        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(5, 700, 300));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(6, 100, 600));
-
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(6, 100, 600));
+//
 //        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(7, 400, 600));
 //
 //        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(8, 700, 600));
 //
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(9, 100, 900));
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(9, 300, 900));
 //
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(10, 400, 900));
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(10, 700, 900));
     }
 
     @Override
