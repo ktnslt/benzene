@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navibar_select"
+        android:icon="@drawable/ic_menu_camera" />
+
+    <item
+        android:id="@+id/navibar_cycle_bond"
+        android:icon="@drawable/ic_menu_gallery" />
+
+    <item
+        android:id="@+id/navibar_synthesis"
+        android:icon="@drawable/ic_menu_send" />
+
+    <item
+        android:id="@+id/navibar_decompose"
+        android:icon="@drawable/ic_menu_send" />
+
+</menu>

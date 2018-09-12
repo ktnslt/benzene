@@ -2,17 +2,18 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.coldradio.benzene.compound.ChainCompound;
+import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
-import com.coldradio.benzene.compound.ConjuatedCyclicCompound;
-import com.coldradio.benzene.compound.CyclicCompound;
 import com.coldradio.benzene.project.Project;
 
-public class CanvasView extends View implements View.OnTouchListener {
+public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener {
     enum Mode {
         SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
@@ -71,5 +72,24 @@ public class CanvasView extends View implements View.OnTouchListener {
             invalidate();
         }
         return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navibar_select:
+                mMode = Mode.SELECT;
+                return true;
+            case R.id.navibar_cycle_bond:
+                mMode = Mode.CYCLE_BOND_TYPE;
+                return true;
+            case R.id.navibar_synthesis:
+                mMode = Mode.SYNTHESIS;
+                return true;
+            case R.id.navibar_decompose:
+                mMode = Mode.DECOMPOSITION;
+                return true;
+        }
+        return false;
     }
 }

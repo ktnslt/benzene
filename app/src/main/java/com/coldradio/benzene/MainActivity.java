@@ -1,6 +1,7 @@
 package com.coldradio.benzene;
 
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -26,14 +27,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,7 +50,14 @@ public class MainActivity extends AppCompatActivity
         if(canvas_layout != null) {
             CanvasView canvasView = new CanvasView(this);
             canvas_layout.addView(canvasView);
+            // attach the navibar listener
+            BottomNavigationView navigation = findViewById(R.id.bottom_navibar);
+
+            if (navigation != null) {
+                navigation.setOnNavigationItemSelectedListener(canvasView);
+            }
         }
+
         // initialize AutoCompleteTextView
 //        final String[] predefined_compounds = {
 //                "Propane", "ConjuatedCyclicCompound", "Toluene"
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle bottom_navibar_menu view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.my_compounds) {
