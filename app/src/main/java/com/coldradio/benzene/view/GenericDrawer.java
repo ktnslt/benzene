@@ -9,51 +9,37 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.TreeTraveler;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
-    private void drawBond(Atom a1, Bond bond, Canvas canvas, Paint paint) {
-        Atom a2 = bond.getBoundAtom();
-        PointF p1 = a1.getPoint(), p2 = a2.getPoint();
-
-        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-        switch (bond.getBondType()) {
-            case DOUBLE:
-                DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
-                break;
-            case TRIPLE:
-                PointF center = centerForDoubleBond(a1, a2);
-
-                DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
-                DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
-                break;
-        }
-    }
-
-    private void drawRecursive(Atom atom, HashSet<String> visitedEdge, Canvas canvas, Paint paint) {
-        for (Bond bond : atom.getBonds()) {
-            /*  TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
-                I have tried to use hashCode of the atom as a key, but it doesn't work.
-            */
-            if (!visitedEdge.contains(atom.getPoint().toString() + bond.getBoundAtom().getPoint())
-                    && !visitedEdge.contains(bond.getBoundAtom().getPoint().toString() + atom.getPoint())) {
-                // the edge is not visited
-                drawBond(atom, bond, canvas, paint);
-                visitedEdge.add(atom.getPoint().toString() + bond.getBoundAtom().getPoint());
-                drawRecursive(bond.getBoundAtom(), visitedEdge, canvas, paint);
-            }
-        }
-    }
-
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
-        List<Atom> atoms = compound.getAtoms();
-        HashSet<String> visitedEdge = new HashSet<>();
+        TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+            @Override
+            public boolean visit(Atom a1, Atom a2, Object... args) {
+                Canvas canvas = (Canvas)args[0];
+                Paint paint = (Paint)args[1];
+                PointF p1 = a1.getPoint(), p2 = a2.getPoint();
 
-        drawRecursive(atoms.get(0), visitedEdge, canvas, paint);
+                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                switch (a1.getBondType(a2)) {
+                    case DOUBLE:
+                        DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
+                        break;
+                    case TRIPLE:
+                        PointF center = centerForDoubleBond(a1, a2);
+
+                        DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
+                        DrawingLibrary.drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
+                        break;
+                }
+                return false;
+            }
+        }, compound, canvas, paint);
 
         return true;
     }
