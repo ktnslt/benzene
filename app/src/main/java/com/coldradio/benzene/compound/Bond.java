@@ -5,8 +5,9 @@ public class Bond {
         NONE, SINGLE, DOUBLE, TRIPLE
     }
 
-    Atom mAtom;
-    BondType mBondType;
+    private Atom mAtom;
+    private BondType mBondType;
+    private boolean mNextDoubleBond = false;
 
     public Bond(Atom bondTo, BondType bondType) {
         mAtom = bondTo;
@@ -39,5 +40,26 @@ public class Bond {
 
     public boolean isCarbonBond() {
         return mAtom instanceof Carbon;
+    }
+
+    public void cycleBond() {
+        switch (mBondType) {
+            case SINGLE:
+                mBondType = BondType.DOUBLE;
+                break;
+            case DOUBLE:
+                if(mNextDoubleBond) {
+                    mBondType = BondType.TRIPLE;
+                }
+                mNextDoubleBond= !mNextDoubleBond;
+                break;
+            case TRIPLE:
+                mBondType = BondType.SINGLE;
+                break;
+        }
+    }
+
+    public boolean isNextDoubleBond() {
+        return mNextDoubleBond;
     }
 }

@@ -38,9 +38,12 @@ public class TreeTraveler {
     }
 
     public static Atom[] returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
-        List<Atom> atoms = compound.getAtoms();
-        HashSet<String> visitedEdge = new HashSet<>();
+        if(compound.size() >= 2) {
+            HashSet<String> visitedEdge = new HashSet<>();
 
-        return doRecursive(atoms.get(0), edgeVisitor, visitedEdge, args);
+            return doRecursive(compound.getAtoms().get(0), edgeVisitor, visitedEdge, args);
+        } else {
+            return null;
+        }
     }
 }

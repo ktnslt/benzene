@@ -81,37 +81,25 @@ public class Compound {
     }
 
     public Compound decomposition(float x, float y) {
-        int leftSelectedIndex = Geometry.leftSelectedIndex(x, y, this);
+        Atom[] edge = Geometry.selectedEdge(x, y, this);
 
-        if (leftSelectedIndex >= 0) {
-            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
-
-            mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
-            mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
-
-            return cutCompound;
+        if (edge != null) {
+//            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
+//
+//            mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
+//            mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
+            return null;//cutCompound;
         } else {
             return null;
         }
     }
 
     public boolean cycleBondType(float x, float y) {
-        int leftSelectedIndex = Geometry.leftSelectedIndex(x, y, this);
+        Atom[] edge = Geometry.selectedEdge(x, y, this);
 
-        if (leftSelectedIndex >= 0) {
-            Atom leftAtom = mAtoms.get(leftSelectedIndex), rightAtom = mAtoms.get((leftSelectedIndex + 1) % mAtoms.size());
-            Bond.BondType bondType = leftAtom.getBondType(rightAtom);
-            switch (bondType) {
-                case SINGLE:
-                    leftAtom.doubleBond(rightAtom);
-                    break;
-                case DOUBLE:
-                    leftAtom.tripleBond(rightAtom);
-                    break;
-                case TRIPLE:
-                    leftAtom.singleBond(rightAtom);
-                    break;
-            }
+        if (edge != null) {
+            edge[0].cycleBond(edge[1]);
+            edge[1].cycleBond(edge[0]);
             return true;
         }
         return false;

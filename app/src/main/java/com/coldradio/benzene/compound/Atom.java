@@ -102,4 +102,22 @@ public class Atom {
         }
         return boundCarbons;
     }
+
+    public void cycleBond(Atom atom) {
+        Bond bond = findBond(atom);
+
+        if (bond != null) {
+            bond.cycleBond();
+        }
+    }
+
+    public boolean isNextDoubleBond(Atom atom) {
+        Bond bond = findBond(atom);
+
+        if (bond != null) {
+            return bond.isNextDoubleBond();
+        } else {
+            return false;
+        }
+    }
 }

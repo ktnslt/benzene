@@ -1,9 +1,11 @@
 package com.coldradio.benzene.geometry;
 
+import android.graphics.Point;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 import java.util.List;
@@ -64,7 +66,7 @@ public class Geometry {
     }
 
     public static boolean isSelected(float x, float y, Compound compound) {
-        return leftSelectedIndex(x, y, compound) >= 0;
+        return selectedEdge(x, y, compound) != null;
     }
 
     public static PointF zoomOut(float x, float y, PointF center, float ratio) {
@@ -73,23 +75,22 @@ public class Geometry {
         return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);
     }
 
-    public static int leftSelectedIndex(float x, float y, Compound compound) {
-        PointF touchedPoint = new PointF(x, y);
-        List<Atom> atoms = compound.getAtoms();
+    public static Atom[] selectedEdge(float x, float y, Compound compound) {
+        return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+            @Override
+            public boolean visit(Atom a1, Atom a2, Object... args) {
+                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF)args[0];
+                float lineLength = distanceFromPointToPoint(p1, p2);
 
-        for (int ii = 0; ii < atoms.size(); ++ii) {
-            if (ii < atoms.size() - 1 || (ii == atoms.size() - 1 && compound.isCyclo())) {
-                PointF p1 = atoms.get(ii).getPoint(), p2 = atoms.get((ii + 1) % atoms.size()).getPoint();
-                float distanceToLine = distanceFromPointToLine(touchedPoint, p1, p2);
-
-                if (distanceToLine < Configuration.SELECT_RANGE
-                        && distanceFromPointToPoint(touchedPoint, p1) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)
-                        && distanceFromPointToPoint(touchedPoint, p2) < (Configuration.LINE_LENGTH + Configuration.SELECT_RANGE)) {
-                    return ii;
+                if (distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
+                        && distanceFromPointToPoint(touchedPoint, p1) < (lineLength + Configuration.SELECT_RANGE)
+                        && distanceFromPointToPoint(touchedPoint, p2) < (lineLength + Configuration.SELECT_RANGE)) {
+                    return true;
+                } else {
+                    return false;
                 }
             }
-        }
-        return -1;
+        }, compound, new PointF(x, y));
     }
 
     public static boolean sameSideOfLine(PointF p1, PointF p2, PointF l1, PointF l2) {

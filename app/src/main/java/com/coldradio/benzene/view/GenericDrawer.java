@@ -56,16 +56,22 @@ public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
             return new PointF((a1p.x + a2p.x + before_a1p.x) / 3, (a1p.y + a2p.y + before_a1p.y) / 3);
         } else {
             PointF[] centers = Geometry.regularTrianglePoint(a1p, a2p);
+            int centerIndex = 0;
             int carbonBound_a1 = a1.carbonBoundNumber(), carbonBound_a2 = a2.carbonBoundNumber();
 
             // carbonBound == 1 is the primary carbon and the chain ends. == 2 means it has one additional branch, and before_a1 != null
             if (carbonBound_a1 == 2) {
-                return Geometry.sameSideOfLine(before_a1.getPoint(), centers[0], a1p, a2p) ? centers[0] : centers[1];
+                centerIndex = Geometry.sameSideOfLine(before_a1.getPoint(), centers[0], a1p, a2p) ? 0 : 1;
             } else if (carbonBound_a2 == 2) {
-                return Geometry.sameSideOfLine(after_a2.getPoint(), centers[0], a1p, a2p) ? centers[0] : centers[1];
+                centerIndex = Geometry.sameSideOfLine(after_a2.getPoint(), centers[0], a1p, a2p) ? 0 : 1;
             } else {
-                return centers[0];
+                centerIndex = 0;
             }
+
+            if (a1.isNextDoubleBond(a2)) {
+                centerIndex = (centerIndex + 1) % 2;
+            }
+            return centers[centerIndex];
         }
     }
 
