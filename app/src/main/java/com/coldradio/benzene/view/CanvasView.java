@@ -3,6 +3,7 @@ package com.coldradio.benzene.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -13,9 +14,9 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
 import com.coldradio.benzene.project.Project;
 
-public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener {
     enum Mode {
-        BROWSE, SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
+        BROWSE, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
 
     Mode mMode = Mode.BROWSE;
@@ -23,6 +24,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     public CanvasView(Context context) {
         super(context);
         setOnTouchListener(this);
+        setLongClickable(true);
+        setOnLongClickListener(this);
         // TODO: delete this line later
         Project.instance().addCompound(CompoundFactory.propane(100, 100));
 
@@ -56,8 +59,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mMode) {
                 case BROWSE:
-                    break;
-                case SELECT:
                     Project.instance().selectComponent(event.getX(), event.getY());
                     break;
                 case SYNTHESIS:
@@ -72,6 +73,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                     break;
             }
             invalidate();
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+
         }
         return true;
     }
@@ -79,11 +82,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.navibar_browse:
-//                mMode = Mode.BROWSE;
-//                return true;
-            case R.id.navibar_select:
-                mMode = Mode.SELECT;
+            case R.id.navibar_browse:
+                mMode = Mode.BROWSE;
                 return true;
             case R.id.navibar_cycle_bond:
                 mMode = Mode.CYCLE_BOND_TYPE;
@@ -97,6 +97,18 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
             case R.id.navibar_add:
                 // TODO: show library activity here
                 return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (mMode == Mode.BROWSE) {
+            int[] points = new int[2];
+
+            v.getLocationOnScreen(points);
+            Project.instance().initiateRegionSelect(points[0], points[1]);
+            return true;
         }
         return false;
     }

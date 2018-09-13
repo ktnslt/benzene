@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<item-->
-        <!--android:id="@+id/navibar_browse"-->
-        <!--android:icon="@drawable/ic_menu_browse"-->
-        <!--android:title="Browse" />-->
-
     <item
-        android:id="@+id/navibar_select"
-        android:icon="@drawable/ic_menu_select"
-        android:title="Select" />
+        android:id="@+id/navibar_browse"
+        android:icon="@drawable/ic_menu_browse"
+        android:title="Browse" />
 
     <item
         android:id="@+id/navibar_cycle_bond"

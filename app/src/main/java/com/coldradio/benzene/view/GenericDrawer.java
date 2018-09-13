@@ -3,17 +3,11 @@ package com.coldradio.benzene.view;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.util.Pair;
 
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
     @Override

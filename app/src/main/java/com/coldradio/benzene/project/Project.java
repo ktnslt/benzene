@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.view.CompoundDrawer;
+import com.coldradio.benzene.view.RegionSelector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,7 @@ public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
+    private RegionSelector mRegionSelector = new RegionSelector();
 
     public static Project instance() {
         return project;
@@ -25,6 +27,7 @@ public class Project {
             CompoundDrawer.instance().draw(compound, canvas);
         }
         CompoundDrawer.instance().drawSynthesis(mCompoundReactor, canvas);
+        mRegionSelector.draw(canvas);
     }
 
     public void addCompound(Compound compound) {
@@ -88,5 +91,9 @@ public class Project {
     public boolean synthesis(float x, float y) {
         mCompoundReactor.synthesis(x, y, Collections.unmodifiableList(mCompoundList));
         return true;
+    }
+
+    public void initiateRegionSelect(float x, float y) {
+        mRegionSelector.initiate(x, y);
     }
 }
