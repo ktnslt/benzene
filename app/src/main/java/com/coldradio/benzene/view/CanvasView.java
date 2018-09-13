@@ -15,10 +15,10 @@ import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener {
     enum Mode {
-        SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
+        BROWSE, SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
 
-    Mode mMode = Mode.SELECT;
+    Mode mMode = Mode.BROWSE;
 
     public CanvasView(Context context) {
         super(context);
@@ -55,6 +55,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mMode) {
+                case BROWSE:
+                    break;
                 case SELECT:
                     Project.instance().selectComponent(event.getX(), event.getY());
                     break;
@@ -77,6 +79,9 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+//            case R.id.navibar_browse:
+//                mMode = Mode.BROWSE;
+//                return true;
             case R.id.navibar_select:
                 mMode = Mode.SELECT;
                 return true;
