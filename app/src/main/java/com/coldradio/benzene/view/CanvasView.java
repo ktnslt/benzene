@@ -18,7 +18,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         SELECT, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
 
-    Mode mMode = Mode.SYNTHESIS;
+    Mode mMode = Mode.SELECT;
 
     public CanvasView(Context context) {
         super(context);
@@ -88,6 +88,9 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                 return true;
             case R.id.navibar_decompose:
                 mMode = Mode.DECOMPOSITION;
+                return true;
+            case R.id.navibar_add:
+                // TODO: show library activity here
                 return true;
         }
         return false;

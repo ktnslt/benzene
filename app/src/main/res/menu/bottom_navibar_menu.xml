@@ -3,18 +3,27 @@
 
     <item
         android:id="@+id/navibar_select"
-        android:icon="@drawable/ic_menu_camera" />
+        android:icon="@drawable/ic_menu_select"
+        android:title="Select" />
 
     <item
         android:id="@+id/navibar_cycle_bond"
-        android:icon="@drawable/ic_menu_gallery" />
+        android:icon="@drawable/ic_menu_bond"
+        android:title="Bond" />
 
     <item
         android:id="@+id/navibar_synthesis"
-        android:icon="@drawable/ic_menu_send" />
+        android:icon="@drawable/ic_menu_synthesis"
+        android:title="Synthesis"/>
 
     <item
         android:id="@+id/navibar_decompose"
-        android:icon="@drawable/ic_menu_send" />
+        android:icon="@drawable/ic_menu_decomposition"
+        android:title="Decomposition"/>
+
+    <item
+        android:id="@+id/navibar_add"
+        android:icon="@drawable/ic_menu_add"
+        android:title="Library"/>
 
 </menu>
