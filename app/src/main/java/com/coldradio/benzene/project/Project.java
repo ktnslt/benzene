@@ -1,6 +1,7 @@
 package com.coldradio.benzene.project;
 
 import android.graphics.Canvas;
+import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
@@ -93,7 +94,7 @@ public class Project {
         return true;
     }
 
-    public void initiateRegionSelect(float x, float y) {
-        mRegionSelector.initiate(x, y);
+    public void initiateRegionSelect(PointF point) {
+        mRegionSelector.initiate(point);
     }
 }

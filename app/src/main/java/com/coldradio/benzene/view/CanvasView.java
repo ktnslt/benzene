@@ -2,8 +2,8 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -19,7 +19,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         BROWSE, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
 
-    Mode mMode = Mode.BROWSE;
+    private Mode mMode = Mode.BROWSE;
+    private PointF mClickedPoint = new PointF();
 
     public CanvasView(Context context) {
         super(context);
@@ -56,27 +57,32 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mClickedPoint.set(event.getX(), event.getY());
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mMode) {
                 case BROWSE:
                     Project.instance().selectComponent(event.getX(), event.getY());
-                    break;
+                    invalidate();
+                    return true;
                 case SYNTHESIS:
                     Project.instance().synthesis(event.getX(), event.getY());
-                    break;
+                    invalidate();
+                    return true;
                 case DECOMPOSITION:
                     Project.instance().decomposition(event.getX(), event.getY());
                     Toast.makeText(getContext(), "Total " + Project.instance().compoundNumber() + " Compounds", Toast.LENGTH_SHORT).show();
-                    break;
+                    invalidate();
+                    return true;
                 case CYCLE_BOND_TYPE:
                     Project.instance().cycleBondType(event.getX(), event.getY());
-                    break;
+                    invalidate();
+                    return true;
             }
-            invalidate();
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -104,12 +110,12 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     @Override
     public boolean onLongClick(View v) {
         if (mMode == Mode.BROWSE) {
-            int[] points = new int[2];
+            Project.instance().initiateRegionSelect(mClickedPoint);
+            invalidate();
 
-            v.getLocationOnScreen(points);
-            Project.instance().initiateRegionSelect(points[0], points[1]);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }
