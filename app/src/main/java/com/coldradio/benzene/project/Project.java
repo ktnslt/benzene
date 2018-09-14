@@ -5,6 +5,7 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
+import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.view.CompoundDrawer;
 import com.coldradio.benzene.view.RegionSelector;
 
@@ -96,5 +97,9 @@ public class Project {
 
     public void initiateRegionSelect(PointF point) {
         mRegionSelector.initiate(point);
+    }
+
+    public PointF centerOfAllCompounds() {
+        return Geometry.centerOfAllCompounds(mCompoundList);
     }
 }

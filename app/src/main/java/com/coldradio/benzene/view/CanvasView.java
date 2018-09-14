@@ -1,10 +1,15 @@
 package com.coldradio.benzene.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
+import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,19 +19,21 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
 import com.coldradio.benzene.project.Project;
 
-public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener {
+public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     enum Mode {
         BROWSE, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
 
     private Mode mMode = Mode.BROWSE;
     private PointF mClickedPoint = new PointF();
+    private GestureDetectorCompat mGestureDetector;
 
     public CanvasView(Context context) {
         super(context);
         setOnTouchListener(this);
         setLongClickable(true);
         setOnLongClickListener(this);
+        mGestureDetector = new GestureDetectorCompat(getContext(), this);
         // TODO: delete this line later
         Project.instance().addCompound(CompoundFactory.propane(100, 100));
 
@@ -57,25 +64,28 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        float actualX = event.getX() + getScrollX(), actualY = event.getY() + getScrollY();
+
+        if(mGestureDetector.onTouchEvent(event)) {
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mClickedPoint.set(event.getX(), event.getY());
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mMode) {
                 case BROWSE:
-                    Project.instance().selectComponent(event.getX(), event.getY());
+                    Project.instance().selectComponent(actualX, actualY);
                     invalidate();
                     return true;
                 case SYNTHESIS:
-                    Project.instance().synthesis(event.getX(), event.getY());
+                    Project.instance().synthesis(actualX, actualY);
                     invalidate();
                     return true;
                 case DECOMPOSITION:
-                    Project.instance().decomposition(event.getX(), event.getY());
-                    Toast.makeText(getContext(), "Total " + Project.instance().compoundNumber() + " Compounds", Toast.LENGTH_SHORT).show();
+                    Project.instance().decomposition(actualX, actualY);
                     invalidate();
                     return true;
                 case CYCLE_BOND_TYPE:
-                    Project.instance().cycleBondType(event.getX(), event.getY());
+                    Project.instance().cycleBondType(actualX, actualY);
                     invalidate();
                     return true;
             }
@@ -109,13 +119,68 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onLongClick(View v) {
-        if (mMode == Mode.BROWSE) {
-            Project.instance().initiateRegionSelect(mClickedPoint);
-            invalidate();
+        return false;
+//        if (mMode == Mode.BROWSE) {
+//            Project.instance().initiateRegionSelect(mClickedPoint);
+//            invalidate();
+//
+//            return true;
+//        } else {
+//            return false;
+//        }
+    }
 
-            return true;
-        } else {
-            return false;
-        }
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        scrollBy((int)distanceX, (int)distanceY);
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+        Point screenSize = new Point();
+
+        ((Activity)getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
+
+        setScrollX((int)centerOfAllCompounds.x - screenSize.x / 2);
+        // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
+        setScrollY((int)centerOfAllCompounds.y - (screenSize.y / 2 - 150));
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
     }
 }

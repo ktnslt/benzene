@@ -1,6 +1,5 @@
 package com.coldradio.benzene.geometry;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
@@ -79,7 +78,7 @@ public class Geometry {
         return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF)args[0];
+                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
                 float lineLength = distanceFromPointToPoint(p1, p2);
 
                 if (distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
@@ -133,7 +132,7 @@ public class Geometry {
     }
 
     public static Atom selectAtom(float x, float y, Compound compound) {
-        for(Atom atom : compound.getAtoms()) {
+        for (Atom atom : compound.getAtoms()) {
             if (distanceFromPointToPoint(atom.getPoint(), new PointF(x, y)) < Configuration.SELECT_RANGE) {
                 return atom;
             }
@@ -143,5 +142,36 @@ public class Geometry {
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
         return new PointF[]{rotatePointByDegree(p1, p2, 60), rotatePointByDegree(p1, p2, -60)};
+    }
+
+    public static PointF centerOfCompound(Compound compound) {
+        PointF center = new PointF();
+
+        for (Atom atom : compound.getAtoms()) {
+            PointF atomPoint = atom.getPoint();
+
+            center.x += atomPoint.x;
+            center.y += atomPoint.y;
+        }
+        center.x /= compound.size();
+        center.y /= compound.size();
+
+        return center;
+    }
+
+    public static PointF centerOfAllCompounds(List<Compound> compounds) {
+        PointF centerOfAll = new PointF();
+
+        for (Compound compound : compounds) {
+            PointF center = centerOfCompound(compound);
+
+            centerOfAll.x += center.x;
+            centerOfAll.y += center.y;
+        }
+
+        centerOfAll.x /= compounds.size();
+        centerOfAll.y /= compounds.size();
+
+        return centerOfAll;
     }
 }
