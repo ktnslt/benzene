@@ -7,7 +7,9 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
+import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.project.Configuration;
+import com.coldradio.benzene.project.SelectedCompound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +17,16 @@ import java.util.List;
 public class CompoundDrawer {
     interface ICompoundDrawer {
         boolean draw(Compound compound, Canvas canvas, Paint paint);
-
         String getID();
     }
 
     private Paint mPaint;
-    private static CompoundDrawer instance = new CompoundDrawer();
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
     private GenericDrawer mGenericDrawer = new GenericDrawer();
 
-    private CompoundDrawer() {
+    public CompoundDrawer() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
-    }
-
-    public static CompoundDrawer instance() {
-        return instance;
     }
 
     public void addCompoundDrawer(ICompoundDrawer newCompoundDrawer) {
@@ -47,9 +43,9 @@ public class CompoundDrawer {
         }
     }
 
-    public void draw(Compound compound, Canvas canvas) {
+    public void draw(Compound compound, boolean selected, Canvas canvas) {
         mPaint.setStyle(Paint.Style.STROKE);
-        if (compound.isSelected()) {
+        if (selected) {
             mPaint.setColor(Color.GREEN);
         } else {
             mPaint.setColor(Color.BLACK);
@@ -73,5 +69,16 @@ public class CompoundDrawer {
             mPaint.setColor(Color.GREEN);
             canvas.drawCircle(synthesisSource.x, synthesisSource.y, 10, mPaint);
         }
+    }
+
+    public void drawSelectedCompoundAccessory(SelectedCompound mSelectedCompound, Canvas canvas) {
+        PointF pivot = mSelectedCompound.getRotationPivotPoint();
+
+        mPaint.setColor(Color.rgb(120, 0, 0));
+        mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, mPaint);
+        mPaint.setColor(Color.RED);
+        mPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE + 5, mPaint);
     }
 }

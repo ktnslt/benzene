@@ -19,14 +19,11 @@ public class Project {
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
     private RegionSelector mRegionSelector = new RegionSelector();
+    private SelectedCompound mSelectedCompound;
+    private CompoundDrawer mCompoundDrawer = new CompoundDrawer();
 
     private Compound getSelectedCompound() {
-        for (Compound compound : mCompoundList) {
-            if (compound.isSelected()) {
-                return compound;
-            }
-        }
-        return null;
+        return mSelectedCompound.getCompound();
     }
 
     public static Project instance() {
@@ -35,9 +32,17 @@ public class Project {
 
     public void drawTo(Canvas canvas) {
         for (Compound compound : mCompoundList) {
-            CompoundDrawer.instance().draw(compound, canvas);
+            boolean selected = mSelectedCompound != null && mSelectedCompound.getCompound() == compound;
+
+            mCompoundDrawer.draw(compound, selected, canvas);
         }
-        CompoundDrawer.instance().drawSynthesis(mCompoundReactor, canvas);
+        mCompoundDrawer.drawSynthesis(mCompoundReactor, canvas);
+
+        if (mSelectedCompound != null) {
+            // not drawn at the same time with the compound since the accessory shall be in front of everything
+            mCompoundDrawer.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
+        }
+
         mRegionSelector.draw(canvas);
     }
 
@@ -46,16 +51,14 @@ public class Project {
     }
 
     public boolean selectComponent(float x, float y) {
-        boolean anySelected = false;
+        mSelectedCompound = null;
 
         for (Compound compound : mCompoundList) {
-            if (anySelected == false) {
-                anySelected = compound.select(x, y);
-            } else {
-                compound.setSelected(false);
+            if (mSelectedCompound == null && Geometry.isSelected(x, y, compound)) {
+                mSelectedCompound = new SelectedCompound(compound);
             }
         }
-        return anySelected;
+        return mSelectedCompound != null;
     }
 
     public boolean removeCompound(Compound compound) {

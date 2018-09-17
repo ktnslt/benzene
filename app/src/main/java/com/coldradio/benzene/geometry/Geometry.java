@@ -23,13 +23,13 @@ public class Geometry {
                 nextPoint.set(Configuration.LINE_LENGTH, 0);
             }
 
-            atoms.get(0).setPoint(currentPoint);
-            atoms.get(1).setPoint(nextPoint);
+            atoms.get(0).setInitialPoint(currentPoint);
+            atoms.get(1).setInitialPoint(nextPoint);
 
             for (int ii = 2; ii < atoms.size(); ++ii) {
                 PointF nextNextPoint = Geometry.rotatePointByDegree(currentPoint, nextPoint, 360 - interiorAngle);
 
-                atoms.get(ii).setPoint(nextNextPoint);
+                atoms.get(ii).setInitialPoint(nextNextPoint);
                 currentPoint = nextPoint;
                 nextPoint = nextNextPoint;
             }
@@ -40,7 +40,7 @@ public class Geometry {
         PointF currentPoint = new PointF(0, 0);
 
         for (Atom atom : atoms) {
-            atom.setPoint(currentPoint);
+            atom.setInitialPoint(currentPoint);
             currentPoint = new PointF(MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
                     Configuration.LINE_LENGTH / 2.0f * (upDirection ? -1 : 1) + currentPoint.y);
             upDirection = !upDirection;

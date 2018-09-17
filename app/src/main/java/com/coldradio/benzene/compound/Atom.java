@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Atom {
     private PointF mPoint = new PointF();
+    final private PointF mInitialPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
 
     private Bond findBond(Atom atom) {
@@ -45,6 +46,11 @@ public class Atom {
     }
 
     public void setPoint(PointF point) {
+        mPoint.set(point);
+    }
+
+    public void setInitialPoint(PointF point) {
+        mInitialPoint.set(point);
         mPoint.set(point);
     }
 

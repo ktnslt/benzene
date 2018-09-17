@@ -1,5 +1,6 @@
 package com.coldradio.benzene.compound;
 
+import android.gesture.GestureLibraries;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -12,7 +13,6 @@ import java.util.List;
 
 public class Compound {
     protected List<Atom> mAtoms;
-    boolean mSelected = false;
 
     public Compound() {
         mAtoms = new ArrayList<>();
@@ -37,18 +37,6 @@ public class Compound {
         for (int ii = 0; ii < carbonNumber; ++ii) {
             mAtoms.add(new Carbon());
         }
-    }
-
-    public boolean isSelected() {
-        return mSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        mSelected = selected;
-    }
-
-    public boolean select(float x, float y) {
-        return mSelected = Geometry.isSelected(x, y, this);
     }
 
     public List<Atom> getAtoms() {
@@ -108,5 +96,13 @@ public class Compound {
     public void merge(Compound compound) {
         mAtoms.addAll(compound.getAtoms());
         Project.instance().removeCompound(compound);
+    }
+
+    public void rotate(float degree) {
+        PointF center = Geometry.centerOfCompound(this);
+
+        for (Atom atom : mAtoms) {
+            atom.setPoint(Geometry.rotatePointByDegree(atom.getPoint(), center, degree));
+        }
     }
 }
