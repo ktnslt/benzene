@@ -28,7 +28,7 @@ public class Compound {
 
     public void offset(float x, float y) {
         for (Atom atom : mAtoms) {
-            atom.getPoint().offset(x, y);
+            atom.offset(x, y);
         }
     }
 

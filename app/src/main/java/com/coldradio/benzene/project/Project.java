@@ -20,6 +20,15 @@ public class Project {
     private CompoundReactor mCompoundReactor = new CompoundReactor();
     private RegionSelector mRegionSelector = new RegionSelector();
 
+    private Compound getSelectedCompound() {
+        for (Compound compound : mCompoundList) {
+            if (compound.isSelected()) {
+                return compound;
+            }
+        }
+        return null;
+    }
+
     public static Project instance() {
         return project;
     }
@@ -101,5 +110,19 @@ public class Project {
 
     public PointF centerOfAllCompounds() {
         return Geometry.centerOfAllCompounds(mCompoundList);
+    }
+
+    public boolean moveSelectedComponentBy(float distanceX, float distanceY) {
+        Compound selectedCompound = getSelectedCompound();
+
+        if (selectedCompound != null) {
+            selectedCompound.offset(distanceX, distanceY);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasSelectedCompound() {
+        return getSelectedCompound() != null;
     }
 }

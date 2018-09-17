@@ -28,6 +28,10 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     private PointF mClickedPoint = new PointF();
     private GestureDetectorCompat mGestureDetector;
 
+    private PointF actualClickedPosition(MotionEvent e) {
+        return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
+    }
+
     public CanvasView(Context context) {
         super(context);
         setOnTouchListener(this);
@@ -64,33 +68,31 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        float actualX = event.getX() + getScrollX(), actualY = event.getY() + getScrollY();
+        PointF actualPoint  = actualClickedPosition(event);
 
         if(mGestureDetector.onTouchEvent(event)) {
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mClickedPoint.set(event.getX(), event.getY());
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            mClickedPoint.set(event.getX(), event.getY());  // TODO is this really necessary for long click?
+
             switch (mMode) {
                 case BROWSE:
-                    Project.instance().selectComponent(actualX, actualY);
+                    Project.instance().selectComponent(actualPoint.x, actualPoint.y);
                     invalidate();
                     return true;
                 case SYNTHESIS:
-                    Project.instance().synthesis(actualX, actualY);
+                    Project.instance().synthesis(actualPoint.x, actualPoint.y);
                     invalidate();
                     return true;
                 case DECOMPOSITION:
-                    Project.instance().decomposition(actualX, actualY);
+                    Project.instance().decomposition(actualPoint.x, actualPoint.y);
                     invalidate();
                     return true;
                 case CYCLE_BOND_TYPE:
-                    Project.instance().cycleBondType(actualX, actualY);
+                    Project.instance().cycleBondType(actualPoint.x, actualPoint.y);
                     invalidate();
                     return true;
             }
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-
         }
         return false;
     }
@@ -147,7 +149,13 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        scrollBy((int)distanceX, (int)distanceY);
+        if (Project.instance().hasSelectedCompound()) {
+            Project.instance().moveSelectedComponentBy(-distanceX, -distanceY);
+            invalidate();
+        } else {
+            scrollBy((int)distanceX, (int)distanceY);
+        }
+
         return true;
     }
 

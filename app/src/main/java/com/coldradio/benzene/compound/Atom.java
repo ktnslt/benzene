@@ -120,4 +120,8 @@ public class Atom {
             return false;
         }
     }
+
+    public void offset(float dx, float dy) {
+        mPoint.offset(dx, dy);
+    }
 }
