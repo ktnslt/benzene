@@ -1,10 +1,11 @@
 package com.coldradio.benzene.compound;
 
-import android.gesture.GestureLibraries;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.TreeTraveler;
+import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
 
 import java.util.ArrayList;
@@ -43,14 +44,29 @@ public class Compound {
         return Collections.unmodifiableList(mAtoms);
     }
 
-    public boolean isCyclo() {
+    public boolean isCyclc() {
         return mAtoms.get(0).getBondType(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
     }
 
-    public PointF center() {
+    public PointF centerOfAtoms() {
+        PointF center = new PointF();
+
+        for (Atom atom : mAtoms) {
+            PointF atomPoint = atom.getPoint();
+
+            center.x += atomPoint.x;
+            center.y += atomPoint.y;
+        }
+        center.x /= mAtoms.size();
+        center.y /= mAtoms.size();
+
+        return center;
+    }
+
+    public PointF centerOfRectangle() {
         RectF region = rectRegion();
 
-        return new PointF((region.left + region.right) / 2, (region.top + region.bottom) / 2);
+        return new PointF(region.centerX(), region.centerY());
     }
 
     public RectF rectRegion() {
@@ -69,7 +85,7 @@ public class Compound {
     }
 
     public Compound decomposition(float x, float y) {
-        Atom[] edge = Geometry.selectedEdge(x, y, this);
+        Atom[] edge = selectedEdge(x, y);
 
         if (edge != null) {
 //            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
@@ -83,7 +99,7 @@ public class Compound {
     }
 
     public boolean cycleBondType(float x, float y) {
-        Atom[] edge = Geometry.selectedEdge(x, y, this);
+        Atom[] edge = selectedEdge(x, y);
 
         if (edge != null) {
             edge[0].cycleBond(edge[1]);
@@ -99,10 +115,41 @@ public class Compound {
     }
 
     public void rotate(float degree) {
-        PointF center = Geometry.centerOfCompound(this);
+        PointF center = centerOfRectangle();
 
         for (Atom atom : mAtoms) {
             atom.setPoint(Geometry.rotatePointByDegree(atom.getPoint(), center, degree));
         }
+    }
+
+    public Atom[] selectedEdge(float x, float y) {
+        return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+            @Override
+            public boolean visit(Atom a1, Atom a2, Object... args) {
+                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
+                float lineLength = Geometry.distanceFromPointToPoint(p1, p2);
+
+                if (Geometry.distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
+                        && Geometry.distanceFromPointToPoint(touchedPoint, p1) < (lineLength + Configuration.SELECT_RANGE)
+                        && Geometry.distanceFromPointToPoint(touchedPoint, p2) < (lineLength + Configuration.SELECT_RANGE)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }, this, new PointF(x, y));
+    }
+
+    public Atom selectAtom(float x, float y) {
+        for (Atom atom : mAtoms) {
+            if (Geometry.distanceFromPointToPoint(atom.getPoint(), new PointF(x, y)) < Configuration.SELECT_RANGE) {
+                return atom;
+            }
+        }
+        return null;
+    }
+
+    public boolean isSelectable(float x, float y) {
+        return selectedEdge(x, y) != null;
     }
 }

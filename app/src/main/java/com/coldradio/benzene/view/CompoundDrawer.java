@@ -56,7 +56,7 @@ public class CompoundDrawer {
                 break;
             }
         }
-        if (drawn == false) {
+        if (! drawn) {
             mGenericDrawer.draw(compound, canvas, mPaint);
         }
     }
@@ -73,12 +73,11 @@ public class CompoundDrawer {
 
     public void drawSelectedCompoundAccessory(SelectedCompound mSelectedCompound, Canvas canvas) {
         PointF pivot = mSelectedCompound.getRotationPivotPoint();
+        PointF center = mSelectedCompound.getCompound().centerOfRectangle();
 
-        mPaint.setColor(Color.rgb(120, 0, 0));
+        mPaint.setColor(Color.rgb(0, 0, 120));
         mPaint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, mPaint);
-        mPaint.setColor(Color.RED);
-        mPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE + 5, mPaint);
+        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, mPaint);
     }
 }

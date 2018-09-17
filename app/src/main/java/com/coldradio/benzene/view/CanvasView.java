@@ -70,6 +70,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
         if(mGestureDetector.onTouchEvent(event)) {
             return true;
+        } else if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
+            return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mClickedPoint.set(event.getX(), event.getY());  // TODO is this really necessary for long click?
 
@@ -91,8 +93,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                     invalidate();
                     return true;
             }
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            Project.instance().rotateSelectedCompound(actualPoint.x, actualPoint.y);
         }
         return false;
     }
@@ -149,7 +149,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (Project.instance().hasSelectedCompound()) {
+        if (Project.instance().hasSelectedCompound() && ! Project.instance().isRotatingCompound(new PointF(e1.getX(), e1.getY()))) {
             Project.instance().moveSelectedCompoundBy(-distanceX, -distanceY);
             invalidate();
         } else {

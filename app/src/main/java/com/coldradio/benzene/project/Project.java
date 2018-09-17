@@ -2,6 +2,8 @@ package com.coldradio.benzene.project;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.RectF;
+import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
@@ -58,7 +60,7 @@ public class Project {
         mSelectedCompound = null;
 
         for (Compound compound : mCompoundList) {
-            if (mSelectedCompound == null && Geometry.isSelected(x, y, compound)) {
+            if (mSelectedCompound == null && compound.isSelectable(x, y)) {
                 mSelectedCompound = new SelectedCompound(compound);
             }
         }
@@ -116,7 +118,19 @@ public class Project {
     }
 
     public PointF centerOfAllCompounds() {
-        return Geometry.centerOfAllCompounds(mCompoundList);
+        if (compoundNumber() > 0) {
+            RectF allRegion = mCompoundList.get(0).rectRegion();
+
+            for (Compound compound : mCompoundList) {
+                RectF region = compound.rectRegion();
+
+                allRegion.union(region);
+            }
+
+            return new PointF(allRegion.centerX(), allRegion.centerY());
+        } else {
+            return new PointF(0, 0);    // TODO: return the center of the screen?
+        }
     }
 
     public boolean moveSelectedCompoundBy(float distanceX, float distanceY) {
@@ -133,10 +147,14 @@ public class Project {
         return getSelectedCompound() != null;
     }
 
-    public boolean rotateSelectedCompound(float x, float y) {
-        if (hasSelectedCompound() && mSelectedCompound.isPivotGrasped()) {
-
+    public boolean rotateSelectedCompound(PointF point, int action) {
+        if (hasSelectedCompound() && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE)) {
+            return mSelectedCompound.rotate(point);
         }
         return false;
+    }
+
+    public boolean isRotatingCompound(PointF point) {
+        return hasSelectedCompound() && mSelectedCompound.isPivotGrasped(point);
     }
 }

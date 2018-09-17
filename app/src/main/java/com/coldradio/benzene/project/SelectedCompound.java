@@ -7,26 +7,42 @@ import com.coldradio.benzene.geometry.Geometry;
 
 public class SelectedCompound {
     private Compound mCompound;
+    final private PointF mInitialRotationPivotPoint;
     private PointF mRotationPivotPoint = new PointF();
 
     public SelectedCompound(Compound compound) {
         mCompound = compound;
-        mRotationPivotPoint.set(0, -200);
+        mRotationPivotPoint.set(compound.centerOfRectangle());
+        mRotationPivotPoint.offset(0, -200);
+        mInitialRotationPivotPoint = new PointF(mRotationPivotPoint.x, mRotationPivotPoint.y);
     }
 
     public PointF getRotationPivotPoint() {
-        PointF pivot = new PointF(mRotationPivotPoint.x, mRotationPivotPoint.y);
-        PointF center = Geometry.centerOfCompound(mCompound);
+        mRotationPivotPoint.set(mCompound.centerOfRectangle());
+        mRotationPivotPoint.offset(0, -200);
 
-        pivot.offset(center.x, center.y);
-        return pivot;
+        return mRotationPivotPoint;
     }
 
     public Compound getCompound() {
         return mCompound;
     }
 
-    public boolean isPivotGrasped() {
-        return false;
+    public boolean rotate(PointF point) {
+        if (isPivotGrasped(point)) {
+            PointF center = mCompound.centerOfRectangle();
+            float rotationDegree = Geometry.degreeOfTriangle(mInitialRotationPivotPoint, point, center);
+
+            mCompound.rotate(rotationDegree);
+            mRotationPivotPoint = Geometry.rotatePointByDegree(mRotationPivotPoint, center, rotationDegree);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isPivotGrasped(PointF point) {
+        return Geometry.distanceFromPointToPoint(mRotationPivotPoint, point) < Configuration.ROTATION_PIVOT_SIZE;
     }
 }

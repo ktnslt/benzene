@@ -16,7 +16,7 @@ public class CompoundReactor {
         Atom selectedAtom = null;
 
         for (Compound compound : compounds) {
-            selectedAtom = Geometry.selectAtom(x, y, compound);
+            selectedAtom = compound.selectAtom(x, y);
             if (selectedAtom != null) {
                 selectedCompound = compound;
                 break;

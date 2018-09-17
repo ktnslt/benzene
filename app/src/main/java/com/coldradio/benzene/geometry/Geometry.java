@@ -3,13 +3,12 @@ package com.coldradio.benzene.geometry;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 import java.util.List;
 
 public class Geometry {
+    // TODO below two methods shall be moved to remove the dependency on Atom
     public static void cycloGeometry(List<Atom> atoms) {
         if (atoms.size() >= 3) {
             PointF currentPoint = new PointF(0, 0);
@@ -64,32 +63,10 @@ public class Geometry {
         return Math.abs((p2.y - p1.y) * p0.x - (p2.x - p1.x) * p0.y + p2.x * p1.y - p2.y * p1.x) / distanceFromPointToPoint(p1, p2);
     }
 
-    public static boolean isSelected(float x, float y, Compound compound) {
-        return selectedEdge(x, y, compound) != null;
-    }
-
     public static PointF zoomOut(float x, float y, PointF center, float ratio) {
         float x_dot = x - center.x, y_dot = y - center.y;
 
         return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);
-    }
-
-    public static Atom[] selectedEdge(float x, float y, Compound compound) {
-        return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
-            @Override
-            public boolean visit(Atom a1, Atom a2, Object... args) {
-                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
-                float lineLength = distanceFromPointToPoint(p1, p2);
-
-                if (distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
-                        && distanceFromPointToPoint(touchedPoint, p1) < (lineLength + Configuration.SELECT_RANGE)
-                        && distanceFromPointToPoint(touchedPoint, p2) < (lineLength + Configuration.SELECT_RANGE)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }, compound, new PointF(x, y));
     }
 
     public static boolean sameSideOfLine(PointF p1, PointF p2, PointF l1, PointF l2) {
@@ -131,47 +108,17 @@ public class Geometry {
         return (180.0f * numberOfSide - 360) / numberOfSide;
     }
 
-    public static Atom selectAtom(float x, float y, Compound compound) {
-        for (Atom atom : compound.getAtoms()) {
-            if (distanceFromPointToPoint(atom.getPoint(), new PointF(x, y)) < Configuration.SELECT_RANGE) {
-                return atom;
-            }
-        }
-        return null;
-    }
-
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
         return new PointF[]{rotatePointByDegree(p1, p2, 60), rotatePointByDegree(p1, p2, -60)};
     }
 
-    public static PointF centerOfCompound(Compound compound) {
-        PointF center = new PointF();
+    public static float degreeOfTriangle(PointF p1, PointF p2, PointF center) {
+        float a = distanceFromPointToPoint(p1, center);
+        float b = distanceFromPointToPoint(p2, center);
+        float c = distanceFromPointToPoint(p1, p2);
+        float cos_theta = (a*a + b*b - c*c) / (2*a*b);
 
-        for (Atom atom : compound.getAtoms()) {
-            PointF atomPoint = atom.getPoint();
+        return (float)Math.toDegrees(Math.acos(cos_theta));
 
-            center.x += atomPoint.x;
-            center.y += atomPoint.y;
-        }
-        center.x /= compound.size();
-        center.y /= compound.size();
-
-        return center;
-    }
-
-    public static PointF centerOfAllCompounds(List<Compound> compounds) {
-        PointF centerOfAll = new PointF();
-
-        for (Compound compound : compounds) {
-            PointF center = centerOfCompound(compound);
-
-            centerOfAll.x += center.x;
-            centerOfAll.y += center.y;
-        }
-
-        centerOfAll.x /= compounds.size();
-        centerOfAll.y /= compounds.size();
-
-        return centerOfAll;
     }
 }
