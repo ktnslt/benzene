@@ -25,4 +25,8 @@ public class SelectedCompound {
     public Compound getCompound() {
         return mCompound;
     }
+
+    public boolean isPivotGrasped() {
+        return false;
+    }
 }

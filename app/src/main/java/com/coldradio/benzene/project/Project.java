@@ -23,7 +23,11 @@ public class Project {
     private CompoundDrawer mCompoundDrawer = new CompoundDrawer();
 
     private Compound getSelectedCompound() {
-        return mSelectedCompound.getCompound();
+        if (mSelectedCompound != null) {
+            return mSelectedCompound.getCompound();
+        } else {
+            return null;
+        }
     }
 
     public static Project instance() {
@@ -115,7 +119,7 @@ public class Project {
         return Geometry.centerOfAllCompounds(mCompoundList);
     }
 
-    public boolean moveSelectedComponentBy(float distanceX, float distanceY) {
+    public boolean moveSelectedCompoundBy(float distanceX, float distanceY) {
         Compound selectedCompound = getSelectedCompound();
 
         if (selectedCompound != null) {
@@ -127,5 +131,12 @@ public class Project {
 
     public boolean hasSelectedCompound() {
         return getSelectedCompound() != null;
+    }
+
+    public boolean rotateSelectedCompound(float x, float y) {
+        if (hasSelectedCompound() && mSelectedCompound.isPivotGrasped()) {
+
+        }
+        return false;
     }
 }

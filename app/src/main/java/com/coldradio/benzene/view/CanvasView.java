@@ -8,12 +8,10 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
@@ -93,6 +91,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                     invalidate();
                     return true;
             }
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            Project.instance().rotateSelectedCompound(actualPoint.x, actualPoint.y);
         }
         return false;
     }
@@ -150,7 +150,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         if (Project.instance().hasSelectedCompound()) {
-            Project.instance().moveSelectedComponentBy(-distanceX, -distanceY);
+            Project.instance().moveSelectedCompoundBy(-distanceX, -distanceY);
             invalidate();
         } else {
             scrollBy((int)distanceX, (int)distanceY);
