@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.view.CompoundDrawer;
 import com.coldradio.benzene.view.RegionSelector;
 
@@ -147,11 +146,18 @@ public class Project {
         return getSelectedCompound() != null;
     }
 
+    private boolean mIsRotating = false;
     public boolean rotateSelectedCompound(PointF point, int action) {
-        if (hasSelectedCompound() && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE)) {
-            return mSelectedCompound.rotate(point);
+        if (action == MotionEvent.ACTION_DOWN && hasSelectedCompound() && mSelectedCompound.isPivotGrasped(point)) {
+            mIsRotating = true;
+        } else if (action == MotionEvent.ACTION_MOVE && mIsRotating && hasSelectedCompound()) {
+            mSelectedCompound.rotateToPoint(point);
+        } else if (action == MotionEvent.ACTION_UP && mIsRotating) {
+            mIsRotating = false;
+        } else {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean isRotatingCompound(PointF point) {

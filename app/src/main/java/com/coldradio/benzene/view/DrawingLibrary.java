@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
-import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.project.Configuration;
 
 public class DrawingLibrary {

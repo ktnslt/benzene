@@ -1,10 +1,10 @@
 package com.coldradio.benzene.compound;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
-import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
@@ -71,7 +71,7 @@ public class Compound {
     }
 
     public RectF rectRegion() {
-        float left = (float) 10e10, top = (float) 10e10, right = 0, bottom = 0;
+        float left = (float) 10e10, top = (float) 10e10, right = (float)-10e10, bottom = (float)-10e10;
 
         for (Atom atom : mAtoms) {
             PointF p = atom.getPoint();
@@ -115,12 +115,18 @@ public class Compound {
         Project.instance().removeCompound(compound);
     }
 
-    public void rotate(float degree) {
+    public float rotateToPoint(PointF point) {
         PointF center = centerOfRectangle();
+        PointF rotationZeroPoint = new PointF(center.x, center.y - 300);
+        float angle = 0;//Geometry.cwAngleFromPositiveXAxis(rotationZeroPoint, point, center);
+
+        Log.d("++++", "Rotation Degree " + Math.toDegrees(angle) + " " + rotationZeroPoint.toString() + " " + point.toString() + " " + center.toString());
 
         for (Atom atom : mAtoms) {
-            atom.setPoint(Geometry.rotatePointByDegree(atom.getPoint(), center, degree));
+            atom.setPoint(Geometry.rotatePoint(atom.getInitialPoint(), center, angle));
         }
+
+        return angle;
     }
 
     public Atom[] selectedEdge(PointF point) {

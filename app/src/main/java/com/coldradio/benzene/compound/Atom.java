@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Atom {
     private PointF mPoint = new PointF();
-    final private PointF mInitialPoint = new PointF();
+    private PointF mInitialPoint;
     private List<Bond> mBonds = new ArrayList<>();
 
     private Bond findBond(Atom atom) {
@@ -47,11 +47,9 @@ public class Atom {
 
     public void setPoint(PointF point) {
         mPoint.set(point);
-    }
-
-    public void setInitialPoint(PointF point) {
-        mInitialPoint.set(point);
-        mPoint.set(point);
+        if (mInitialPoint == null) {
+            mInitialPoint = new PointF(mPoint.x, mPoint.y);
+        }
     }
 
     public PointF getPoint() {
@@ -129,5 +127,13 @@ public class Atom {
 
     public void offset(float dx, float dy) {
         mPoint.offset(dx, dy);
+        if (mInitialPoint == null) {
+            mInitialPoint = new PointF(mPoint.x, mPoint.y);
+        }
+        mInitialPoint.offset(dx, dy);
+    }
+
+    public PointF getInitialPoint() {
+        return mInitialPoint;
     }
 }

@@ -5,7 +5,6 @@ import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 
 import java.util.HashSet;
-import java.util.List;
 
 public class TreeTraveler {
     public interface IEdgeVisitor {
@@ -45,5 +44,10 @@ public class TreeTraveler {
         } else {
             return null;
         }
+    }
+
+    public static class MathConstant {
+        public static final float ROOT_2 = 1.41421f;
+        public static final float ROOT_3 = 1.73205f;
     }
 }

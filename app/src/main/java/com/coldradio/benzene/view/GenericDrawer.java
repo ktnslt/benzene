@@ -6,7 +6,7 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
 
 public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {

@@ -7,7 +7,6 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.geometry.Geometry;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.SelectedCompound;
 
@@ -71,9 +70,9 @@ public class CompoundDrawer {
         }
     }
 
-    public void drawSelectedCompoundAccessory(SelectedCompound mSelectedCompound, Canvas canvas) {
-        PointF pivot = mSelectedCompound.getRotationPivotPoint();
-        PointF center = mSelectedCompound.getCompound().centerOfRectangle();
+    public void drawSelectedCompoundAccessory(SelectedCompound selectedCompound, Canvas canvas) {
+        PointF pivot = selectedCompound.getRotationPivotPoint();
+        PointF center = selectedCompound.getCompound().centerOfRectangle();
 
         mPaint.setColor(Color.rgb(0, 0, 120));
         mPaint.setStyle(Paint.Style.FILL);

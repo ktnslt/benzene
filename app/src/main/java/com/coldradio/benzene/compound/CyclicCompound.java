@@ -1,6 +1,6 @@
 package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.geometry.Geometry;
+import com.coldradio.benzene.lib.Geometry;
 
 public class CyclicCompound extends Compound {
     public CyclicCompound(int carbonNumber) {

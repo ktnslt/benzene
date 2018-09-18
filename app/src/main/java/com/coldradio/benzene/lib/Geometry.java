@@ -1,4 +1,4 @@
-package com.coldradio.benzene.geometry;
+package com.coldradio.benzene.lib;
 
 import android.graphics.PointF;
 
@@ -13,22 +13,22 @@ public class Geometry {
         if (atoms.size() >= 3) {
             PointF currentPoint = new PointF(0, 0);
             PointF nextPoint = new PointF();
-            float interiorAngle = Geometry.interiorAngleOfPolygon(atoms.size());
+            float interiorDegree = Geometry.interiorDegreeOfPolygon(atoms.size());
 
             if (atoms.size() == 6 || atoms.size() % 2 == 1) {
-                nextPoint.set(Configuration.LINE_LENGTH * (float) Math.sin(Math.toRadians(interiorAngle / 2)),
-                        Configuration.LINE_LENGTH * (float) Math.cos(Math.toRadians(interiorAngle / 2)));
+                nextPoint.set(Configuration.LINE_LENGTH * (float) Math.sin(Math.toRadians(interiorDegree / 2)),
+                        Configuration.LINE_LENGTH * (float) Math.cos(Math.toRadians(interiorDegree / 2)));
             } else { // even number of sides polygon except hexagon
                 nextPoint.set(Configuration.LINE_LENGTH, 0);
             }
 
-            atoms.get(0).setInitialPoint(currentPoint);
-            atoms.get(1).setInitialPoint(nextPoint);
+            atoms.get(0).setPoint(currentPoint);
+            atoms.get(1).setPoint(nextPoint);
 
             for (int ii = 2; ii < atoms.size(); ++ii) {
-                PointF nextNextPoint = Geometry.rotatePointByDegree(currentPoint, nextPoint, 360 - interiorAngle);
+                PointF nextNextPoint = Geometry.rotatePoint(currentPoint, nextPoint, (float)Math.toRadians(360 - interiorDegree));
 
-                atoms.get(ii).setInitialPoint(nextNextPoint);
+                atoms.get(ii).setPoint(nextNextPoint);
                 currentPoint = nextPoint;
                 nextPoint = nextNextPoint;
             }
@@ -39,17 +39,17 @@ public class Geometry {
         PointF currentPoint = new PointF(0, 0);
 
         for (Atom atom : atoms) {
-            atom.setInitialPoint(currentPoint);
-            currentPoint = new PointF(MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
+            atom.setPoint(currentPoint);
+            currentPoint = new PointF(TreeTraveler.MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
                     Configuration.LINE_LENGTH / 2.0f * (upDirection ? -1 : 1) + currentPoint.y);
             upDirection = !upDirection;
         }
     }
 
-    public static PointF rotatePointByDegree(PointF current, PointF center, float degree) {
+    public static PointF rotatePoint(PointF current, PointF center, float angle) {
         float currentToZeroX = current.x - center.x;
         float currentToZeroY = current.y - center.y;
-        float cos_theta = (float) Math.cos(Math.toRadians(degree)), sin_theta = (float) Math.sin(Math.toRadians(degree));
+        float cos_theta = (float) Math.cos(angle), sin_theta = (float) Math.sin(angle);
 
         return new PointF(currentToZeroX * cos_theta - currentToZeroY * sin_theta + center.x,
                 currentToZeroY * cos_theta + currentToZeroX * sin_theta + center.y);
@@ -104,21 +104,22 @@ public class Geometry {
         return args;
     }
 
-    public static float interiorAngleOfPolygon(int numberOfSide) {
+    public static float interiorDegreeOfPolygon(int numberOfSide) {
         return (180.0f * numberOfSide - 360) / numberOfSide;
     }
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
-        return new PointF[]{rotatePointByDegree(p1, p2, 60), rotatePointByDegree(p1, p2, -60)};
+        return new PointF[]{rotatePoint(p1, p2, (float)Math.toRadians(60)), rotatePoint(p1, p2, (float)Math.toRadians(-60))};
     }
 
-    public static float degreeOfTriangle(PointF p1, PointF p2, PointF center) {
-        float a = distanceFromPointToPoint(p1, center);
-        float b = distanceFromPointToPoint(p2, center);
-        float c = distanceFromPointToPoint(p1, p2);
-        float cos_theta = (a*a + b*b - c*c) / (2*a*b);
+    public static float cwAngleFromPositiveXAxis(PointF point) {
+        float angle = (float)Math.atan2(point.x, point.y);
 
-        return (float)Math.toDegrees(Math.acos(cos_theta));
-
+        if (angle < 0) {
+            angle = -angle;
+        } else {
+            angle += Math.PI;
+        }
+        return angle;
     }
 }

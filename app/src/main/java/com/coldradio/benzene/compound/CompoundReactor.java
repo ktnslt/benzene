@@ -3,9 +3,6 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.util.Pair;
 
-import com.coldradio.benzene.geometry.Geometry;
-import com.coldradio.benzene.project.Project;
-
 import java.util.List;
 
 public class CompoundReactor {

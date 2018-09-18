@@ -66,11 +66,13 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        PointF actualPoint  = actualClickedPosition(event);
+        PointF actualPoint = actualClickedPosition(event);
 
-        if(mGestureDetector.onTouchEvent(event)) {
+        if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
+            // this handler shall be the first not to feed the event to GestureDetector
+            invalidate();
             return true;
-        } else if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
+        } else if (mGestureDetector.onTouchEvent(event)) {
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mClickedPoint.set(event.getX(), event.getY());  // TODO is this really necessary for long click?
@@ -149,11 +151,11 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (Project.instance().hasSelectedCompound() && ! Project.instance().isRotatingCompound(new PointF(e1.getX(), e1.getY()))) {
+        if (Project.instance().hasSelectedCompound()) {
             Project.instance().moveSelectedCompoundBy(-distanceX, -distanceY);
             invalidate();
         } else {
-            scrollBy((int)distanceX, (int)distanceY);
+            scrollBy((int) distanceX, (int) distanceY);
         }
 
         return true;
@@ -179,11 +181,11 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
         Point screenSize = new Point();
 
-        ((Activity)getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-        setScrollX((int)centerOfAllCompounds.x - screenSize.x / 2);
+        setScrollX((int) centerOfAllCompounds.x - screenSize.x / 2);
         // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
-        setScrollY((int)centerOfAllCompounds.y - (screenSize.y / 2 - 150));
+        setScrollY((int) centerOfAllCompounds.y - (screenSize.y / 2 - 150));
         return true;
     }
 
