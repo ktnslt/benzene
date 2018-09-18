@@ -11,12 +11,12 @@ import java.util.List;
 public class CompoundReactor {
     private Pair<Compound, Atom> mSynthesisSource = null;
 
-    private Pair<Compound, Atom> selectSource(float x, float y, List<Compound> compounds) {
+    private Pair<Compound, Atom> selectSource(PointF point, List<Compound> compounds) {
         Compound selectedCompound = null;
         Atom selectedAtom = null;
 
         for (Compound compound : compounds) {
-            selectedAtom = compound.selectAtom(x, y);
+            selectedAtom = compound.selectAtom(point);
             if (selectedAtom != null) {
                 selectedCompound = compound;
                 break;
@@ -41,8 +41,8 @@ public class CompoundReactor {
         mSynthesisSource = null;
     }
 
-    public boolean synthesis(float x, float y, List<Compound> compounds) {
-        Pair<Compound, Atom> selectedSource = selectSource(x, y, compounds);
+    public boolean synthesis(PointF point, List<Compound> compounds) {
+        Pair<Compound, Atom> selectedSource = selectSource(point, compounds);
 
         if (mSynthesisSource == null) {
             mSynthesisSource = selectedSource;

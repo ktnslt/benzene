@@ -56,11 +56,11 @@ public class Project {
         mCompoundList.add(compound);
     }
 
-    public boolean selectComponent(float x, float y) {
+    public boolean selectComponent(PointF point) {
         mSelectedCompound = null;
 
         for (Compound compound : mCompoundList) {
-            if (mSelectedCompound == null && compound.isSelectable(x, y)) {
+            if (mSelectedCompound == null && compound.isSelectable(point)) {
                 mSelectedCompound = new SelectedCompound(compound);
             }
         }
@@ -77,10 +77,10 @@ public class Project {
         return false;
     }
 
-    public boolean decomposition(float x, float y) {
+    public boolean decomposition(PointF point) {
         // TODO: in case of a ring, it will not be broken into two compounds
         for (Compound compound : mCompoundList) {
-            Compound cutCompound = compound.decomposition(x, y);
+            Compound cutCompound = compound.decomposition(point);
 
             if (cutCompound != null) {
                 if (compound.size() == 1) {
@@ -99,17 +99,17 @@ public class Project {
         return mCompoundList.size();
     }
 
-    public boolean cycleBondType(float x, float y) {
+    public boolean cycleBondType(PointF point) {
         for (Compound compound : mCompoundList) {
-            if (compound.cycleBondType(x, y)) {
+            if (compound.cycleBondType(point)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean synthesis(float x, float y) {
-        mCompoundReactor.synthesis(x, y, Collections.unmodifiableList(mCompoundList));
+    public boolean synthesis(PointF point) {
+        mCompoundReactor.synthesis(point, Collections.unmodifiableList(mCompoundList));
         return true;
     }
 

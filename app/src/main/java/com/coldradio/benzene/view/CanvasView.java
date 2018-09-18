@@ -77,19 +77,19 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
             switch (mMode) {
                 case BROWSE:
-                    Project.instance().selectComponent(actualPoint.x, actualPoint.y);
+                    Project.instance().selectComponent(actualPoint);
                     invalidate();
                     return true;
                 case SYNTHESIS:
-                    Project.instance().synthesis(actualPoint.x, actualPoint.y);
+                    Project.instance().synthesis(actualPoint);
                     invalidate();
                     return true;
                 case DECOMPOSITION:
-                    Project.instance().decomposition(actualPoint.x, actualPoint.y);
+                    Project.instance().decomposition(actualPoint);
                     invalidate();
                     return true;
                 case CYCLE_BOND_TYPE:
-                    Project.instance().cycleBondType(actualPoint.x, actualPoint.y);
+                    Project.instance().cycleBondType(actualPoint);
                     invalidate();
                     return true;
             }

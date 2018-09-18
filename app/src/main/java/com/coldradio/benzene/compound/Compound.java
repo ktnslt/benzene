@@ -1,5 +1,6 @@
 package com.coldradio.benzene.compound;
 
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -84,8 +85,8 @@ public class Compound {
         return new RectF(left, top, right, bottom);
     }
 
-    public Compound decomposition(float x, float y) {
-        Atom[] edge = selectedEdge(x, y);
+    public Compound decomposition(PointF point) {
+        Atom[] edge = selectedEdge(point);
 
         if (edge != null) {
 //            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
@@ -98,8 +99,8 @@ public class Compound {
         }
     }
 
-    public boolean cycleBondType(float x, float y) {
-        Atom[] edge = selectedEdge(x, y);
+    public boolean cycleBondType(PointF point) {
+        Atom[] edge = selectedEdge(point);
 
         if (edge != null) {
             edge[0].cycleBond(edge[1]);
@@ -122,7 +123,7 @@ public class Compound {
         }
     }
 
-    public Atom[] selectedEdge(float x, float y) {
+    public Atom[] selectedEdge(PointF point) {
         return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
@@ -137,19 +138,19 @@ public class Compound {
                     return false;
                 }
             }
-        }, this, new PointF(x, y));
+        }, this, point);
     }
 
-    public Atom selectAtom(float x, float y) {
+    public Atom selectAtom(PointF point) {
         for (Atom atom : mAtoms) {
-            if (Geometry.distanceFromPointToPoint(atom.getPoint(), new PointF(x, y)) < Configuration.SELECT_RANGE) {
+            if (Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.SELECT_RANGE) {
                 return atom;
             }
         }
         return null;
     }
 
-    public boolean isSelectable(float x, float y) {
-        return selectedEdge(x, y) != null;
+    public boolean isSelectable(PointF point) {
+        return selectedEdge(point) != null;
     }
 }
