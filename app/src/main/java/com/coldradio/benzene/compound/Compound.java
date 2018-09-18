@@ -115,18 +115,10 @@ public class Compound {
         Project.instance().removeCompound(compound);
     }
 
-    public float rotateToPoint(PointF point) {
-        PointF center = centerOfRectangle();
-        PointF rotationZeroPoint = new PointF(center.x, center.y - 300);
-        float angle = 0;//Geometry.cwAngleFromPositiveXAxis(rotationZeroPoint, point, center);
-
-        Log.d("++++", "Rotation Degree " + Math.toDegrees(angle) + " " + rotationZeroPoint.toString() + " " + point.toString() + " " + center.toString());
-
+    public void rotate(float angle) {
         for (Atom atom : mAtoms) {
-            atom.setPoint(Geometry.rotatePoint(atom.getInitialPoint(), center, angle));
+            atom.setPoint(Geometry.rotatePoint(atom.getPoint(), centerOfRectangle(), angle));
         }
-
-        return angle;
     }
 
     public Atom[] selectedEdge(PointF point) {

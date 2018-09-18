@@ -113,13 +113,20 @@ public class Geometry {
     }
 
     public static float cwAngleFromPositiveXAxis(PointF point) {
-        float angle = (float)Math.atan2(point.x, point.y);
+        float angle = (float)Math.atan2(point.y, point.x);
 
-        if (angle < 0) {
-            angle = -angle;
-        } else {
-            angle += Math.PI;
-        }
+//        if (angle < 0) {
+//            angle = -angle;
+//        } else {
+//            angle += Math.PI;
+//        }
         return angle;
+    }
+
+    public static float cwAngle(PointF pointFrom, PointF pointTo, PointF center) {
+        PointF pointFromCentered = new PointF(pointFrom.x - center.x, pointFrom.y - center.y);
+        PointF pointToCentered = new PointF(pointTo.x - center.x, pointTo.y - center.y);
+
+        return cwAngleFromPositiveXAxis(pointToCentered) - cwAngleFromPositiveXAxis(pointFromCentered);
     }
 }
