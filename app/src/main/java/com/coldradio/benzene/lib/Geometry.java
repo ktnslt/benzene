@@ -2,50 +2,7 @@ package com.coldradio.benzene.lib;
 
 import android.graphics.PointF;
 
-import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.project.Configuration;
-
-import java.util.List;
-
 public class Geometry {
-    // TODO below two methods shall be moved to remove the dependency on Atom
-    public static void cycloGeometry(List<Atom> atoms) {
-        if (atoms.size() >= 3) {
-            PointF currentPoint = new PointF(0, 0);
-            PointF nextPoint = new PointF();
-            float interiorDegree = Geometry.interiorDegreeOfPolygon(atoms.size());
-
-            if (atoms.size() == 6 || atoms.size() % 2 == 1) {
-                nextPoint.set(Configuration.LINE_LENGTH * (float) Math.sin(Math.toRadians(interiorDegree / 2)),
-                        Configuration.LINE_LENGTH * (float) Math.cos(Math.toRadians(interiorDegree / 2)));
-            } else { // even number of sides polygon except hexagon
-                nextPoint.set(Configuration.LINE_LENGTH, 0);
-            }
-
-            atoms.get(0).setPoint(currentPoint);
-            atoms.get(1).setPoint(nextPoint);
-
-            for (int ii = 2; ii < atoms.size(); ++ii) {
-                PointF nextNextPoint = Geometry.rotatePoint(currentPoint, nextPoint, (float)Math.toRadians(360 - interiorDegree));
-
-                atoms.get(ii).setPoint(nextNextPoint);
-                currentPoint = nextPoint;
-                nextPoint = nextNextPoint;
-            }
-        }
-    }
-
-    public static void alkaneGeometry(List<Atom> atoms, boolean upDirection) {
-        PointF currentPoint = new PointF(0, 0);
-
-        for (Atom atom : atoms) {
-            atom.setPoint(currentPoint);
-            currentPoint = new PointF(TreeTraveler.MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
-                    Configuration.LINE_LENGTH / 2.0f * (upDirection ? -1 : 1) + currentPoint.y);
-            upDirection = !upDirection;
-        }
-    }
-
     public static PointF rotatePoint(PointF current, PointF center, float angle) {
         float currentToZeroX = current.x - center.x;
         float currentToZeroY = current.y - center.y;
@@ -112,21 +69,10 @@ public class Geometry {
         return new PointF[]{rotatePoint(p1, p2, (float)Math.toRadians(60)), rotatePoint(p1, p2, (float)Math.toRadians(-60))};
     }
 
-    public static float cwAngleFromPositiveXAxis(PointF point) {
-        float angle = (float)Math.atan2(point.y, point.x);
-
-//        if (angle < 0) {
-//            angle = -angle;
-//        } else {
-//            angle += Math.PI;
-//        }
-        return angle;
-    }
-
     public static float cwAngle(PointF pointFrom, PointF pointTo, PointF center) {
-        PointF pointFromCentered = new PointF(pointFrom.x - center.x, pointFrom.y - center.y);
-        PointF pointToCentered = new PointF(pointTo.x - center.x, pointTo.y - center.y);
+        float pointFromX = pointFrom.x - center.x, pointFromY = pointFrom.y - center.y;
+        float pointToX = pointTo.x - center.x, pointToY = pointTo.y - center.y;
 
-        return cwAngleFromPositiveXAxis(pointToCentered) - cwAngleFromPositiveXAxis(pointFromCentered);
+        return (float)(Math.atan2(pointToY, pointToX) - Math.atan2(pointFromY, pointFromX));
     }
 }

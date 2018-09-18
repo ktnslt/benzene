@@ -1,7 +1,5 @@
 package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.lib.Geometry;
-
 public class CyclicCompound extends Compound {
     public CyclicCompound(int carbonNumber) {
         fillCarbon(carbonNumber);
@@ -10,6 +8,6 @@ public class CyclicCompound extends Compound {
             mAtoms.get(ii).singleBond(mAtoms.get((ii+1) % carbonNumber));
         }
 
-        Geometry.cycloGeometry(mAtoms);
+        CompoundFactory.cyclicGeometry(mAtoms);
     }
 }

@@ -1,7 +1,5 @@
 package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.lib.Geometry;
-
 public class ChainCompound extends Compound{
     public ChainCompound(int carbonLength) {
         fillCarbon(carbonLength);
@@ -10,6 +8,6 @@ public class ChainCompound extends Compound{
             mAtoms.get(ii).singleBond(mAtoms.get(ii+1));
         }
 
-        Geometry.alkaneGeometry(mAtoms, true);
+        CompoundFactory.alkaneGeometry(mAtoms, true);
     }
 }

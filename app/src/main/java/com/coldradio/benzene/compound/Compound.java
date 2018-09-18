@@ -2,7 +2,6 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
@@ -15,6 +14,7 @@ import java.util.List;
 
 public class Compound {
     protected List<Atom> mAtoms;
+    private PointF mCenterOfRectangle;
 
     public Compound() {
         mAtoms = new ArrayList<>();
@@ -45,33 +45,17 @@ public class Compound {
         return Collections.unmodifiableList(mAtoms);
     }
 
-    public boolean isCyclc() {
-        return mAtoms.get(0).getBondType(mAtoms.get(mAtoms.size() - 1)) != Bond.BondType.NONE;
-    }
-
-    public PointF centerOfAtoms() {
-        PointF center = new PointF();
-
-        for (Atom atom : mAtoms) {
-            PointF atomPoint = atom.getPoint();
-
-            center.x += atomPoint.x;
-            center.y += atomPoint.y;
-        }
-        center.x /= mAtoms.size();
-        center.y /= mAtoms.size();
-
-        return center;
-    }
-
     public PointF centerOfRectangle() {
-        RectF region = rectRegion();
+        if (mCenterOfRectangle == null) {
+            RectF region = rectRegion();
 
-        return new PointF(region.centerX(), region.centerY());
+            mCenterOfRectangle = new PointF(region.centerX(), region.centerY());
+        }
+        return mCenterOfRectangle;
     }
 
     public RectF rectRegion() {
-        float left = (float) 10e10, top = (float) 10e10, right = (float)-10e10, bottom = (float)-10e10;
+        float left = (float) 10e10, top = (float) 10e10, right = (float) -10e10, bottom = (float) -10e10;
 
         for (Atom atom : mAtoms) {
             PointF p = atom.getPoint();
@@ -113,6 +97,7 @@ public class Compound {
     public void merge(Compound compound) {
         mAtoms.addAll(compound.getAtoms());
         Project.instance().removeCompound(compound);
+        mCenterOfRectangle = null;
     }
 
     public void rotate(float angle) {
