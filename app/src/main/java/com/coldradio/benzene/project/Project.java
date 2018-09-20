@@ -19,17 +19,9 @@ public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
-    private RegionSelector mRegionSelector = new RegionSelector();
+    private RegionSelector mRegionSelector;
     private SelectedCompound mSelectedCompound;
     private CompoundDrawer mCompoundDrawer = new CompoundDrawer();
-
-    private Compound getSelectedCompound() {
-        if (mSelectedCompound != null) {
-            return mSelectedCompound.getCompound();
-        } else {
-            return null;
-        }
-    }
 
     public static Project instance() {
         return project;
@@ -44,11 +36,13 @@ public class Project {
         mCompoundDrawer.drawSynthesis(mCompoundReactor, canvas);
 
         if (mSelectedCompound != null) {
-            // not drawn at the same time with the compound since the accessory shall be in front of everything
+// not drawn at the same time with the compound since the accessory shall be in front of everything
             mCompoundDrawer.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
         }
 
-        mRegionSelector.draw(canvas);
+        if (mRegionSelector != null) {
+            mRegionSelector.draw(canvas);
+        }
     }
 
     public void addCompound(Compound compound) {
@@ -77,7 +71,7 @@ public class Project {
     }
 
     public boolean decomposition(PointF point) {
-        // TODO: in case of a ring, it will not be broken into two compounds
+// TODO: in case of a ring, it will not be broken into two compounds
         for (Compound compound : mCompoundList) {
             Compound cutCompound = compound.decomposition(point);
 
@@ -112,8 +106,20 @@ public class Project {
         return true;
     }
 
-    public void initiateRegionSelect(PointF point) {
-        mRegionSelector.initiate(point);
+    public boolean regionSelect(PointF point, int touchAction) {
+        if (touchAction < 0) {
+// long pressed, initiate region selection
+            mRegionSelector = new RegionSelector(point);
+            return true;
+        } else if (mRegionSelector != null) {
+            return mRegionSelector.onTouchEvent(point, touchAction);
+        }
+
+        return false;
+    }
+
+    public boolean isSelectingRegion() {
+        return mRegionSelector != null;
     }
 
     public PointF centerOfAllCompounds() {
@@ -128,25 +134,24 @@ public class Project {
 
             return new PointF(allRegion.centerX(), allRegion.centerY());
         } else {
-            return new PointF(0, 0);    // TODO: return the center of the screen?
+            return new PointF(0, 0); // TODO: return the center of the screen?
         }
     }
 
-    public boolean moveSelectedCompoundBy(float distanceX, float distanceY) {
-        Compound selectedCompound = getSelectedCompound();
-
-        if (selectedCompound != null) {
-            selectedCompound.offset(distanceX, distanceY);
+    public boolean moveSelectedCompoundBy(PointF distance) {
+        if (mSelectedCompound != null) {
+            mSelectedCompound.offset(distance);
             return true;
         }
         return false;
     }
 
     public boolean hasSelectedCompound() {
-        return getSelectedCompound() != null;
+        return mSelectedCompound != null;
     }
 
-    private boolean mIsRotating = false;
+    private boolean mIsRotating = false; // TODO needs to be moved inside mSelectedCompound
+
     public boolean rotateSelectedCompound(PointF point, int action) {
         if (action == MotionEvent.ACTION_DOWN && hasSelectedCompound() && mSelectedCompound.isPivotGrasped(point)) {
             mIsRotating = true;
@@ -158,9 +163,5 @@ public class Project {
             return false;
         }
         return true;
-    }
-
-    public boolean isRotatingCompound(PointF point) {
-        return hasSelectedCompound() && mSelectedCompound.isPivotGrasped(point);
     }
 }

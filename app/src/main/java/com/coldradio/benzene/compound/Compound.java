@@ -32,6 +32,7 @@ public class Compound {
         for (Atom atom : mAtoms) {
             atom.offset(x, y);
         }
+        mCenterOfRectangle = null;
     }
 
     public void fillCarbon(int carbonNumber) {
@@ -73,10 +74,10 @@ public class Compound {
         Atom[] edge = selectedEdge(point);
 
         if (edge != null) {
-//            Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
+// Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
 //
-//            mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
-//            mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
+// mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
+// mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
             return null;//cutCompound;
         } else {
             return null;

@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,7 +18,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
 import com.coldradio.benzene.project.Project;
 
-public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     enum Mode {
         BROWSE, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
     }
@@ -33,8 +34,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     public CanvasView(Context context) {
         super(context);
         setOnTouchListener(this);
-        setLongClickable(true);
-        setOnLongClickListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         // TODO: delete this line later
         Project.instance().addCompound(CompoundFactory.propane(100, 100));
@@ -68,14 +67,17 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     public boolean onTouch(View v, MotionEvent event) {
         PointF actualPoint = actualClickedPosition(event);
 
-        if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
+        if (Project.instance().regionSelect(actualPoint, event.getAction())) {
+            invalidate();
+            return true;
+        } else if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
             return true;
         } else if (mGestureDetector.onTouchEvent(event)) {
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mClickedPoint.set(event.getX(), event.getY());  // TODO is this really necessary for long click?
+            mClickedPoint.set(event.getX(), event.getY()); // TODO is this really necessary for long click?
 
             switch (mMode) {
                 case BROWSE:
@@ -122,19 +124,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     }
 
     @Override
-    public boolean onLongClick(View v) {
-        return false;
-//        if (mMode == Mode.BROWSE) {
-//            Project.instance().initiateRegionSelect(mClickedPoint);
-//            invalidate();
-//
-//            return true;
-//        } else {
-//            return false;
-//        }
-    }
-
-    @Override
     public boolean onDown(MotionEvent e) {
         return false;
     }
@@ -151,8 +140,10 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (Project.instance().hasSelectedCompound()) {
-            Project.instance().moveSelectedCompoundBy(-distanceX, -distanceY);
+        if (Project.instance().isSelectingRegion()) {
+            return false;
+        } else if (Project.instance().hasSelectedCompound()) {
+            Project.instance().moveSelectedCompoundBy(new PointF(-distanceX, -distanceY));
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);
@@ -163,7 +154,10 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public void onLongPress(MotionEvent e) {
-
+        if (mMode == Mode.BROWSE) {
+            Project.instance().regionSelect(mClickedPoint, -1);
+            invalidate();
+        }
     }
 
     @Override
