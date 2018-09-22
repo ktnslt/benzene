@@ -8,8 +8,9 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
+import com.coldradio.benzene.project.IRegionSelector;
 
-public class GenericDrawer implements CompoundDrawer.ICompoundDrawer {
+public class GenericDrawer implements ICompoundDrawer {
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {

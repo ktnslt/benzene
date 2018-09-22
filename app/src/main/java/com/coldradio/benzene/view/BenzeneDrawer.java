@@ -12,7 +12,7 @@ import com.coldradio.benzene.project.Configuration;
 
 import java.util.List;
 
-//public class BenzeneDrawer implements CompoundDrawer.IComponentDrawer {
+//public class BenzeneDrawer implements DrawerManager.IComponentDrawer {
 //    @Override
 //    public boolean draw(Compound compound, Canvas canvas, Paint paint) {
 //        if (compound instanceof ConjuatedCyclicCompound) {

@@ -13,17 +13,12 @@ import com.coldradio.benzene.project.SelectedCompound;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompoundDrawer {
-    interface ICompoundDrawer {
-        boolean draw(Compound compound, Canvas canvas, Paint paint);
-        String getID();
-    }
-
+public class DrawerManager {
     private Paint mPaint;
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
     private GenericDrawer mGenericDrawer = new GenericDrawer();
 
-    public CompoundDrawer() {
+    public DrawerManager() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
     }

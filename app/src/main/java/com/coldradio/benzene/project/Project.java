@@ -7,7 +7,8 @@ import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.view.CompoundDrawer;
+import com.coldradio.benzene.view.DrawerManager;
+import com.coldradio.benzene.view.SelectedRegionDrawer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,23 +21,27 @@ public class Project {
     private CompoundReactor mCompoundReactor = new CompoundReactor();
     private IRegionSelector mRegionSelector;
     private SelectedCompound mSelectedCompound;
-    private CompoundDrawer mCompoundDrawer = new CompoundDrawer();
+    private DrawerManager mDrawerManager = new DrawerManager();
 
     public static Project instance() {
         return project;
+    }
+
+    public Project() {
+        mDrawerManager.addCompoundDrawer(new SelectedRegionDrawer());
     }
 
     public void drawTo(Canvas canvas) {
         for (Compound compound : mCompoundList) {
             boolean selected = mSelectedCompound != null && mSelectedCompound.getCompound() == compound;
 
-            mCompoundDrawer.draw(compound, selected, canvas);
+            mDrawerManager.draw(compound, selected, canvas);
         }
-        mCompoundDrawer.drawSynthesis(mCompoundReactor, canvas);
+        mDrawerManager.drawSynthesis(mCompoundReactor, canvas);
 
         if (mSelectedCompound != null) {
             // not drawn at the same time with the compound since the accessory shall be in front of everything
-            mCompoundDrawer.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
+            mDrawerManager.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
         }
 
         if (mRegionSelector != null) {
@@ -162,5 +167,9 @@ public class Project {
             return false;
         }
         return true;
+    }
+
+    public IRegionSelector getRegionSelector() {
+        return mRegionSelector;
     }
 }
