@@ -1,4 +1,4 @@
-package com.coldradio.benzene.view;
+package com.coldradio.benzene.project;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,9 +7,8 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.project.Configuration;
 
-public class RegionSelector {
+public class RectSelector implements IRegionSelector {
     enum MarkerIndex {
         LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
@@ -27,7 +26,7 @@ public class RegionSelector {
         }
     }
 
-    public RegionSelector(PointF point) {
+    public RectSelector(PointF point) {
         mPaint.setColor(Color.argb(80, 0, 100, 255));
         mPaint.setStyle(Paint.Style.FILL);
 
@@ -41,12 +40,14 @@ public class RegionSelector {
         mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].set(point.x + Configuration.INITIAL_REGION_SIZE, point.y + Configuration.INITIAL_REGION_SIZE);
     }
 
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawRect(mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x, mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y,
                 mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x, mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y, mPaint);
         drawVertexMarker(canvas);
     }
 
+    @Override
     public boolean onTouchEvent(PointF point, int touchAction) {
         if (touchAction == MotionEvent.ACTION_DOWN) {
             for (int ii = 0; ii < mMarkers.length; ++ii) {

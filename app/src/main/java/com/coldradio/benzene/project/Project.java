@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.view.CompoundDrawer;
-import com.coldradio.benzene.view.RegionSelector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +18,7 @@ public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
-    private RegionSelector mRegionSelector;
+    private IRegionSelector mRegionSelector;
     private SelectedCompound mSelectedCompound;
     private CompoundDrawer mCompoundDrawer = new CompoundDrawer();
 
@@ -36,7 +35,7 @@ public class Project {
         mCompoundDrawer.drawSynthesis(mCompoundReactor, canvas);
 
         if (mSelectedCompound != null) {
-// not drawn at the same time with the compound since the accessory shall be in front of everything
+            // not drawn at the same time with the compound since the accessory shall be in front of everything
             mCompoundDrawer.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
         }
 
@@ -109,7 +108,7 @@ public class Project {
     public boolean regionSelect(PointF point, int touchAction) {
         if (touchAction < 0) {
 // long pressed, initiate region selection
-            mRegionSelector = new RegionSelector(point);
+            mRegionSelector = new RectSelector(point);
             return true;
         } else if (mRegionSelector != null) {
             return mRegionSelector.onTouchEvent(point, touchAction);
