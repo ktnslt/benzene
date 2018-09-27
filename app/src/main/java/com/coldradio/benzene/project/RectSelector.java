@@ -76,8 +76,8 @@ public class RectSelector implements IRegionSelector {
         } else if (touchAction == MotionEvent.ACTION_UP) {
             mSelectedMarkerIndex = MarkerIndex.NONE_TOUCHED_DOWN;
         } else if (touchAction == MotionEvent.ACTION_MOVE && mSelectedMarkerIndex == MarkerIndex.WHOLE_RECT) {
-            for (int ii = 0; ii < mMarkers.length; ++ii) {
-                mMarkers[ii].offset(point.x - mPrevPoint.x, point.y - mPrevPoint.y);
+            for (PointF marker : mMarkers) {
+                marker.offset(point.x - mPrevPoint.x, point.y - mPrevPoint.y);
             }
             mPrevPoint.set(point);
         } else if (touchAction == MotionEvent.ACTION_MOVE && mSelectedMarkerIndex != MarkerIndex.NONE_TOUCHED_DOWN) {
