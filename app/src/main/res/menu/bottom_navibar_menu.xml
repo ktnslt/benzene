@@ -7,6 +7,11 @@
         android:title="Browse" />
 
     <item
+        android:id="@+id/navibar_atom"
+        android:icon="@drawable/ic_menu_atom"
+        android:title="Atom" />
+
+    <item
         android:id="@+id/navibar_cycle_bond"
         android:icon="@drawable/ic_menu_bond"
         android:title="Bond" />
@@ -20,10 +25,4 @@
         android:id="@+id/navibar_decompose"
         android:icon="@drawable/ic_menu_decomposition"
         android:title="Decomposition"/>
-
-    <item
-        android:id="@+id/navibar_add"
-        android:icon="@drawable/ic_menu_add"
-        android:title="Library"/>
-
 </menu>

@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.view.View;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
+import com.coldradio.benzene.project.ContextMenuManager;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -26,6 +28,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     private Mode mMode = Mode.BROWSE;
     private PointF mClickedPoint = new PointF();
     private GestureDetectorCompat mGestureDetector;
+    private ContextMenuManager mContextMenuManager;
 
     private PointF actualClickedPosition(MotionEvent e) {
         return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -77,12 +80,14 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         } else if (mGestureDetector.onTouchEvent(event)) {
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mClickedPoint.set(event.getX(), event.getY()); // TODO is this really necessary for long click?
+            // for long click, the clicked position is saved
+            mClickedPoint.set(event.getX(), event.getY());
 
             switch (mMode) {
                 case BROWSE:
                     Project.instance().selectComponent(actualPoint);
                     invalidate();
+                    mContextMenuManager.update();
                     return true;
                 case SYNTHESIS:
                     Project.instance().synthesis(actualPoint);
@@ -107,6 +112,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
             case R.id.navibar_browse:
                 mMode = Mode.BROWSE;
                 return true;
+            case R.id.navibar_atom:
+                return true;
             case R.id.navibar_cycle_bond:
                 mMode = Mode.CYCLE_BOND_TYPE;
                 return true;
@@ -115,9 +122,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                 return true;
             case R.id.navibar_decompose:
                 mMode = Mode.DECOMPOSITION;
-                return true;
-            case R.id.navibar_add:
-                // TODO: show library activity here
                 return true;
         }
         return false;
