@@ -39,6 +39,8 @@ public class CompoundReactor {
     }
 
     public boolean synthesis(PointF point, List<Compound> compounds) {
+        // TODO: when trying to synthesize two neighboring atoms that already have a bond, it is the case that changes the bond type (single -> double)
+        // so. 1. block this case, or 2. redirect this case to "BOND"
         Pair<Compound, Atom> selectedSource = selectSource(point, compounds);
 
         if (mSynthesisSource == null) {

@@ -7,7 +7,12 @@
         android:title="Browse" />
 
     <item
-        android:id="@+id/navibar_atom"
+        android:id="@+id/navibar_function"
+        android:icon="@drawable/ic_menu_function"
+        android:title="Func Grp" />
+
+    <item
+        android:id="@+id/navibar_change_atom"
         android:icon="@drawable/ic_menu_atom"
         android:title="Atom" />
 
@@ -17,12 +22,7 @@
         android:title="Bond" />
 
     <item
-        android:id="@+id/navibar_synthesis"
+        android:id="@+id/navibar_synthesis_decomposition"
         android:icon="@drawable/ic_menu_synthesis"
         android:title="Synthesis"/>
-
-    <item
-        android:id="@+id/navibar_decompose"
-        android:icon="@drawable/ic_menu_decomposition"
-        android:title="Decomposition"/>
 </menu>

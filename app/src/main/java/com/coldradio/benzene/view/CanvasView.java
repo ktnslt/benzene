@@ -22,7 +22,7 @@ import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     enum Mode {
-        BROWSE, SYNTHESIS, DECOMPOSITION, CYCLE_BOND_TYPE
+        BROWSE, ATTACH_FUNC_GROUP, CHANGE_ATOM, CYCLE_BOND_TYPE, SYNTHESIS, DECOMPOSITION
     }
 
     private Mode mMode = Mode.BROWSE;
@@ -87,7 +87,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                 case BROWSE:
                     Project.instance().selectComponent(actualPoint);
                     invalidate();
-                    mContextMenuManager.update();
+                    //mContextMenuManager.update();
                     return true;
                 case SYNTHESIS:
                     Project.instance().synthesis(actualPoint);
@@ -112,16 +112,25 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
             case R.id.navibar_browse:
                 mMode = Mode.BROWSE;
                 return true;
-            case R.id.navibar_atom:
+            case R.id.navibar_function:
+                mMode = Mode.ATTACH_FUNC_GROUP;
+                return true;
+            case R.id.navibar_change_atom:
+                mMode = Mode.CHANGE_ATOM;
                 return true;
             case R.id.navibar_cycle_bond:
                 mMode = Mode.CYCLE_BOND_TYPE;
                 return true;
-            case R.id.navibar_synthesis:
-                mMode = Mode.SYNTHESIS;
-                return true;
-            case R.id.navibar_decompose:
-                mMode = Mode.DECOMPOSITION;
+            case R.id.navibar_synthesis_decomposition:
+                if (mMode == Mode.SYNTHESIS) {
+                    mMode = Mode.DECOMPOSITION;
+                    item.setIcon(R.drawable.ic_menu_decomposition);
+                    item.setTitle("Decomposition");
+                } else {
+                    mMode = Mode.SYNTHESIS;
+                    item.setIcon(R.drawable.ic_menu_synthesis);
+                    item.setTitle("Synthesis");
+                }
                 return true;
         }
         return false;
