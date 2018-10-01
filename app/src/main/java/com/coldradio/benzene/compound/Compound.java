@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.coldradio.benzene.lib.AtomicNumber;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -24,6 +25,23 @@ public class Compound {
         mAtoms = atoms;
     }
 
+    public Compound(int[] aids, AtomicNumber[] atomicNumber) {
+        mAtoms = new ArrayList<>();
+
+        for (int ii = 0; ii < aids.length; ++ii) {
+            if (atomicNumber[ii] != AtomicNumber.H) {
+                mAtoms.add(new Atom(aids[ii], atomicNumber[ii]));
+            }
+        }
+    }
+
+    public Atom getAtom(int aid) {
+        for (Atom atom : mAtoms) {
+            if (atom.getAID() == aid) return atom;
+        }
+        return null;
+    }
+
     public int size() {
         return mAtoms.size();
     }
@@ -38,7 +56,7 @@ public class Compound {
     public void fillCarbon(int carbonNumber) {
         mAtoms.clear();
         for (int ii = 0; ii < carbonNumber; ++ii) {
-            mAtoms.add(new Carbon());
+            mAtoms.add(new Atom(ii+1, AtomicNumber.C));
         }
     }
 
@@ -136,5 +154,13 @@ public class Compound {
 
     public boolean isSelectable(PointF point) {
         return selectedEdge(point) != null;
+    }
+
+    public void makeBond(int aid1, int aid2, Bond.BondType bondType) {
+        Atom a1 = getAtom(aid1), a2 = getAtom(aid2);
+
+        if (a1 != null & a2 != null) {
+            a1.setBond(a2, bondType);
+        }
     }
 }

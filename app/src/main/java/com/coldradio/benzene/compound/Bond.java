@@ -1,5 +1,7 @@
 package com.coldradio.benzene.compound;
 
+import com.coldradio.benzene.lib.AtomicNumber;
+
 public class Bond {
     public enum BondType {
         NONE, SINGLE, DOUBLE, TRIPLE
@@ -39,7 +41,7 @@ public class Bond {
     }
 
     public boolean isCarbonBond() {
-        return mAtom instanceof Carbon;
+        return mAtom.getAtomicNumber() == AtomicNumber.C;
     }
 
     public void cycleBond() {

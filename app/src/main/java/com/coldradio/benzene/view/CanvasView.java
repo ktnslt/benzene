@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
+import com.coldradio.benzene.lib.CompoundLibrary;
 import com.coldradio.benzene.project.ContextMenuManager;
 import com.coldradio.benzene.project.Project;
 
@@ -39,25 +40,27 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         // TODO: delete this line later
-        Project.instance().addCompound(CompoundFactory.propane(100, 100));
-
-        Project.instance().addCompound(CompoundFactory.butane(500, 100));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(3, 100, 300));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(4, 400, 300));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(5, 700, 300));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(6, 100, 600));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(7, 400, 600));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(8, 700, 600));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(9, 300, 900));
-
-        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(10, 700, 900));
+        CompoundLibrary.instance().parseLibrary(this.getResources());
+        Project.instance().addCompound(CompoundLibrary.instance().getCompound(241));
+//        Project.instance().addCompound(CompoundFactory.propane(100, 100));
+//
+//        Project.instance().addCompound(CompoundFactory.butane(500, 100));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(3, 100, 300));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(4, 400, 300));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(5, 700, 300));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(6, 100, 600));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(7, 400, 600));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(8, 700, 600));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(9, 300, 900));
+//
+//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(10, 700, 900));
     }
 
     @Override

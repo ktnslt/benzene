@@ -2,6 +2,8 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
+import com.coldradio.benzene.lib.AtomicNumber;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,6 +12,8 @@ import java.util.List;
 public class Atom {
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
+    private int mAID;   // AID is only valid in CompoundLibrary during initial setup. When merging two compounds into one, the uniqueness will be broken
+    private AtomicNumber mAtomicNumber;
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -20,7 +24,20 @@ public class Atom {
         return null;
     }
 
-    private void setBond(Atom atom, Bond.BondType bondType) {
+    public Atom(int aid, AtomicNumber atomicNumber) {
+        mAID = aid;
+        mAtomicNumber = atomicNumber;
+    }
+
+    public int getAID() {
+        return mAID;
+    }
+
+    public AtomicNumber getAtomicNumber() {
+        return mAtomicNumber;
+    }
+
+    public void setBond(Atom atom, Bond.BondType bondType) {
         Bond bond = findBond(atom);
 
         if (bond == null) {

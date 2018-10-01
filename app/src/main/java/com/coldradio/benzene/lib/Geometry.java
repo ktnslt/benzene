@@ -66,13 +66,23 @@ public class Geometry {
     }
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
-        return new PointF[]{rotatePoint(p1, p2, (float)Math.toRadians(60)), rotatePoint(p1, p2, (float)Math.toRadians(-60))};
+        return new PointF[]{rotatePoint(p1, p2, (float) Math.toRadians(60)), rotatePoint(p1, p2, (float) Math.toRadians(-60))};
     }
 
     public static float cwAngle(PointF pointFrom, PointF pointTo, PointF center) {
         float pointFromX = pointFrom.x - center.x, pointFromY = pointFrom.y - center.y;
         float pointToX = pointTo.x - center.x, pointToY = pointTo.y - center.y;
 
-        return (float)(Math.atan2(pointToY, pointToX) - Math.atan2(pointFromY, pointFromX));
+        return (float) (Math.atan2(pointToY, pointToX) - Math.atan2(pointFromY, pointFromX));
+    }
+
+    public static float center(float[] points) {
+        float center = 0;
+
+        for (float point : points) {
+            center += point;
+        }
+
+        return center / points.length;
     }
 }
