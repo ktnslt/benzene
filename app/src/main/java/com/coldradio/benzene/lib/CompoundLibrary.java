@@ -14,7 +14,7 @@ import java.io.Reader;
 import java.lang.reflect.Field;
 
 public class CompoundLibrary {
-    private SparseArray<Compound> mCompounds = new SparseArray<>();
+    private SparseArray<CompoundEntry> mCompounds = new SparseArray<>();
     private static CompoundLibrary smInstance = new CompoundLibrary();
 
     private AtomicNumber[] toAtomicNumber(int[] atomicNumberInts) {
@@ -72,7 +72,8 @@ public class CompoundLibrary {
                     Reader reader = new InputStreamReader(resources.openRawResource(field.getInt(field)));
                     PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
 
-                    mCompounds.put(compound_json.cid(), compoundFromStructure(compound_json));
+                    mCompounds.put(compound_json.cid(), new CompoundEntry(compound_json.preferredIUPACName(), compound_json.otherNames(),
+                                                                            compoundFromStructure(compound_json)));
                 } catch (IllegalAccessException iae) {
                     // skip this resource
                 }
@@ -81,6 +82,18 @@ public class CompoundLibrary {
     }
 
     public Compound getCompound(int cid) {
-        return mCompounds.get(cid);
+        return mCompounds.get(cid).compound;
+    }
+}
+
+class CompoundEntry {
+    public String preferredIUPACName;
+    public String otherNames;
+    public Compound compound;
+
+    public CompoundEntry(String iupacName, String names, Compound c) {
+        preferredIUPACName = iupacName;
+        otherNames = names;
+        compound = c;
     }
 }
