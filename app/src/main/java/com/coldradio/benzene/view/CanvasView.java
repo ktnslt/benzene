@@ -2,6 +2,7 @@ package com.coldradio.benzene.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundFactory;
 import com.coldradio.benzene.lib.CompoundLibrary;
+import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.ContextMenuManager;
 import com.coldradio.benzene.project.Project;
 
@@ -41,7 +43,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         // TODO: delete this line later
         CompoundLibrary.instance().parseLibrary(this.getResources());
-        Project.instance().addCompound(CompoundLibrary.instance().getCompound(241));
+        Project.instance().addCompound(CompoundLibrary.instance().getCompound(18937));
 //        Project.instance().addCompound(CompoundFactory.propane(100, 100));
 //
 //        Project.instance().addCompound(CompoundFactory.butane(500, 100));
@@ -156,6 +158,8 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        ScreenInfo.instance().setLeftTopPoint(getX(), getY());
+
         if (Project.instance().isSelectingRegion()) {
             return false;
         } else if (Project.instance().hasSelectedCompound()) {
@@ -189,18 +193,24 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
-        Point screenSize = new Point();
 
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
-
-        setScrollX((int) centerOfAllCompounds.x - screenSize.x / 2);
+        setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
         // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
-        setScrollY((int) centerOfAllCompounds.y - (screenSize.y / 2 - 150));
+        setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
         return true;
     }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        Point screenSize = new Point();
+
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
+        ScreenInfo.instance().setScreenSize(screenSize.x, screenSize.y);
+        super.onConfigurationChanged(newConfig);
     }
 }

@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.lib.Geometry;
+import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Configuration;
 
 public class CompoundArranger {
@@ -11,7 +12,10 @@ public class CompoundArranger {
     }
 
     private static void moveProperly(Compound compound) {
-        // TODO move to the center of the screen
+        PointF screenCenter = ScreenInfo.instance().centerPoint();
+        PointF compoundCenter = compound.centerOfRectangle();
+
+        compound.offset(screenCenter.x - compoundCenter.x, screenCenter.y - compoundCenter.y);
     }
 
     public static void zoomProperly(Compound compound) {

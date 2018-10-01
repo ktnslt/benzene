@@ -1,5 +1,7 @@
 package com.coldradio.benzene;
 
+import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.view.CanvasView;
 
 public class MainActivity extends AppCompatActivity
@@ -32,6 +35,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // set screen size
+        Point screenSize = new Point();
+
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        ScreenInfo.instance().setScreenSize(screenSize.x, screenSize.y);
 
         // add CanvasView to the canvas_main layout
         ViewGroup canvas_layout = findViewById(R.id.canvas_main);
@@ -100,7 +109,6 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle bottom_navibar_menu view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.my_compounds) {
