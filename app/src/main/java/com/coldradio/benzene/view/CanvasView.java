@@ -9,15 +9,14 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.CompoundFactory;
+import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.lib.CompoundLibrary;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.ContextMenuManager;
@@ -41,28 +40,10 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         super(context);
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        // TODO: delete this line later
         CompoundLibrary.instance().parseLibrary(this.getResources());
-        Project.instance().addCompound(CompoundLibrary.instance().getCompoundIndexByCID(18937).compound);
-//        Project.instance().addCompound(CompoundFactory.propane(100, 100));
-//
-//        Project.instance().addCompound(CompoundFactory.butane(500, 100));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(3, 100, 300));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(4, 400, 300));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(5, 700, 300));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(6, 100, 600));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(7, 400, 600));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(8, 700, 600));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(9, 300, 900));
-//
-//        Project.instance().addCompound(CompoundFactory.conjugatedCyclicAlkane(10, 700, 900));
+        // TODO: delete this line later
+        Compound c = CompoundLibrary.instance().getCompoundIndexByCID(18937).compound;
+        Project.instance().addCompound(CompoundArranger.alignCenter(c, ScreenInfo.instance().centerPoint()));
     }
 
     @Override

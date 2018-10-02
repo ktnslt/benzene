@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.lib.CompoundIndex;
 import com.coldradio.benzene.lib.CompoundLibrary;
 import com.coldradio.benzene.project.Configuration;
@@ -73,9 +74,9 @@ class CompoundPreview extends View {
     }
 
     public void setCompound(Compound compound) {
-        mCompound = compound;
-        RectF rect = mCompound.rectRegion();
-        mCompound.offset(-rect.left, -rect.top);
+        RectF rect = compound.rectRegion();
+
+        mCompound = compound.offset(-rect.left, -rect.top);
     }
 
     public void setPaint(Paint paint) {

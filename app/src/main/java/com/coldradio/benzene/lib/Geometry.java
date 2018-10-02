@@ -20,7 +20,7 @@ public class Geometry {
         return Math.abs((p2.y - p1.y) * p0.x - (p2.x - p1.x) * p0.y + p2.x * p1.y - p2.y * p1.x) / distanceFromPointToPoint(p1, p2);
     }
 
-    public static PointF zoomOut(float x, float y, PointF center, float ratio) {
+    public static PointF zoom(float x, float y, PointF center, float ratio) {
         float x_dot = x - center.x, y_dot = y - center.y;
 
         return new PointF(x_dot * ratio + center.x, y_dot * ratio + center.y);

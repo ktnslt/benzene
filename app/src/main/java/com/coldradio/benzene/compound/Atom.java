@@ -29,8 +29,24 @@ public class Atom {
         mAtomicNumber = atomicNumber;
     }
 
+    public Atom copy() {
+        Atom atom = new Atom(mAID, mAtomicNumber);
+
+        atom.mPoint.set(mPoint);
+
+        for (Bond bond : mBonds) {
+            atom.mBonds.add(bond.copy());
+        }
+
+        return atom;
+    }
+
     public int getAID() {
         return mAID;
+    }
+
+    public void setAID(int aid) {
+        mAID = aid;
     }
 
     public AtomicNumber getAtomicNumber() {

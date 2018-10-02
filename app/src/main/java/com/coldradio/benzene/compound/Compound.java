@@ -17,6 +17,14 @@ public class Compound {
     protected List<Atom> mAtoms;
     private PointF mCenterOfRectangle;
 
+    private void resetAID() {
+        int aid = 1;
+
+        for (Atom atom : mAtoms) {
+            atom.setAID(aid++);
+        }
+    }
+
     public Compound() {
         mAtoms = new ArrayList<>();
     }
@@ -35,6 +43,18 @@ public class Compound {
         }
     }
 
+    public Compound copy() {
+        Compound compound = new Compound();
+
+        resetAID();
+        for (Atom atom : mAtoms) {
+            compound.mAtoms.add(atom.copy());
+        }
+        compound.mCenterOfRectangle = mCenterOfRectangle;
+
+        return compound;
+    }
+
     public Atom getAtom(int aid) {
         for (Atom atom : mAtoms) {
             if (atom.getAID() == aid) return atom;
@@ -46,11 +66,13 @@ public class Compound {
         return mAtoms.size();
     }
 
-    public void offset(float x, float y) {
+    public Compound offset(float x, float y) {
         for (Atom atom : mAtoms) {
             atom.offset(x, y);
         }
         mCenterOfRectangle = null;
+
+        return this;
     }
 
     public void fillCarbon(int carbonNumber) {

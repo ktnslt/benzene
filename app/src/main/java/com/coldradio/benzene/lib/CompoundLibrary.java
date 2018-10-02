@@ -48,7 +48,7 @@ public class CompoundLibrary {
             }
         }
 
-        CompoundArranger.autoArrange(compound);
+        CompoundArranger.zoomToStandard(compound, 0.5f);
 
         return compound;
     }

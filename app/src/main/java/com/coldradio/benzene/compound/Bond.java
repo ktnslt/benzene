@@ -16,6 +16,10 @@ public class Bond {
         mBondType = bondType;
     }
 
+    public Bond copy() {
+        return null;
+    }
+
     public BondType getBondType(Atom atom) {
         if (hasBondTo(atom)) {
             return mBondType;

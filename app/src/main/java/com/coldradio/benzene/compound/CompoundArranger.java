@@ -8,32 +8,37 @@ import com.coldradio.benzene.project.Configuration;
 
 public class CompoundArranger {
     private static float atomDistance(Compound compound) {
-        return Geometry.distanceFromPointToPoint(compound.getAtoms().get(0).getPoint(), compound.getAtoms().get(1).getPoint());
-    }
-
-    private static void moveProperly(Compound compound) {
-        PointF screenCenter = ScreenInfo.instance().centerPoint();
-        PointF compoundCenter = compound.centerOfRectangle();
-
-        compound.offset(screenCenter.x - compoundCenter.x, screenCenter.y - compoundCenter.y);
-    }
-
-    public static void zoomProperly(Compound compound) {
-        if (compound.size() == 1)
-            return;
-
-        PointF center = compound.centerOfRectangle();
-        float atomDistance = atomDistance(compound);
-
-        for (Atom atom : compound.getAtoms()) {
-            PointF point = atom.getPoint();
-
-            atom.setPoint(Geometry.zoomOut(point.x, point.y, center, Configuration.LINE_LENGTH / atomDistance));
+        if (compound.size() == 1) {
+            return Configuration.LINE_LENGTH;
+        } else {
+            return Geometry.distanceFromPointToPoint(compound.getAtoms().get(0).getPoint(), compound.getAtoms().get(1).getPoint());
         }
     }
 
-    public static void autoArrange(Compound compound) {
-        zoomProperly(compound);
-        moveProperly(compound);
+    public static Compound alignCenter(Compound compound, PointF center) {
+        PointF compoundCenter = compound.centerOfRectangle();
+
+        compound.offset(center.x - compoundCenter.x, center.y - compoundCenter.y);
+
+        return compound;
+    }
+
+    public static Compound zoom(Compound compound, float ratio) {
+        if (compound.size() > 1) {
+            PointF center = compound.centerOfRectangle();
+
+            for (Atom atom : compound.getAtoms()) {
+                PointF point = atom.getPoint();
+
+                atom.setPoint(Geometry.zoom(point.x, point.y, center, ratio));
+            }
+        }
+        return compound;
+    }
+
+    public static Compound zoomToStandard(Compound compound, float ratio) {
+        zoom(compound, Configuration.LINE_LENGTH / atomDistance(compound) * ratio);
+
+        return compound;
     }
 }
