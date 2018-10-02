@@ -16,7 +16,6 @@ import java.util.List;
 public class DrawerManager {
     private Paint mPaint;
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
-    private GenericDrawer mGenericDrawer = new GenericDrawer();
 
     public DrawerManager() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -51,7 +50,7 @@ public class DrawerManager {
             }
         }
         if (! drawn) {
-            mGenericDrawer.draw(compound, canvas, mPaint);
+            GenericDrawer.draw(compound, canvas, mPaint);
         }
     }
 

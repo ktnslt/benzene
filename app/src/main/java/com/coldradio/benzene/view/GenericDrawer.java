@@ -8,11 +8,9 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
-import com.coldradio.benzene.project.IRegionSelector;
 
-public class GenericDrawer implements ICompoundDrawer {
-    @Override
-    public boolean draw(Compound compound, Canvas canvas, Paint paint) {
+public class GenericDrawer {
+    public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
@@ -39,7 +37,7 @@ public class GenericDrawer implements ICompoundDrawer {
         return true;
     }
 
-    private PointF centerForDoubleBond(Atom a1, Atom a2) {
+    private static PointF centerForDoubleBond(Atom a1, Atom a2) {
         PointF a1p = a1.getPoint(), a2p = a2.getPoint();
         Atom before_a1 = a1.getBoundAtomExcept(a2);
         Atom after_a2 = a2.getBoundAtomExcept(a1);
@@ -68,10 +66,5 @@ public class GenericDrawer implements ICompoundDrawer {
             }
             return centers[centerIndex];
         }
-    }
-
-    @Override
-    public String getID() {
-        return "GenericDrawer";
     }
 }

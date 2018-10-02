@@ -43,7 +43,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         // TODO: delete this line later
         CompoundLibrary.instance().parseLibrary(this.getResources());
-        Project.instance().addCompound(CompoundLibrary.instance().getCompound(18937));
+        Project.instance().addCompound(CompoundLibrary.instance().getCompoundIndexByCID(18937).compound);
 //        Project.instance().addCompound(CompoundFactory.propane(100, 100));
 //
 //        Project.instance().addCompound(CompoundFactory.butane(500, 100));

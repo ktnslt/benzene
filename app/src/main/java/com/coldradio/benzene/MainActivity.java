@@ -1,6 +1,6 @@
 package com.coldradio.benzene;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cut) {
+            return true;
+        } else if (id == R.id.action_add) {
+            startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
             return true;
         }
 
