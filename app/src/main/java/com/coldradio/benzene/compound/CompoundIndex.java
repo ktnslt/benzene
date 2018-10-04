@@ -1,6 +1,4 @@
-package com.coldradio.benzene.lib;
-
-import com.coldradio.benzene.compound.Compound;
+package com.coldradio.benzene.compound;
 
 public class CompoundIndex {
     final public String preferredIUPACName;

@@ -18,7 +18,7 @@ import android.view.View;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
-import com.coldradio.benzene.lib.CompoundLibrary;
+import com.coldradio.benzene.compound.CompoundLibrary;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.ContextMenuManager;

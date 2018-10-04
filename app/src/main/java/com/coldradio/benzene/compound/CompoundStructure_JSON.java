@@ -1,6 +1,6 @@
-package com.coldradio.benzene.lib;
+package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.compound.Bond;
+import com.coldradio.benzene.lib.AtomicNumber;
 
 import java.util.ArrayList;
 import java.util.HashSet;
