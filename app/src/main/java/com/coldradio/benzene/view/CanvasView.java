@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.lib.CompoundLibrary;
+import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.ContextMenuManager;
 import com.coldradio.benzene.project.Project;
@@ -36,14 +38,18 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
     }
 
-    public CanvasView(Context context) {
+    public CanvasView(Context context, Toolbar toolbar) {
         super(context);
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         CompoundLibrary.instance().parseLibrary(this.getResources());
+        Helper.instance().setContext(this.getContext());
+        mContextMenuManager = new ContextMenuManager(toolbar);
         // TODO: delete this line later
-        Compound c = CompoundLibrary.instance().getCompoundIndexByCID(18937).compound;
-        Project.instance().addCompound(CompoundArranger.alignCenter(c, ScreenInfo.instance().centerPoint()));
+        Compound c = CompoundLibrary.instance().getCompoundIndexByCID(18937).compound.copy();
+        CompoundArranger.zoomToStandard(c, 1);
+        CompoundArranger.alignCenter(c, ScreenInfo.instance().centerPoint());
+        Project.instance().addCompound(c);
     }
 
     @Override
@@ -73,7 +79,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                 case BROWSE:
                     Project.instance().selectComponent(actualPoint);
                     invalidate();
-                    //mContextMenuManager.update();
+                    mContextMenuManager.update();
                     return true;
                 case SYNTHESIS:
                     Project.instance().synthesis(actualPoint);

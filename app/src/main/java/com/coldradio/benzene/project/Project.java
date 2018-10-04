@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.view.DrawerManager;
 import com.coldradio.benzene.view.SelectedRegionDrawer;
@@ -21,6 +22,7 @@ public class Project {
     private CompoundReactor mCompoundReactor = new CompoundReactor();
     private IRegionSelector mRegionSelector;
     private SelectedCompound mSelectedCompound;
+    private Compound mCopiedCompound;
     private DrawerManager mDrawerManager = new DrawerManager();
 
     public static Project instance() {
@@ -53,6 +55,11 @@ public class Project {
         mCompoundList.add(compound);
     }
 
+    public void addCompoundAsSelected(Compound compound) {
+        mCompoundList.add(compound);
+        mSelectedCompound = new SelectedCompound(compound);
+    }
+
     public boolean selectComponent(PointF point) {
         mSelectedCompound = null;
 
@@ -72,6 +79,13 @@ public class Project {
             }
         }
         return false;
+    }
+
+    public boolean removeSelectedCompound() {
+        boolean ret = removeCompound(mSelectedCompound.getCompound());
+        mSelectedCompound = null;
+
+        return ret;
     }
 
     public boolean decomposition(PointF point) {
@@ -171,5 +185,22 @@ public class Project {
 
     public IRegionSelector getRegionSelector() {
         return mRegionSelector;
+    }
+
+    public void copySelectedCompound() {
+        mCopiedCompound = mSelectedCompound.getCompound().copy();
+    }
+
+    public void pasteSelectedCompound(PointF point) {
+        if (mCopiedCompound != null) {
+            Compound compound = mCopiedCompound.copy();
+
+            CompoundArranger.alignCenter(compound, point);
+            addCompoundAsSelected(compound);
+        }
+    }
+
+    public boolean hasCopiedCompound() {
+        return mCopiedCompound != null;
     }
 }

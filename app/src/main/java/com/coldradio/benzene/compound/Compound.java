@@ -44,15 +44,29 @@ public class Compound {
     }
 
     public Compound copy() {
-        Compound compound = new Compound();
+        Compound that_compound = new Compound();
+        int this_aid = 1;
 
-        resetAID();
-        for (Atom atom : mAtoms) {
-            compound.mAtoms.add(atom.copy());
+        for (Atom this_atom : mAtoms) {
+            Atom that_atom = new Atom(this_aid++, this_atom.getAtomicNumber());
+
+            that_atom.setPoint(this_atom.getPoint());
+            that_compound.mAtoms.add(that_atom);
         }
-        compound.mCenterOfRectangle = mCenterOfRectangle;
 
-        return compound;
+        that_compound.mCenterOfRectangle = this.mCenterOfRectangle;
+
+        // now copy bonds
+        resetAID();
+        for (int from_aid = 1; from_aid <= size(); ++from_aid) {
+            Atom from_atom = mAtoms.get(from_aid - 1);
+
+            for (Bond bond : from_atom.getBonds()) {
+                that_compound.makeBond(from_aid, bond.getBoundAtom().getAID(), bond.getBondType());
+            }
+        }
+
+        return that_compound;
     }
 
     public Atom getAtom(int aid) {
@@ -78,7 +92,7 @@ public class Compound {
     public void fillCarbon(int carbonNumber) {
         mAtoms.clear();
         for (int ii = 0; ii < carbonNumber; ++ii) {
-            mAtoms.add(new Atom(ii+1, AtomicNumber.C));
+            mAtoms.add(new Atom(ii + 1, AtomicNumber.C));
         }
     }
 

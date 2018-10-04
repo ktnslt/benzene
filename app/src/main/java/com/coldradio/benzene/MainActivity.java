@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.lib.ScreenInfo;
+import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.CanvasView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private CanvasView canvasView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         // add CanvasView to the canvas_main layout
         ViewGroup canvas_layout = findViewById(R.id.canvas_main);
         if(canvas_layout != null) {
-            CanvasView canvasView = new CanvasView(this);
+            canvasView = new CanvasView(this, toolbar);
             canvas_layout.addView(canvasView);
             // attach the navibar listener
             BottomNavigationView navigation = findViewById(R.id.bottom_navibar);
@@ -86,23 +89,36 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        boolean ret = true;
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_cut) {
-            return true;
+            Project.instance().copySelectedCompound();
+            Project.instance().removeSelectedCompound();
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
+        } else if (id == R.id.action_copy) {
+            Project.instance().copySelectedCompound();
+        } else if (id == R.id.action_paste) {
+            Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
+        } else if (id == R.id.action_redo) {
+
+        } else if (id == R.id.action_undo) {
+
+        } else if (id == R.id.action_trashcan) {
+            Project.instance().removeSelectedCompound();
+        } else {
+            ret = false;
+        }
+
+        if (canvasView != null && ret) {
+            canvasView.invalidate();
             return true;
         }
 
