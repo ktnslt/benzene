@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (canvasView != null && ret) {
+            canvasView.updateContextMenu();
             canvasView.invalidate();
             return true;
         }

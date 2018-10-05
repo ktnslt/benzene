@@ -18,9 +18,9 @@ public class ScreenInfo {
         mScreenHeight = height;
     }
 
-    public void setLeftTopPoint(float x, float y) {
-        mVisualX = x;
-        mVisualY = y;
+    public void offset(float dx, float dy) {
+        mVisualX += dx;
+        mVisualY += dy;
     }
 
     public PointF centerPoint() {

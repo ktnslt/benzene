@@ -82,6 +82,9 @@ public class Project {
     }
 
     public boolean removeSelectedCompound() {
+        if (mSelectedCompound == null)
+            return false;
+
         boolean ret = removeCompound(mSelectedCompound.getCompound());
         mSelectedCompound = null;
 

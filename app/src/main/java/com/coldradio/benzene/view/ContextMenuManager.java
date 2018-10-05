@@ -1,9 +1,10 @@
-package com.coldradio.benzene.project;
+package com.coldradio.benzene.view;
 
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.Project;
 
 public class ContextMenuManager {
     private Toolbar mToolbar;

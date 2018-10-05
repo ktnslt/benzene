@@ -16,12 +16,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundLibrary;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
-import com.coldradio.benzene.project.ContextMenuManager;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -45,6 +42,11 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         CompoundLibrary.instance().parseLibrary(this.getResources());
         Helper.instance().setContext(this.getContext());
         mContextMenuManager = new ContextMenuManager(toolbar);
+    }
+
+    public void updateContextMenu() {
+        if (mContextMenuManager != null)
+            mContextMenuManager.update();
     }
 
     @Override
@@ -140,8 +142,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        ScreenInfo.instance().setLeftTopPoint(getX(), getY());
-
         if (Project.instance().isSelectingRegion()) {
             return false;
         } else if (Project.instance().hasSelectedCompound()) {
@@ -149,6 +149,7 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);
+            ScreenInfo.instance().offset(distanceX, distanceY);
         }
 
         return true;
