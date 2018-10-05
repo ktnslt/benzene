@@ -5,10 +5,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.CompoundLibrary;
+import com.coldradio.benzene.compound.StringSearchFilter;
 
-public class CompoundSearchActivity extends AppCompatActivity {
+public class CompoundSearchActivity extends AppCompatActivity implements TextWatcher {
+    private RecyclerView.Adapter mAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +30,38 @@ public class CompoundSearchActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        RecyclerView.Adapter adapter = new CompoundSearchAdapter();
-        recyclerView.setAdapter(adapter);
+        // specify an mAdapter (see also next example)
+        mAdapter = new CompoundSearchAdapter();
+        recyclerView.setAdapter(mAdapter);
+
+        // set listener for EditText
+        EditText editText = findViewById(R.id.compound_search_edittext);
+        if (editText != null) {
+            editText.addTextChangedListener(this);
+        }
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.length() == 0) {
+            CompoundLibrary.instance().resetSearchFilter();
+        } else {
+            CompoundLibrary.instance().setSearchFilter(new StringSearchFilter(s.toString()));
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        CompoundLibrary.instance().resetSearchFilter();
+        super.onBackPressed();
     }
 }

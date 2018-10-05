@@ -45,11 +45,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
         CompoundLibrary.instance().parseLibrary(this.getResources());
         Helper.instance().setContext(this.getContext());
         mContextMenuManager = new ContextMenuManager(toolbar);
-        // TODO: delete this line later
-        Compound c = CompoundLibrary.instance().getCompoundIndexByCID(18937).compound.copy();
-        CompoundArranger.zoomToStandard(c, 1);
-        CompoundArranger.alignCenter(c, ScreenInfo.instance().centerPoint());
-        Project.instance().addCompound(c);
     }
 
     @Override

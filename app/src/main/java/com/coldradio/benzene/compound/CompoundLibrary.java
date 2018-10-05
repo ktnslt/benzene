@@ -2,7 +2,6 @@ package com.coldradio.benzene.compound;
 
 import android.content.res.Resources;
 import android.graphics.PointF;
-import android.util.SparseArray;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.lib.AtomicNumber;
@@ -11,9 +10,14 @@ import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompoundLibrary {
-    private SparseArray<CompoundIndex> mCompounds = new SparseArray<>();
+    private List<CompoundIndex> mAllCompounds = new ArrayList<>();
+    private List<CompoundIndex> mFilteredCompounds;
+    ;
+    private SearchFilter mSearchFilter;
     private static CompoundLibrary smInstance = new CompoundLibrary();
 
     private AtomicNumber[] toAtomicNumber(int[] atomicNumberInts) {
@@ -71,7 +75,7 @@ public class CompoundLibrary {
                     Reader reader = new InputStreamReader(resources.openRawResource(field.getInt(field)));
                     PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
 
-                    mCompounds.put(compound_json.cid(), new CompoundIndex(compound_json.preferredIUPACName(), compound_json.otherNames(),
+                    mAllCompounds.add(new CompoundIndex(compound_json.preferredIUPACName(), compound_json.otherNames(),
                             compoundFromStructure(compound_json)));
                 } catch (IllegalAccessException iae) {
                     // skip this resource
@@ -80,19 +84,40 @@ public class CompoundLibrary {
         }
     }
 
-    public CompoundIndex getCompoundIndexByCID(int cid) {
-        return mCompounds.get(cid);
-    }
-
-    public CompoundIndex getCompoundIndexByIndex(int index) {
-        if (index >= 0 && index < mCompounds.size()) {
-            return mCompounds.valueAt(index);
+    public CompoundIndex getCompoundIndex(int index) {
+        if (mSearchFilter == null) {
+            if (index >= 0 && index < mAllCompounds.size()) {
+                return mAllCompounds.get(index);
+            }
         } else {
-            return null;
+            if (index >= 0 && index < mFilteredCompounds.size()) {
+                return mFilteredCompounds.get(index);
+            }
         }
+        return null;
     }
 
     public int size() {
-        return mCompounds.size();
+        if (mSearchFilter == null)
+            return mAllCompounds.size();
+        else
+            return mFilteredCompounds.size();
+    }
+
+    public void setSearchFilter(SearchFilter filter) {
+        if (mSearchFilter != null && filter.subsetOf(mSearchFilter)) {
+            mFilteredCompounds = filter.filtered(mFilteredCompounds);
+        } else {
+            mFilteredCompounds = filter.filtered(mAllCompounds);
+        }
+        mSearchFilter = filter;
+    }
+
+    public SearchFilter getSearchFilter() {
+        return mSearchFilter;
+    }
+
+    public void resetSearchFilter() {
+        mSearchFilter = null;
     }
 }
