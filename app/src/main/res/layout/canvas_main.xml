@@ -9,6 +9,19 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/canvas_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#F6F6F6"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navibar"
         android:layout_width="0dp"

@@ -49,11 +49,4 @@
         android:title="&gt;"
         android:icon="@drawable/ic_menu_redo"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_add"
-        android:orderInCategory="13"
-        android:title="Add"
-        android:icon="@drawable/ic_menu_add"
-        app:showAsAction="always" />
 </menu>

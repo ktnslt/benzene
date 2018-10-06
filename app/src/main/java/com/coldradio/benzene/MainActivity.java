@@ -3,7 +3,7 @@ package com.coldradio.benzene;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,22 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.lib.ScreenInfo;
-import com.coldradio.benzene.project.Project;
-import com.coldradio.benzene.view.CanvasView;
+import com.coldradio.benzene.view.ProjectView;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-    private CanvasView canvasView;
-
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.project_toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -45,18 +41,22 @@ public class MainActivity extends AppCompatActivity
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         ScreenInfo.instance().setScreenSize(screenSize.x, screenSize.y);
 
-        // add CanvasView to the canvas_main layout
-        ViewGroup canvas_layout = findViewById(R.id.canvas_main);
-        if(canvas_layout != null) {
-            canvasView = new CanvasView(this, toolbar);
-            canvas_layout.addView(canvasView);
-            // attach the navibar listener
-            BottomNavigationView navigation = findViewById(R.id.bottom_navibar);
+        // add ProjectView
+        ViewGroup project_layout = findViewById(R.id.project_main);
+        if (project_layout != null) {
+            ProjectView projectView = new ProjectView(this);
 
-            if (navigation != null) {
-                navigation.setOnNavigationItemSelectedListener(canvasView);
-            }
+            project_layout.addView(projectView);
         }
+
+        // add FloatingActionBar
+        FloatingActionButton fab = findViewById(R.id.fab_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent("com.coldradio.benzene.CANVAS"));
+            }
+        });
     }
 
     @Override
@@ -71,38 +71,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.project_toolbar_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        boolean ret = true;
 
-        if (id == R.id.action_cut) {
-            Project.instance().copySelectedCompound();
-            Project.instance().removeSelectedCompound();
-        } else if (id == R.id.action_add) {
-            startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
-        } else if (id == R.id.action_copy) {
-            Project.instance().copySelectedCompound();
-        } else if (id == R.id.action_paste) {
-            Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
-        } else if (id == R.id.action_redo) {
+        if (id == R.id.action_search) {
 
-        } else if (id == R.id.action_undo) {
+        } else if (id == R.id.action_sort) {
 
-        } else if (id == R.id.action_trashcan) {
-            Project.instance().removeSelectedCompound();
-        } else {
-            ret = false;
-        }
-
-        if (canvasView != null && ret) {
-            canvasView.updateContextMenu();
-            canvasView.invalidate();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
