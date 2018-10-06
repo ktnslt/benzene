@@ -57,24 +57,6 @@ public class MainActivity extends AppCompatActivity
                 navigation.setOnNavigationItemSelectedListener(canvasView);
             }
         }
-
-        // initialize AutoCompleteTextView
-//        final String[] predefined_compounds = {
-//                "Propane", "ConjuatedCyclicCompound", "Toluene"
-//        };
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, predefined_compounds);
-//        AutoCompleteTextView textView = findViewById(R.id.compound_name);
-//        textView.setThreshold(0);
-//        textView.setAdapter(adapter);
-//        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                List predefined_compound_list = Arrays.asList(predefined_compounds);
-//                if(id == predefined_compound_list.indexOf("ConjuatedCyclicCompound")) {
-//                    Project.instance().addCompound(new ConjuatedCyclicCompound());
-//                }
-//            }
-//        });
     }
 
     @Override
