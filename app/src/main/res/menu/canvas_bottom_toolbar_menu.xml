@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_change_atom"
+        android:orderInCategory="1"
+        android:title="Decomposition"
+        android:icon="@drawable/ic_menu_atom"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_bond"
+        android:orderInCategory="2"
+        android:title="Bond"
+        android:icon="@drawable/ic_menu_bond"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_synthesize"
+        android:orderInCategory="3"
+        android:title="Synthesize"
+        android:icon="@drawable/ic_menu_synthesis"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_decomposition"
+        android:orderInCategory="4"
+        android:title="Decomposition"
+        android:icon="@drawable/ic_menu_decomposition"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add"
+        android:orderInCategory="10"
+        android:title="Add"
+        android:icon="@drawable/ic_menu_add"
+        app:showAsAction="always" />
+</menu>

@@ -6,22 +6,18 @@ import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundLibrary;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 
-public class CanvasView extends View implements View.OnTouchListener, BottomNavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class CanvasView extends View implements View.OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     enum Mode {
         BROWSE, ATTACH_FUNC_GROUP, CHANGE_ATOM, CYCLE_BOND_TYPE, SYNTHESIS, DECOMPOSITION
     }
@@ -91,36 +87,6 @@ public class CanvasView extends View implements View.OnTouchListener, BottomNavi
                     invalidate();
                     return true;
             }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navibar_browse:
-                mMode = Mode.BROWSE;
-                return true;
-            case R.id.navibar_function:
-                mMode = Mode.ATTACH_FUNC_GROUP;
-                return true;
-            case R.id.navibar_change_atom:
-                mMode = Mode.CHANGE_ATOM;
-                return true;
-            case R.id.navibar_cycle_bond:
-                mMode = Mode.CYCLE_BOND_TYPE;
-                return true;
-            case R.id.navibar_synthesis_decomposition:
-                if (mMode == Mode.SYNTHESIS) {
-                    mMode = Mode.DECOMPOSITION;
-                    item.setIcon(R.drawable.ic_menu_decomposition);
-                    item.setTitle("Decomposition");
-                } else {
-                    mMode = Mode.SYNTHESIS;
-                    item.setIcon(R.drawable.ic_menu_synthesis);
-                    item.setTitle("Synthesis");
-                }
-                return true;
         }
         return false;
     }
