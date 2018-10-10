@@ -11,7 +11,7 @@ public class TreeTraveler {
         boolean visit(Atom a1, Atom a2, Object... args);
     }
 
-    private static Atom[] doRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
+    private static Edge doRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
         for (Bond bond : parent.getBonds()) {
             /*  TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
                 I have tried to use hashCode of the atom as a key, but it doesn't work.
@@ -22,11 +22,11 @@ public class TreeTraveler {
                     && !visitedEdge.contains(child.getPoint().toString() + parent.getPoint())) {
                 // the edge is not visited
                 if (edgeVisitor.visit(parent, child, args)) {
-                    return new Atom[]{parent, child};
+                    return new Edge(parent, child);
                 }
                 visitedEdge.add(parent.getPoint().toString() + child.getPoint());
 
-                Atom[] ret = doRecursive(child, edgeVisitor, visitedEdge, args);
+                Edge ret = doRecursive(child, edgeVisitor, visitedEdge, args);
                 if(ret != null) {
                     return ret;
                 }
@@ -36,7 +36,7 @@ public class TreeTraveler {
         return null;
     }
 
-    public static Atom[] returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
+    public static Edge returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
         if(compound.size() >= 2) {
             HashSet<String> visitedEdge = new HashSet<>();
 
@@ -44,10 +44,5 @@ public class TreeTraveler {
         } else {
             return null;
         }
-    }
-
-    public static class MathConstant {
-        public static final float ROOT_2 = 1.41421f;
-        public static final float ROOT_3 = 1.73205f;
     }
 }

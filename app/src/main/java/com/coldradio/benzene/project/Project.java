@@ -1,15 +1,11 @@
 package com.coldradio.benzene.project;
 
-import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.view.DrawerManager;
-import com.coldradio.benzene.view.SelectedRegionDrawer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,34 +17,15 @@ public class Project {
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
     private IRegionSelector mRegionSelector;
-    private SelectedCompound mSelectedCompound;
+    private ElementSelector mElementSelector = new ElementSelector();
     private Compound mCopiedCompound;
-    private DrawerManager mDrawerManager = new DrawerManager();
 
     public static Project instance() {
         return project;
     }
 
-    public Project() {
-        mDrawerManager.addCompoundDrawer(new SelectedRegionDrawer());
-    }
-
-    public void drawTo(Canvas canvas) {
-        for (Compound compound : mCompoundList) {
-            boolean selected = mSelectedCompound != null && mSelectedCompound.getCompound() == compound;
-
-            mDrawerManager.draw(compound, selected, canvas);
-        }
-        mDrawerManager.drawSynthesis(mCompoundReactor, canvas);
-
-        if (mSelectedCompound != null) {
-            // not drawn at the same time with the compound since the accessory shall be in front of everything
-            mDrawerManager.drawSelectedCompoundAccessory(mSelectedCompound, canvas);
-        }
-
-        if (mRegionSelector != null) {
-            mRegionSelector.draw(canvas);
-        }
+    public List<Compound> getCompounds() {
+        return Collections.unmodifiableList(mCompoundList);
     }
 
     public void addCompound(Compound compound) {
@@ -57,18 +34,19 @@ public class Project {
 
     public void addCompoundAsSelected(Compound compound) {
         mCompoundList.add(compound);
-        mSelectedCompound = new SelectedCompound(compound);
+        mElementSelector.selectCompound(compound);
     }
 
-    public boolean selectComponent(PointF point) {
-        mSelectedCompound = null;
+    public ElementSelector getElementSelector() {
+        return mElementSelector;
+    }
 
-        for (Compound compound : mCompoundList) {
-            if (mSelectedCompound == null && compound.isSelectable(point)) {
-                mSelectedCompound = new SelectedCompound(compound);
-            }
-        }
-        return mSelectedCompound != null;
+    public boolean select(PointF point) {
+        return mElementSelector.select(point, Collections.unmodifiableList(mCompoundList));
+    }
+
+    public boolean tryToSelect(PointF point) {
+        return mElementSelector.tryToSelect(point, Collections.unmodifiableList(mCompoundList));
     }
 
     public boolean removeCompound(Compound compound) {
@@ -82,35 +60,31 @@ public class Project {
     }
 
     public boolean removeSelectedCompound() {
-        if (mSelectedCompound == null)
+        if (mElementSelector.hasSelectedCompound()) {
+            removeCompound(mElementSelector.getSelectedCompound());
+            mElementSelector.reset();
+            return true;
+        } else {
             return false;
-
-        boolean ret = removeCompound(mSelectedCompound.getCompound());
-        mSelectedCompound = null;
-
-        return ret;
+        }
     }
 
     public boolean decomposition(PointF point) {
-// TODO: in case of a ring, it will not be broken into two compounds
-        for (Compound compound : mCompoundList) {
-            Compound cutCompound = compound.decomposition(point);
-
-            if (cutCompound != null) {
-                if (compound.size() == 1) {
-                    removeCompound(compound);
-                }
-                if (cutCompound.size() > 1) {
-                    mCompoundList.add(cutCompound);
-                }
-                return true;
-            }
-        }
+//// TODO: in case of a ring, it will not be broken into two compounds
+//        for (Compound compound : mCompoundList) {
+//            Compound cutCompound = compound.decomposition(point);
+//
+//            if (cutCompound != null) {
+//                if (compound.size() == 1) {
+//                    removeCompound(compound);
+//                }
+//                if (cutCompound.size() > 1) {
+//                    mCompoundList.add(cutCompound);
+//                }
+//                return true;
+//            }
+//        }
         return false;
-    }
-
-    public int compoundNumber() {
-        return mCompoundList.size();
     }
 
     public boolean cycleBondType(PointF point) {
@@ -129,7 +103,7 @@ public class Project {
 
     public boolean regionSelect(PointF point, int touchAction) {
         if (touchAction < 0) {
-// long pressed, initiate region selection
+            // long pressed, initiate region selection
             mRegionSelector = new RectSelector(point);
             return true;
         } else if (mRegionSelector != null) {
@@ -144,7 +118,7 @@ public class Project {
     }
 
     public PointF centerOfAllCompounds() {
-        if (compoundNumber() > 0) {
+        if (mCompoundList.size() > 0) {
             RectF allRegion = mCompoundList.get(0).rectRegion();
 
             for (Compound compound : mCompoundList) {
@@ -160,30 +134,19 @@ public class Project {
     }
 
     public boolean moveSelectedCompoundBy(PointF distance) {
-        if (mSelectedCompound != null) {
-            mSelectedCompound.offset(distance);
-            return true;
-        }
-        return false;
+        return mElementSelector.moveSelectedCompoundBy(distance);
     }
 
     public boolean hasSelectedCompound() {
-        return mSelectedCompound != null;
+        return mElementSelector.hasSelectedCompound();
     }
 
-    private boolean mIsRotating = false; // TODO needs to be moved inside mSelectedCompound
+    public boolean hasSelectedElement() {
+        return mElementSelector.hasSelectedElement();
+    }
 
     public boolean rotateSelectedCompound(PointF point, int action) {
-        if (action == MotionEvent.ACTION_DOWN && hasSelectedCompound() && mSelectedCompound.isPivotGrasped(point)) {
-            mIsRotating = true;
-        } else if (action == MotionEvent.ACTION_MOVE && mIsRotating && hasSelectedCompound()) {
-            mSelectedCompound.rotateToPoint(point);
-        } else if (action == MotionEvent.ACTION_UP && mIsRotating) {
-            mIsRotating = false;
-        } else {
-            return false;
-        }
-        return true;
+        return mElementSelector.rotateSelectedCompound(point, action);
     }
 
     public IRegionSelector getRegionSelector() {
@@ -191,7 +154,7 @@ public class Project {
     }
 
     public void copySelectedCompound() {
-        mCopiedCompound = mSelectedCompound.getCompound().copy();
+        mCopiedCompound = mElementSelector.getSelectedCompound().copy();
     }
 
     public void pasteSelectedCompound(PointF point) {

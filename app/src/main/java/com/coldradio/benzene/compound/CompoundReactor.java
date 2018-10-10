@@ -9,22 +9,23 @@ public class CompoundReactor {
     private Pair<Compound, Atom> mSynthesisSource = null;
 
     private Pair<Compound, Atom> selectSource(PointF point, List<Compound> compounds) {
-        Compound selectedCompound = null;
-        Atom selectedAtom = null;
-
-        for (Compound compound : compounds) {
-            selectedAtom = compound.selectAtom(point);
-            if (selectedAtom != null) {
-                selectedCompound = compound;
-                break;
-            }
-        }
-
-        if(selectedAtom != null) {
-            return new Pair<>(selectedCompound, selectedAtom);
-        } else {
-            return null;
-        }
+        return null;
+//        Compound selectedCompound = null;
+//        Atom selectedAtom = null;
+//
+//        for (Compound compound : compounds) {
+//            selectedAtom = compound.selectAtom(point);
+//            if (selectedAtom != null) {
+//                selectedCompound = compound;
+//                break;
+//            }
+//        }
+//
+//        if(selectedAtom != null) {
+//            return new Pair<>(selectedCompound, selectedAtom);
+//        } else {
+//            return null;
+//        }
     }
 
     private void synthesis(Pair<Compound, Atom> source, Pair<Compound, Atom> destination) {

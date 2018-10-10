@@ -21,6 +21,7 @@ import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.view.drawer.GenericDrawer;
 
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
     public static class CompoundViewHolder extends RecyclerView.ViewHolder {

@@ -1,4 +1,4 @@
-package com.coldradio.benzene.view;
+package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

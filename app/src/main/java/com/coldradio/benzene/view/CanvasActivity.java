@@ -76,7 +76,7 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_undo) {
 
         } else if (id == R.id.action_trashcan) {
-
+            Project.instance().removeSelectedCompound();
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
             Project.instance().removeSelectedCompound();

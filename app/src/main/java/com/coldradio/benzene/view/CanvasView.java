@@ -16,16 +16,14 @@ import com.coldradio.benzene.compound.CompoundLibrary;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.view.drawer.DrawerManager;
+import com.coldradio.benzene.view.drawer.SelectedRegionDrawer;
 
 public class CanvasView extends View implements View.OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
-    enum Mode {
-        BROWSE, ATTACH_FUNC_GROUP, CHANGE_ATOM, CYCLE_BOND_TYPE, SYNTHESIS, DECOMPOSITION
-    }
-
-    private Mode mMode = Mode.BROWSE;
     private PointF mClickedPoint = new PointF();
     private GestureDetectorCompat mGestureDetector;
     private ContextMenuManager mContextMenuManager;
+    private DrawerManager mDrawerManager = new DrawerManager();
 
     private PointF actualClickedPosition(MotionEvent e) {
         return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -38,6 +36,9 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         CompoundLibrary.instance().parseLibrary(this.getResources());
         Helper.instance().setContext(this.getContext());
         mContextMenuManager = new ContextMenuManager(toolbar);
+
+        // register drawer
+        mDrawerManager.addCompoundDrawer(new SelectedRegionDrawer());
     }
 
     public void updateContextMenu() {
@@ -48,7 +49,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Project.instance().drawTo(canvas);
+        mDrawerManager.draw(canvas);
     }
 
     @Override
@@ -67,26 +68,9 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // for long click, the clicked position is saved
             mClickedPoint.set(event.getX(), event.getY());
-
-            switch (mMode) {
-                case BROWSE:
-                    Project.instance().selectComponent(actualPoint);
-                    invalidate();
-                    mContextMenuManager.update();
-                    return true;
-                case SYNTHESIS:
-                    Project.instance().synthesis(actualPoint);
-                    invalidate();
-                    return true;
-                case DECOMPOSITION:
-                    Project.instance().decomposition(actualPoint);
-                    invalidate();
-                    return true;
-                case CYCLE_BOND_TYPE:
-                    Project.instance().cycleBondType(actualPoint);
-                    invalidate();
-                    return true;
-            }
+            Project.instance().select(actualPoint);
+            invalidate();
+            return true;
         }
         return false;
     }
@@ -123,10 +107,10 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public void onLongPress(MotionEvent e) {
-        if (mMode == Mode.BROWSE) {
-            Project.instance().regionSelect(mClickedPoint, -1);
-            invalidate();
-        }
+//        if (mMode == Mode.BROWSE) {
+//            Project.instance().regionSelect(mClickedPoint, -1);
+//            invalidate();
+//        }
     }
 
     @Override
@@ -141,11 +125,14 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+        if (! Project.instance().tryToSelect(actualClickedPosition(e))) {
+            PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
 
-        setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
-        // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
-        setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
+            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
+            // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
+            setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
+        }
+
         return true;
     }
 

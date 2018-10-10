@@ -3,7 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.lib.TreeTraveler;
+import com.coldradio.benzene.lib.MathConstant;
 import com.coldradio.benzene.project.Configuration;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class CompoundFactory {
 
         for (Atom atom : atoms) {
             atom.setPoint(currentPoint);
-            currentPoint = new PointF(TreeTraveler.MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
+            currentPoint = new PointF(MathConstant.ROOT_3 / 2 * Configuration.LINE_LENGTH + currentPoint.x,
                     Configuration.LINE_LENGTH / 2.0f * (upDirection ? -1 : 1) + currentPoint.y);
             upDirection = !upDirection;
         }

@@ -5,8 +5,6 @@ import android.graphics.RectF;
 
 import com.coldradio.benzene.lib.AtomicNumber;
 import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.lib.TreeTraveler;
-import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
 
 import java.util.ArrayList;
@@ -125,27 +123,28 @@ public class Compound {
     }
 
     public Compound decomposition(PointF point) {
-        Atom[] edge = selectedEdge(point);
-
-        if (edge != null) {
-// Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
+        return null;
+//        Atom[] edge = selectedEdge(point);
 //
-// mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
-// mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
-            return null;//cutCompound;
-        } else {
-            return null;
-        }
+//        if (edge != null) {
+//// Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
+////
+//// mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
+//// mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
+//            return null;//cutCompound;
+//        } else {
+//            return null;
+//        }
     }
 
     public boolean cycleBondType(PointF point) {
-        Atom[] edge = selectedEdge(point);
-
-        if (edge != null) {
-            edge[0].cycleBond(edge[1]);
-            edge[1].cycleBond(edge[0]);
-            return true;
-        }
+//        Atom[] edge = selectedEdge(point);
+//
+//        if (edge != null) {
+//            edge[0].cycleBond(edge[1]);
+//            edge[1].cycleBond(edge[0]);
+//            return true;
+//        }
         return false;
     }
 
@@ -159,37 +158,6 @@ public class Compound {
         for (Atom atom : mAtoms) {
             atom.setPoint(Geometry.rotatePoint(atom.getPoint(), centerOfRectangle(), angle));
         }
-    }
-
-    public Atom[] selectedEdge(PointF point) {
-        return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
-            @Override
-            public boolean visit(Atom a1, Atom a2, Object... args) {
-                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
-                float lineLength = Geometry.distanceFromPointToPoint(p1, p2);
-
-                if (Geometry.distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
-                        && Geometry.distanceFromPointToPoint(touchedPoint, p1) < (lineLength + Configuration.SELECT_RANGE)
-                        && Geometry.distanceFromPointToPoint(touchedPoint, p2) < (lineLength + Configuration.SELECT_RANGE)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }, this, point);
-    }
-
-    public Atom selectAtom(PointF point) {
-        for (Atom atom : mAtoms) {
-            if (Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.SELECT_RANGE) {
-                return atom;
-            }
-        }
-        return null;
-    }
-
-    public boolean isSelectable(PointF point) {
-        return selectedEdge(point) != null;
     }
 
     public void makeBond(int aid1, int aid2, Bond.BondType bondType) {
