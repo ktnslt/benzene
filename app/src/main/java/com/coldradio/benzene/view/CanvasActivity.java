@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 
@@ -21,15 +22,15 @@ public class CanvasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.canvas_main);
 
-        Toolbar toolbar = findViewById(R.id.canvas_top_toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar topToolbar = findViewById(R.id.canvas_top_toolbar);
+        setSupportActionBar(topToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // add CanvasView to the canvas_main layout
         ViewGroup canvas_layout = findViewById(R.id.canvas_main);
         if (canvas_layout != null) {
-            mCanvasView = new CanvasView(this, toolbar);
+            mCanvasView = new CanvasView(this, topToolbar, (Toolbar)findViewById(R.id.canvas_bottom_toolbar));
             canvas_layout.addView(mCanvasView);
         }
     }
@@ -67,26 +68,27 @@ public class CanvasActivity extends AppCompatActivity {
         if (id == R.id.action_cut) {
             Project.instance().copySelectedCompound();
             Project.instance().removeSelectedCompound();
+            Helper.instance().notification("Compound Cut");
         } else if (id == R.id.action_copy) {
             Project.instance().copySelectedCompound();
+            Helper.instance().notification("Compound Copied");
         } else if (id == R.id.action_paste) {
             Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
+            Helper.instance().notification("Compound Pasted");
         } else if (id == R.id.action_redo) {
 
         } else if (id == R.id.action_undo) {
 
         } else if (id == R.id.action_trashcan) {
             Project.instance().removeSelectedCompound();
+            Helper.instance().notification("Compound Deleted");
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
-            Project.instance().removeSelectedCompound();
         } else if (id == R.id.action_change_atom) {
 
         } else if (id == R.id.action_bond) {
 
         } else if (id == R.id.action_synthesize) {
-
-        } else if (id == R.id.action_decomposition) {
 
         } else {
             ret = false;
@@ -99,5 +101,12 @@ public class CanvasActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // after adding compound, the context menu needs to be updated
+        mCanvasView.updateContextMenu();
     }
 }

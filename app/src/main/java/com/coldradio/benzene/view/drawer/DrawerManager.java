@@ -19,18 +19,6 @@ public class DrawerManager {
     private Paint mThickPaint;
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
 
-//    private void draw(Compound compound, Canvas canvas) {
-//        boolean drawn = false;
-//        for (ICompoundDrawer componentDrawer : mCompoundDrawer) {
-//            if (drawn = componentDrawer.draw(compound, canvas, mPaint)) {
-//                break;
-//            }
-//        }
-//        if (! drawn) {
-//            GenericDrawer.draw(compound, canvas, mPaint);
-//        }
-//    }
-
     private void drawSelectedCompoundAccessory(ElementSelector elementSelector, Canvas canvas) {
         PointF pivot = elementSelector.getRotationPivotPoint();
         PointF center = elementSelector.getSelectedCompound().centerOfRectangle();

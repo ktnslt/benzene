@@ -29,21 +29,20 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
     }
 
-    public CanvasView(Context context, Toolbar toolbar) {
+    public CanvasView(Context context, Toolbar topToolbar, Toolbar bottomToolbar) {
         super(context);
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         CompoundLibrary.instance().parseLibrary(this.getResources());
         Helper.instance().setContext(this.getContext());
-        mContextMenuManager = new ContextMenuManager(toolbar);
+        mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
 
         // register drawer
         mDrawerManager.addCompoundDrawer(new SelectedRegionDrawer());
     }
 
     public void updateContextMenu() {
-        if (mContextMenuManager != null)
-            mContextMenuManager.update();
+        mContextMenuManager.update();
     }
 
     @Override
@@ -69,6 +68,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
             // for long click, the clicked position is saved
             mClickedPoint.set(event.getX(), event.getY());
             Project.instance().select(actualPoint);
+            updateContextMenu();
             invalidate();
             return true;
         }

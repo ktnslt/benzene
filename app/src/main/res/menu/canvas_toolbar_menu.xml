@@ -27,14 +27,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_trashcan"
-        android:orderInCategory="4"
-        android:title="Atom"
-        android:icon="@drawable/ic_menu_trashcan"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_undo"
         android:orderInCategory="11"
         android:title="&lt;"

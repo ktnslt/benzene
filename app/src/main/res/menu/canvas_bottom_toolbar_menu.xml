@@ -5,29 +5,57 @@
     <item
         android:id="@+id/action_change_atom"
         android:orderInCategory="1"
-        android:title="Decomposition"
+        android:title="Change Atom"
         android:icon="@drawable/ic_menu_atom"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_3d"
+        android:orderInCategory="2"
+        android:title="Mark"
+        android:icon="@drawable/ic_menu_3d"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_star"
+        android:orderInCategory="3"
+        android:title="Mark"
+        android:icon="@drawable/ic_menu_star"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_bond"
-        android:orderInCategory="2"
+        android:orderInCategory="4"
         android:title="Bond"
         android:icon="@drawable/ic_menu_bond"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_synthesize"
-        android:orderInCategory="3"
+        android:orderInCategory="5"
         android:title="Synthesize"
         android:icon="@drawable/ic_menu_synthesis"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_decomposition"
-        android:orderInCategory="4"
-        android:title="Decomposition"
-        android:icon="@drawable/ic_menu_decomposition"
+        android:id="@+id/action_adjust"
+        android:orderInCategory="6"
+        android:title="Delete"
+        android:icon="@drawable/ic_menu_adjust"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_trashcan"
+        android:orderInCategory="7"
+        android:title="Delete"
+        android:icon="@drawable/ic_menu_trashcan"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
