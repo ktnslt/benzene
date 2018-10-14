@@ -20,7 +20,6 @@ public class ElementSelector {
     private Atom mSelectedAtom;
     private Edge mSelectedEdge;
     private Compound mSelectedCompound;
-    // TODO: move to DrawerManager
     private PointF mRotationPivotPoint = new PointF();
     private boolean mIsRotating = false;
 
@@ -69,6 +68,7 @@ public class ElementSelector {
         for (Compound compound : compoundList) {
             // try to select Atom first
             Atom atom = selectAtom(point, compound);
+            mSelectedCompound = compound;
 
             if (atom != null) {
                 if (mSelection == Selection.ATOM && atom == mSelectedAtom) {

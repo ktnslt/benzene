@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
+import com.coldradio.benzene.lib.Edge;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,41 +60,32 @@ public class Project {
         return false;
     }
 
-    public boolean removeSelectedCompound() {
-        if (mElementSelector.hasSelectedCompound()) {
-            removeCompound(mElementSelector.getSelectedCompound());
-            mElementSelector.reset();
+    public boolean deleteSelectedElement() {
+        switch(mElementSelector.selection()) {
+            case ATOM:
+                mElementSelector.getSelectedCompound().delete(mElementSelector.getSelectedAtom());
+                break;
+            case EDGE:
+                mElementSelector.getSelectedCompound().delete(mElementSelector.getSelectedEdge());
+                break;
+            case COMPOUND:
+                removeCompound(mElementSelector.getSelectedCompound());
+                break;
+            case NONE:
+                return false;
+        }
+        mElementSelector.reset();
+
+        return true;
+    }
+
+    public boolean cycleBondType() {
+        if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
+            mElementSelector.getSelectedCompound().cycleBondType(mElementSelector.getSelectedEdge());
             return true;
         } else {
             return false;
         }
-    }
-
-    public boolean decomposition(PointF point) {
-//// TODO: in case of a ring, it will not be broken into two compounds
-//        for (Compound compound : mCompoundList) {
-//            Compound cutCompound = compound.decomposition(point);
-//
-//            if (cutCompound != null) {
-//                if (compound.size() == 1) {
-//                    removeCompound(compound);
-//                }
-//                if (cutCompound.size() > 1) {
-//                    mCompoundList.add(cutCompound);
-//                }
-//                return true;
-//            }
-//        }
-        return false;
-    }
-
-    public boolean cycleBondType(PointF point) {
-        for (Compound compound : mCompoundList) {
-            if (compound.cycleBondType(point)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean synthesis(PointF point) {

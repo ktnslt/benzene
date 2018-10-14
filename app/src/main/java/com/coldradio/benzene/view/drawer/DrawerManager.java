@@ -2,6 +2,7 @@ package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
@@ -17,16 +18,15 @@ import java.util.List;
 public class DrawerManager {
     private Paint mPaint;
     private Paint mThickPaint;
+    private Paint mDashedLinePaint;
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
 
     private void drawSelectedCompoundAccessory(ElementSelector elementSelector, Canvas canvas) {
         PointF pivot = elementSelector.getRotationPivotPoint();
         PointF center = elementSelector.getSelectedCompound().centerOfRectangle();
 
-        mPaint.setColor(Color.rgb(0, 0, 120));
-        mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, mPaint);
-        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, mPaint);
+        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, mDashedLinePaint);
+        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, mDashedLinePaint);
     }
 
     public DrawerManager() {
@@ -38,6 +38,12 @@ public class DrawerManager {
         mThickPaint.setStrokeCap(Paint.Cap.ROUND);
         mThickPaint.setStyle(Paint.Style.STROKE);
         mThickPaint.setColor(Color.rgb(140, 180, 250));
+
+        mDashedLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mDashedLinePaint.setStrokeWidth(4);
+        mDashedLinePaint.setColor(Color.rgb(60, 60, 60));
+        mDashedLinePaint.setStyle(Paint.Style.STROKE);
+        mDashedLinePaint.setPathEffect(new DashPathEffect(new float[]{5, 5},0));
     }
 
     public void addCompoundDrawer(ICompoundDrawer newCompoundDrawer) {
@@ -87,10 +93,10 @@ public class DrawerManager {
             }
         }
 
-//        if (elementSelector.hasSelectedCompound()) {
-//            // not drawn at the same time with the compound since the accessory shall be in front of everything
-//            drawSelectedCompoundAccessory(mElementSelector, canvas);
-//        }
+        if (elementSelector.hasSelectedCompound()) {
+            // not drawn at the same time with the compound since the accessory shall be in front of everything
+            drawSelectedCompoundAccessory(elementSelector, canvas);
+        }
 
 //        if (mRegionSelector != null) {
 //            mRegionSelector.draw(canvas);

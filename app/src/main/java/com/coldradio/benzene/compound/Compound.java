@@ -4,11 +4,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.coldradio.benzene.lib.AtomicNumber;
+import com.coldradio.benzene.lib.Edge;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.project.Project;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class Compound {
@@ -122,29 +124,9 @@ public class Compound {
         return new RectF(left, top, right, bottom);
     }
 
-    public Compound decomposition(PointF point) {
-        return null;
-//        Atom[] edge = selectedEdge(point);
-//
-//        if (edge != null) {
-//// Compound cutCompound = new Compound(new ArrayList<>(mAtoms.subList(leftSelectedIndex + 1, mAtoms.size())));
-////
-//// mAtoms.subList(leftSelectedIndex + 1, mAtoms.size()).clear();
-//// mAtoms.get(leftSelectedIndex).cutBond(cutCompound.mAtoms.get(0));
-//            return null;//cutCompound;
-//        } else {
-//            return null;
-//        }
-    }
-
-    public boolean cycleBondType(PointF point) {
-//        Atom[] edge = selectedEdge(point);
-//
-//        if (edge != null) {
-//            edge[0].cycleBond(edge[1]);
-//            edge[1].cycleBond(edge[0]);
-//            return true;
-//        }
+    public boolean cycleBondType(Edge edge) {
+        edge.first.cycleBond(edge.second);
+        edge.second.cycleBond(edge.first);
         return false;
     }
 
@@ -165,6 +147,26 @@ public class Compound {
 
         if (a1 != null & a2 != null) {
             a1.setBond(a2, bondType);
+        }
+    }
+
+    public void delete(Edge edge) {
+        edge.first.cutBond(edge.second);
+    }
+
+    public void delete(Atom atom) {
+        // cut all bonds
+        for (Atom other : mAtoms) {
+            if (other != atom) {
+                other.cutBond(atom);
+            }
+        }
+        // delete atom
+        for (Iterator<Atom> it = mAtoms.iterator(); it.hasNext(); ) {
+            if (it.next() == atom) {
+                it.remove();
+                break;
+            }
         }
     }
 }

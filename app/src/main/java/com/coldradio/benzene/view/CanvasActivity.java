@@ -67,27 +67,24 @@ public class CanvasActivity extends AppCompatActivity {
 
         if (id == R.id.action_cut) {
             Project.instance().copySelectedCompound();
-            Project.instance().removeSelectedCompound();
-            Helper.instance().notification("Compound Cut");
+            Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_copy) {
             Project.instance().copySelectedCompound();
             Helper.instance().notification("Compound Copied");
         } else if (id == R.id.action_paste) {
             Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
-            Helper.instance().notification("Compound Pasted");
         } else if (id == R.id.action_redo) {
 
         } else if (id == R.id.action_undo) {
 
         } else if (id == R.id.action_trashcan) {
-            Project.instance().removeSelectedCompound();
-            Helper.instance().notification("Compound Deleted");
+            Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_change_atom) {
 
         } else if (id == R.id.action_bond) {
-
+            Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
 
         } else {
