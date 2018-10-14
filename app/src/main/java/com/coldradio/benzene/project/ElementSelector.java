@@ -124,7 +124,8 @@ public class ElementSelector {
         return mSelectedAtom;
     }
 
-    public boolean moveSelectedCompoundBy(PointF distance) {
+    public boolean moveSelectedElement(PointF distance) {
+        // TODO: shall move both the Atom and Edge or anything selected
         if (hasSelectedCompound()) {
             mRotationPivotPoint.offset(distance.x, distance.y);
             mSelectedCompound.offset(distance.x, distance.y);

@@ -59,6 +59,22 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_select_by_rect"
+        android:orderInCategory="8"
+        android:title="Select"
+        android:icon="@drawable/ic_menu_select_by_rect"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_select_by_finger"
+        android:orderInCategory="9"
+        android:title="Delete"
+        android:icon="@drawable/ic_menu_select_by_finger"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_add"
         android:orderInCategory="10"
         android:title="Add"

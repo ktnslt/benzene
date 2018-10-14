@@ -26,7 +26,7 @@ public class ContextMenuManager {
         showItem(mTopToolbar, R.id.action_copy, copy);
     }
 
-    private void setBottomToolbar(boolean change_atom, boolean rs, boolean star_mark, boolean bond, boolean synthesize, boolean auto_adjust, boolean trashcan) {
+    private void setBottomToolbar(boolean change_atom, boolean rs, boolean star_mark, boolean bond, boolean synthesize, boolean auto_adjust, boolean trashcan, boolean select_by_rect, boolean select_by_finger) {
         showItem(mBottomToolbar, R.id.action_change_atom, change_atom);
         showItem(mBottomToolbar, R.id.action_3d, rs);
         showItem(mBottomToolbar, R.id.action_star, star_mark);
@@ -34,6 +34,8 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_synthesize, synthesize);
         showItem(mBottomToolbar, R.id.action_adjust, auto_adjust);
         showItem(mBottomToolbar, R.id.action_trashcan, trashcan);
+        showItem(mBottomToolbar, R.id.action_select_by_rect, select_by_rect);
+        showItem(mBottomToolbar, R.id.action_select_by_finger, select_by_finger);
     }
 
     public ContextMenuManager(Toolbar topToolbar, Toolbar bottomToolbar) {
@@ -53,16 +55,16 @@ public class ContextMenuManager {
         // bottom toolbar update
         switch(Project.instance().getElementSelector().selection()) {
             case ATOM:
-                setBottomToolbar(true, true, true, false, true, false, true);
+                setBottomToolbar(true, true, true, false, true, false, true, false, false);
                 break;
             case EDGE:
-                setBottomToolbar(false, false, false, true, false, false, true);
+                setBottomToolbar(false, false, false, true, false, false, true, false, false);
                 break;
             case COMPOUND:
-                setBottomToolbar(false, false, false, false, false, true, true);
+                setBottomToolbar(false, false, false, false, false, true, true, false, false);
                 break;
             case NONE:
-                setBottomToolbar(false, false, false, false, false, false, false);
+                setBottomToolbar(false, false, false, false, false, false, false, true, true);
                 break;
         }
     }

@@ -24,6 +24,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
     private GestureDetectorCompat mGestureDetector;
     private ContextMenuManager mContextMenuManager;
     private DrawerManager mDrawerManager = new DrawerManager();
+    private boolean mMovedAfterActionDown;
 
     private PointF actualClickedPosition(MotionEvent e) {
         return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -65,8 +66,11 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         } else if (mGestureDetector.onTouchEvent(event)) {
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // for long click, the clicked position is saved
             mClickedPoint.set(event.getX(), event.getY());
+            mMovedAfterActionDown = false;
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_UP && ! mMovedAfterActionDown) {
+            // this event happens only if the ACTION_DOWN returns true
             Project.instance().select(actualPoint);
             updateContextMenu();
             invalidate();
@@ -92,10 +96,12 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        mMovedAfterActionDown = true;
+
         if (Project.instance().isSelectingRegion()) {
             return false;
-        } else if (Project.instance().hasSelectedCompound()) {
-            Project.instance().moveSelectedCompoundBy(new PointF(-distanceX, -distanceY));
+        } else if (Project.instance().hasSelectedElement()) {
+            Project.instance().moveSelectedElement(new PointF(-distanceX, -distanceY));
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);

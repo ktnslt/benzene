@@ -16,7 +16,7 @@ public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
     private CompoundReactor mCompoundReactor = new CompoundReactor();
-    private IRegionSelector mRegionSelector;
+    private IRegionSelector mRegionSelector;    // TODO move to ElementSelector
     private ElementSelector mElementSelector = new ElementSelector();
     private Compound mCopiedCompound;
 
@@ -133,8 +133,8 @@ public class Project {
         }
     }
 
-    public boolean moveSelectedCompoundBy(PointF distance) {
-        return mElementSelector.moveSelectedCompoundBy(distance);
+    public boolean moveSelectedElement(PointF distance) {
+        return mElementSelector.moveSelectedElement(distance);
     }
 
     public boolean hasSelectedCompound() {
