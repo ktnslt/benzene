@@ -82,7 +82,7 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_change_atom) {
-
+            startActivity(new Intent("com.coldradio.benzene.CHANGE_ATOM"));
         } else if (id == R.id.action_bond) {
             Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
