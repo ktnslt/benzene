@@ -1,9 +1,8 @@
 package com.coldradio.benzene.compound;
 
-import com.coldradio.benzene.lib.AtomicNumber;
-
 public class Bond {
     public enum BondType {
+        // TODO consider DOUBLE, DOUBLE_OTHER_SIDE, that differs in the drawing. Then the mNextDoubleBond can be deleted
         NONE, SINGLE, DOUBLE, TRIPLE
     }
 
@@ -32,20 +31,16 @@ public class Bond {
         return mAtom;
     }
 
-    public boolean isCarbonBond() {
-        return mAtom.getAtomicNumber() == AtomicNumber.C;
-    }
-
     public void cycleBond() {
         switch (mBondType) {
             case SINGLE:
                 mBondType = BondType.DOUBLE;
                 break;
             case DOUBLE:
-                if(mNextDoubleBond) {
+                if (mNextDoubleBond) {
                     mBondType = BondType.TRIPLE;
                 }
-                mNextDoubleBond= !mNextDoubleBond;
+                mNextDoubleBond = !mNextDoubleBond;
                 break;
             case TRIPLE:
                 mBondType = BondType.SINGLE;

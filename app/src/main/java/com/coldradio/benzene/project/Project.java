@@ -6,7 +6,7 @@ import android.graphics.RectF;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.lib.Edge;
+import com.coldradio.benzene.lib.AtomicNumber;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +61,7 @@ public class Project {
     }
 
     public boolean deleteSelectedElement() {
-        switch(mElementSelector.selection()) {
+        switch (mElementSelector.selection()) {
             case ATOM:
                 mElementSelector.getSelectedCompound().delete(mElementSelector.getSelectedAtom());
                 break;
@@ -160,5 +160,17 @@ public class Project {
 
     public boolean hasCopiedCompound() {
         return mCopiedCompound != null;
+    }
+
+    public void changeSelectedAtom(AtomicNumber ele) {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            mElementSelector.getSelectedAtom().setAtomicNumber(ele);
+        }
+    }
+
+    public void markSelectedAtomWithStart() {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            mElementSelector.getSelectedAtom().markWithStar();
+        }
     }
 }

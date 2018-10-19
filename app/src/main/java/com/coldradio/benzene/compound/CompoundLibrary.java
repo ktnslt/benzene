@@ -16,7 +16,6 @@ import java.util.List;
 public class CompoundLibrary {
     private List<CompoundIndex> mAllCompounds = new ArrayList<>();
     private List<CompoundIndex> mFilteredCompounds;
-    ;
     private SearchFilter mSearchFilter;
     private static CompoundLibrary smInstance = new CompoundLibrary();
 

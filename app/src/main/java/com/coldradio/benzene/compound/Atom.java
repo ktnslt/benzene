@@ -10,10 +10,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Atom {
+    public enum Marker {
+        NONE, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
+    }
+
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is only valid in CompoundLibrary during initial setup. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
+    private Marker mMarker = Marker.NONE;
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -113,15 +118,8 @@ public class Atom {
         return Collections.unmodifiableList(mBonds);
     }
 
-    public int carbonBoundNumber() {
-        int boundCarbons = 0;
-
-        for (Bond bond : mBonds) {
-            if (bond.isCarbonBond()) {
-                ++boundCarbons;
-            }
-        }
-        return boundCarbons;
+    public int bondNumber() {
+        return mBonds.size();
     }
 
     public void cycleBond(Atom atom) {
@@ -144,5 +142,17 @@ public class Atom {
 
     public void offset(float dx, float dy) {
         mPoint.offset(dx, dy);
+    }
+
+    public void setAtomicNumber(AtomicNumber ele) {
+        mAtomicNumber = ele;
+    }
+
+    public void markWithStar() {
+        mMarker = Marker.values()[(mMarker.ordinal() + 1) % Marker.values().length];
+    }
+
+    public Marker getMarker() {
+        return mMarker;
     }
 }

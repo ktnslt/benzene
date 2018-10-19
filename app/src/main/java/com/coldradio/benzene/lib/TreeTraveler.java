@@ -11,9 +11,13 @@ public class TreeTraveler {
         boolean visit(Atom a1, Atom a2, Object... args);
     }
 
-    private static Edge doRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
+    public interface IAtomVisitor {
+        boolean visit(Atom atom, Object... args);
+    }
+
+    private static Edge doEdgeRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
         for (Bond bond : parent.getBonds()) {
-            /*  TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
+            /* TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
                 I have tried to use hashCode of the atom as a key, but it doesn't work.
             */
             Atom child = bond.getBoundAtom();
@@ -26,8 +30,8 @@ public class TreeTraveler {
                 }
                 visitedEdge.add(parent.getPoint().toString() + child.getPoint());
 
-                Edge ret = doRecursive(child, edgeVisitor, visitedEdge, args);
-                if(ret != null) {
+                Edge ret = doEdgeRecursive(child, edgeVisitor, visitedEdge, args);
+                if (ret != null) {
                     return ret;
                 }
             }
@@ -37,12 +41,21 @@ public class TreeTraveler {
     }
 
     public static Edge returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
-        if(compound.size() >= 2) {
+        if (compound.size() >= 2) {
             HashSet<String> visitedEdge = new HashSet<>();
 
-            return doRecursive(compound.getAtoms().get(0), edgeVisitor, visitedEdge, args);
+            return doEdgeRecursive(compound.getAtoms().get(0), edgeVisitor, visitedEdge, args);
         } else {
             return null;
         }
+    }
+
+    public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Compound compound, Object... args) {
+        for (Atom atom : compound.getAtoms()) {
+            if (atomVisitor.visit(atom, args)) {
+                return atom;
+            }
+        }
+        return null;
     }
 }

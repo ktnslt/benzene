@@ -32,6 +32,8 @@ public class DrawerManager {
     public DrawerManager() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
+        mPaint.setTextSize(Configuration.FONT_SIZE);
+        mPaint.setStyle(Paint.Style.FILL);
 
         mThickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mThickPaint.setStrokeWidth(Configuration.LINE_THICKNESS * 7);
@@ -67,7 +69,7 @@ public class DrawerManager {
             case ATOM:
                 PointF p = elementSelector.getSelectedAtom().getPoint();
 
-                canvas.drawCircle(p.x, p.y, 1, mThickPaint);
+                canvas.drawCircle(p.x, p.y, 10, mThickPaint);
                 break;
             case EDGE:
                 Edge edge = elementSelector.getSelectedEdge();

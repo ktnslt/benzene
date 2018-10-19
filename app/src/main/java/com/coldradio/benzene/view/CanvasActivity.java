@@ -10,12 +10,16 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.lib.AtomicNumber;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 
 public class CanvasActivity extends AppCompatActivity {
-    CanvasView mCanvasView;
+    private enum ActivityRequestCode {
+        CHANGE_ATOM_REQ
+    }
+    private CanvasView mCanvasView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,11 +86,13 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_change_atom) {
-            startActivity(new Intent("com.coldradio.benzene.CHANGE_ATOM"));
+            startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
         } else if (id == R.id.action_bond) {
             Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
 
+        } else if (id == R.id.action_star) {
+            Project.instance().markSelectedAtomWithStart();
         } else {
             ret = false;
         }
@@ -105,5 +111,17 @@ public class CanvasActivity extends AppCompatActivity {
         super.onResume();
         // after adding compound, the context menu needs to be updated
         mCanvasView.updateContextMenu();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
+            if (resultCode == RESULT_OK) {
+                Project.instance().changeSelectedAtom(AtomicNumber.valueOf(data.getData().toString()));
+                mCanvasView.invalidate();
+            }
+        }
     }
 }
