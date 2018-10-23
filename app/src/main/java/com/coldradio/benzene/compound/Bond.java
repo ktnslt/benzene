@@ -2,13 +2,11 @@ package com.coldradio.benzene.compound;
 
 public class Bond {
     public enum BondType {
-        // TODO consider DOUBLE, DOUBLE_OTHER_SIDE, that differs in the drawing. Then the mNextDoubleBond can be deleted
-        NONE, SINGLE, DOUBLE, TRIPLE
+        NONE, SINGLE, DOUBLE, DOUBLE_OTHER_SIDE, DOUBLE_MIDDLE, TRIPLE
     }
 
     private Atom mAtom;
     private BondType mBondType;
-    private boolean mNextDoubleBond = false;
 
     public Bond(Atom bondTo, BondType bondType) {
         mAtom = bondTo;
@@ -16,6 +14,14 @@ public class Bond {
     }
 
     public BondType getBondType() {
+        if (mBondType == BondType.DOUBLE_MIDDLE || mBondType == BondType.DOUBLE_OTHER_SIDE) {
+            return BondType.DOUBLE;
+        } else {
+            return mBondType;
+        }
+    }
+
+    public BondType getDetailedBondType() {
         return mBondType;
     }
 
@@ -32,23 +38,8 @@ public class Bond {
     }
 
     public void cycleBond() {
-        switch (mBondType) {
-            case SINGLE:
-                mBondType = BondType.DOUBLE;
-                break;
-            case DOUBLE:
-                if (mNextDoubleBond) {
-                    mBondType = BondType.TRIPLE;
-                }
-                mNextDoubleBond = !mNextDoubleBond;
-                break;
-            case TRIPLE:
-                mBondType = BondType.SINGLE;
-                break;
-        }
-    }
-
-    public boolean isNextDoubleBond() {
-        return mNextDoubleBond;
+        mBondType = BondType.values()[(mBondType.ordinal() + 1) % BondType.values().length];
+        if (mBondType == BondType.NONE)
+            mBondType = BondType.SINGLE;
     }
 }

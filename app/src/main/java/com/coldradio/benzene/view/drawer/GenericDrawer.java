@@ -65,7 +65,7 @@ public class GenericDrawer {
                 centerIndex = indexSameSideOfLineBondAndCenter(a2, a1, centers);
             }
 
-            if (a1.isNextDoubleBond(a2)) {
+            if (a1.getDetailedBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE) {
                 centerIndex = (centerIndex + 1) % 2;
             }
             return centers[centerIndex];
@@ -78,7 +78,7 @@ public class GenericDrawer {
 
         paint.getTextBounds(text, 0, text.length(), bounds);
 
-        float textWidth = (bounds.right - bounds.left) + 10, textHeight = (bounds.bottom - bounds.top) + 10;
+        float textWidth = (bounds.right - bounds.left) + 5, textHeight = (bounds.bottom - bounds.top);
 
         if (bgOn) {
             paint.setColor(bgColor);
@@ -109,23 +109,42 @@ public class GenericDrawer {
         drawTextToCenter(xy, Character.toString(Configuration.ATOM_MARKER), false, 0, canvas, paint);
     }
 
+    private static boolean isCarbonHydrogenBond(Atom a1, Atom a2) {
+        AtomicNumber a1an = a1.getAtomicNumber(), a2an = a2.getAtomicNumber();
+
+        return (a1an == AtomicNumber.C && a2an == AtomicNumber.H) || (a1an == AtomicNumber.H && a2an == AtomicNumber.C);
+    }
+
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         // draw edges
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
+                if (isCarbonHydrogenBond(a1, a2))
+                    return false;
+
                 Canvas canvas = (Canvas) args[0];
                 Paint paint = (Paint) args[1];
                 PointF p1 = a1.getPoint(), p2 = a2.getPoint();
 
-                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-                switch (a1.getBondType(a2)) {
+                switch (a1.getDetailedBondType(a2)) {
+                    case SINGLE:
+                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                        break;
                     case DOUBLE:
+                    case DOUBLE_OTHER_SIDE:
+                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
+                        break;
+                    case DOUBLE_MIDDLE:
+                        // TODO draw two parallel lines between points
+                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
                         break;
                     case TRIPLE:
                         PointF center = centerForDoubleBond(a1, a2);
 
+                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
                         break;
@@ -141,7 +160,7 @@ public class GenericDrawer {
                 Canvas canvas = (Canvas) args[0];
                 Paint paint = (Paint) args[1];
 
-                if (atom.getAtomicNumber() != AtomicNumber.C) {
+                if (atom.getAtomicNumber() != AtomicNumber.C && !atom.isHydrogenBoundTo(AtomicNumber.C)) {
                     drawTextToCenter(atom.getPoint(), atom.getAtomicNumber().toString(), true, Color.WHITE, canvas, paint);
                 }
                 if (atom.getMarker() != Atom.Marker.NONE) {

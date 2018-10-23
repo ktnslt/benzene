@@ -37,9 +37,7 @@ public class Compound {
         mAtoms = new ArrayList<>();
 
         for (int ii = 0; ii < aids.length; ++ii) {
-            if (atomicNumber[ii] != AtomicNumber.H) {
-                mAtoms.add(new Atom(aids[ii], atomicNumber[ii]));
-            }
+            mAtoms.add(new Atom(aids[ii], atomicNumber[ii]));
         }
     }
 

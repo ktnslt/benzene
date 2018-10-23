@@ -34,20 +34,15 @@ public class CompoundLibrary {
 
         // setup bonds
         for (int ii = 0; ii < compound_json.bondLength(); ++ii) {
-            if (compound_json.isNonHydrogenBond(ii)) {
-                compound.makeBond(compound_json.bonds.aid1[ii], compound_json.bonds.aid2[ii], compound_json.bondType(ii));
-            }
+            compound.makeBond(compound_json.bonds.aid1[ii], compound_json.bonds.aid2[ii], compound_json.bondType(ii));
         }
 
         // setup coordinates
         coords_JSON coord = compound_json.coords.get(0);
 
         for (int ii = 0; ii < coord.aid.length; ++ii) {
-            if (compound_json.getAtomicNumber(coord.aid[ii]) != AtomicNumber.H) {
-                conformer_JSON xy = coord.conformers.get(0);
-
-                compound.getAtom(coord.aid[ii]).setPoint(new PointF(xy.x[ii], xy.y[ii]));
-            }
+            conformer_JSON xy = coord.conformers.get(0);
+            compound.getAtom(coord.aid[ii]).setPoint(new PointF(xy.x[ii], xy.y[ii]));
         }
 
         CompoundArranger.zoomToStandard(compound, 0.5f);

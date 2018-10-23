@@ -11,7 +11,10 @@ public class CompoundArranger {
         if (compound.size() == 1) {
             return Configuration.LINE_LENGTH;
         } else {
-            return Geometry.distanceFromPointToPoint(compound.getAtoms().get(0).getPoint(), compound.getAtoms().get(1).getPoint());
+            Atom a1 = compound.getAtoms().get(0);
+            Atom a2 = a1.getBonds().get(0).getBoundAtom();
+
+            return Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint());
         }
     }
 

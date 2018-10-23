@@ -130,16 +130,6 @@ public class Atom {
         }
     }
 
-    public boolean isNextDoubleBond(Atom atom) {
-        Bond bond = findBond(atom);
-
-        if (bond != null) {
-            return bond.isNextDoubleBond();
-        } else {
-            return false;
-        }
-    }
-
     public void offset(float dx, float dy) {
         mPoint.offset(dx, dy);
     }
@@ -154,5 +144,18 @@ public class Atom {
 
     public Marker getMarker() {
         return mMarker;
+    }
+
+    public Bond.BondType getDetailedBondType(Atom atom) {
+        Bond bond = findBond(atom);
+
+        if (bond != null) {
+            return bond.getDetailedBondType();
+        }
+        return Bond.BondType.NONE;
+    }
+
+    public boolean isHydrogenBoundTo(AtomicNumber c) {
+        return mAtomicNumber == AtomicNumber.H && mBonds.size() == 1 && mBonds.get(0).getBoundAtom().getAtomicNumber() == c;
     }
 }

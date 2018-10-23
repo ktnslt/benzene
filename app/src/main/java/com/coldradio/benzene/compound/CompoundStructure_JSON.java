@@ -30,10 +30,6 @@ class PC_Compound_JSON {
         return bonds.aid1.length;
     }
 
-    public boolean isNonHydrogenBond(int bondIndex) {
-        return getAtomicNumber(bonds.aid1[bondIndex]) != AtomicNumber.H && getAtomicNumber(bonds.aid2[bondIndex]) != AtomicNumber.H;
-    }
-
     public Bond.BondType bondType(int bondIndex) {
         // 1 --> SINGLE, 2 --> DOUBLE, 3 --> TRIPLE
         return Bond.BondType.values()[bonds.order[bondIndex]];

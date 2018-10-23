@@ -1,0 +1,470 @@
+{
+  "PC_Compounds": [
+    {
+      "id": {
+        "id": {
+          "cid": 1005
+        }
+      },
+      "atoms": {
+        "aid": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "element": [
+          15,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          6,
+          6,
+          6,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "bonds": {
+        "aid1": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          6,
+          6,
+          7,
+          8,
+          8,
+          10,
+          10
+        ],
+        "aid2": [
+          2,
+          3,
+          4,
+          5,
+          8,
+          13,
+          14,
+          9,
+          15,
+          9,
+          9,
+          10,
+          11,
+          12
+        ],
+        "order": [
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          2,
+          1,
+          1
+        ]
+      },
+      "coords": [
+        {
+          "type": [
+            1,
+            5,
+            255
+          ],
+          "aid": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "conformers": [
+            {
+              "x": [
+                3.403,
+                4.269,
+                2.5369,
+                2.903,
+                3.903,
+                6.8671,
+                6.001,
+                5.135,
+                6.001,
+                5.135,
+                4.5981,
+                5.672,
+                2,
+                3.213,
+                7.404
+              ],
+              "y": [
+                -0.25,
+                0.25,
+                -0.75,
+                0.616,
+                -1.116,
+                -0.25,
+                1.25,
+                -0.25,
+                0.25,
+                -1.25,
+                -1.56,
+                -1.56,
+                -0.44,
+                1.153,
+                0.06
+              ]
+            }
+          ]
+        }
+      ],
+      "charge": 0,
+      "props": [
+        {
+          "urn": {
+            "label": "Compound",
+            "name": "Canonicalized",
+            "datatype": 5,
+            "release": "2012.11.26"
+          },
+          "value": {
+            "ival": 1
+          }
+        },
+        {
+          "urn": {
+            "label": "Compound Complexity",
+            "datatype": 7,
+            "implementation": "E_COMPLEXITY",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": 201
+          }
+        },
+        {
+          "urn": {
+            "label": "Count",
+            "name": "Hydrogen Bond Acceptor",
+            "datatype": 5,
+            "implementation": "E_NHACCEPTORS",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "ival": 6
+          }
+        },
+        {
+          "urn": {
+            "label": "Count",
+            "name": "Hydrogen Bond Donor",
+            "datatype": 5,
+            "implementation": "E_NHDONORS",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "ival": 3
+          }
+        },
+        {
+          "urn": {
+            "label": "Count",
+            "name": "Rotatable Bond",
+            "datatype": 5,
+            "implementation": "E_NROTBONDS",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "ival": 3
+          }
+        },
+        {
+          "urn": {
+            "label": "Fingerprint",
+            "name": "SubStructure Keys",
+            "datatype": 16,
+            "parameters": "extended 2",
+            "implementation": "E_SCREEN",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "binary": "0000037180403802000000000000000000000000000000000000000000000000000000000000001A00000820000804808000000800000310884000D208820000000000000000004000400104000000000000000000000110800000000000000000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "urn": {
+            "label": "IUPAC Name",
+            "name": "Allowed",
+            "datatype": 1,
+            "version": "2.2.0",
+            "software": "LexiChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "2-phosphonooxyprop-2-enoic acid"
+          }
+        },
+        {
+          "urn": {
+            "label": "IUPAC Name",
+            "name": "CAS-like Style",
+            "datatype": 1,
+            "version": "2.2.0",
+            "software": "LexiChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "2-phosphonooxy-2-propenoic acid"
+          }
+        },
+        {
+          "urn": {
+            "label": "IUPAC Name",
+            "name": "Preferred",
+            "datatype": 1,
+            "version": "2.2.0",
+            "software": "LexiChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "2-phosphonooxyprop-2-enoic acid"
+          }
+        },
+        {
+          "urn": {
+            "label": "IUPAC Name",
+            "name": "Systematic",
+            "datatype": 1,
+            "version": "2.2.0",
+            "software": "LexiChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "2-phosphonooxyprop-2-enoic acid"
+          }
+        },
+        {
+          "urn": {
+            "label": "IUPAC Name",
+            "name": "Traditional",
+            "datatype": 1,
+            "version": "2.2.0",
+            "software": "LexiChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "2-phosphonooxyacrylic acid"
+          }
+        },
+        {
+          "urn": {
+            "label": "InChI",
+            "name": "Standard",
+            "datatype": 1,
+            "version": "1.0.4",
+            "software": "InChI",
+            "source": "iupac.org",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "InChI=1S/C3H5O6P/c1-2(3(4)5)9-10(6,7)8/h1H2,(H,4,5)(H2,6,7,8)"
+          }
+        },
+        {
+          "urn": {
+            "label": "InChIKey",
+            "name": "Standard",
+            "datatype": 1,
+            "version": "1.0.4",
+            "software": "InChI",
+            "source": "iupac.org",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "DTBNBXWJWCWCIK-UHFFFAOYSA-N"
+          }
+        },
+        {
+          "urn": {
+            "label": "Log P",
+            "name": "XLogP3-AA",
+            "datatype": 7,
+            "version": "3.0",
+            "source": "sioc-ccbg.ac.cn",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": -1.1
+          }
+        },
+        {
+          "urn": {
+            "label": "Mass",
+            "name": "Exact",
+            "datatype": 7,
+            "version": "2.1",
+            "software": "PubChem",
+            "source": "ncbi.nlm.nih.gov",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": 167.982
+          }
+        },
+        {
+          "urn": {
+            "label": "Molecular Formula",
+            "datatype": 1,
+            "version": "2.1",
+            "software": "PubChem",
+            "source": "ncbi.nlm.nih.gov",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "C3H5O6P"
+          }
+        },
+        {
+          "urn": {
+            "label": "Molecular Weight",
+            "datatype": 7,
+            "version": "2.1",
+            "software": "PubChem",
+            "source": "ncbi.nlm.nih.gov",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": 168.041
+          }
+        },
+        {
+          "urn": {
+            "label": "SMILES",
+            "name": "Canonical",
+            "datatype": 1,
+            "version": "1.9.0",
+            "software": "OEChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "C=C(C(=O)O)OP(=O)(O)O"
+          }
+        },
+        {
+          "urn": {
+            "label": "SMILES",
+            "name": "Isomeric",
+            "datatype": 1,
+            "version": "1.9.0",
+            "software": "OEChem",
+            "source": "openeye.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "sval": "C=C(C(=O)O)OP(=O)(O)O"
+          }
+        },
+        {
+          "urn": {
+            "label": "Topological",
+            "name": "Polar Surface Area",
+            "datatype": 7,
+            "implementation": "E_TPSA",
+            "version": "3.444",
+            "software": "Cactvs",
+            "source": "xemistry.com",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": 104
+          }
+        },
+        {
+          "urn": {
+            "label": "Weight",
+            "name": "MonoIsotopic",
+            "datatype": 7,
+            "version": "2.1",
+            "software": "PubChem",
+            "source": "ncbi.nlm.nih.gov",
+            "release": "2016.09.28"
+          },
+          "value": {
+            "fval": 167.982
+          }
+        }
+      ],
+      "count": {
+        "heavy_atom": 10,
+        "atom_chiral": 0,
+        "atom_chiral_def": 0,
+        "atom_chiral_undef": 0,
+        "bond_chiral": 0,
+        "bond_chiral_def": 0,
+        "bond_chiral_undef": 0,
+        "isotope_atom": 0,
+        "covalent_unit": 1,
+        "tautomers": 1
+      }
+    }
+  ]
+}
