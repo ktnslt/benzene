@@ -65,7 +65,7 @@ public class GenericDrawer {
                 centerIndex = indexSameSideOfLineBondAndCenter(a2, a1, centers);
             }
 
-            if (a1.getDetailedBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE) {
+            if (a1.getBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE) {
                 centerIndex = (centerIndex + 1) % 2;
             }
             return centers[centerIndex];
@@ -127,7 +127,7 @@ public class GenericDrawer {
                 Paint paint = (Paint) args[1];
                 PointF p1 = a1.getPoint(), p2 = a2.getPoint();
 
-                switch (a1.getDetailedBondType(a2)) {
+                switch (a1.getBondType(a2)) {
                     case SINGLE:
                         canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
                         break;
@@ -137,9 +137,11 @@ public class GenericDrawer {
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
                         break;
                     case DOUBLE_MIDDLE:
-                        // TODO draw two parallel lines between points
-                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                        PointF[] shifted = Geometry.lineOrthogonalShift(p1, p2, 0.05f, true);
+                        canvas.drawLine(shifted[0].x, shifted[0].y, shifted[1].x, shifted[1].y, paint);
+
+                        shifted = Geometry.lineOrthogonalShift(p1, p2, 0.05f, false);
+                        canvas.drawLine(shifted[0].x, shifted[0].y, shifted[1].x, shifted[1].y, paint);
                         break;
                     case TRIPLE:
                         PointF center = centerForDoubleBond(a1, a2);

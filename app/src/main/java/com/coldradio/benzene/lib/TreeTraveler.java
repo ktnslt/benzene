@@ -40,6 +40,27 @@ public class TreeTraveler {
         return null;
     }
 
+    private static Atom doAtomRecursive(Atom atom, IAtomVisitor atomVisitor, HashSet<Atom> visitedAtom, Object[] args) {
+        for (Bond bond : atom.getBonds()) {
+            Atom next = bond.getBoundAtom();
+
+            if (!visitedAtom.contains(next)) {
+                if (atomVisitor.visit(next, args)) {
+                    return next;
+                }
+                visitedAtom.add(next);
+
+                Atom ret = doAtomRecursive(next, atomVisitor, visitedAtom, args);
+
+                if (ret != null) {
+                    return ret;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static Edge returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
         if (compound.size() >= 2) {
             HashSet<String> visitedEdge = new HashSet<>();
@@ -57,5 +78,21 @@ public class TreeTraveler {
             }
         }
         return null;
+    }
+
+    public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Atom atom, Object... args) {
+        HashSet<Atom> visitedAtom = new HashSet<>();
+
+        visitedAtom.add(atom);
+        return doAtomRecursive(atom, atomVisitor, visitedAtom, args);
+    }
+
+    public static boolean isCyclicBond(final Atom a1, Atom a2) {
+        return null != returnFirstAtom(new IAtomVisitor() {
+            @Override
+            public boolean visit(Atom atom, Object... args) {
+                return atom == a1;
+            }
+        }, a2);
     }
 }

@@ -12,7 +12,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.coldradio.benzene.compound.CompoundLibrary;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
@@ -34,7 +33,6 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         super(context);
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        CompoundLibrary.instance().parseLibrary(this.getResources());
         Helper.instance().setContext(this.getContext());
         mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
 

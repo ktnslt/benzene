@@ -85,4 +85,17 @@ public class Geometry {
 
         return center / points.length;
     }
+
+    public static PointF[] lineOrthogonalShift(PointF l1, PointF l2, float shiftRatio, boolean up) {
+        PointF[] shifted = new PointF[2];
+
+        // rotate l2 90 Degrees against l1
+        shifted[0] = rotatePoint(l2, l1, MathConstant.RADIAN_90 * (up ? -1 : 1));
+        shifted[0] = zoom(shifted[0].x, shifted[0].y, l1, shiftRatio);
+
+        shifted[1] = rotatePoint(l1, l2, MathConstant.RADIAN_90 * (up ? 1 : -1));
+        shifted[1] = zoom(shifted[1].x, shifted[1].y, l2, shiftRatio);
+
+        return shifted;
+    }
 }

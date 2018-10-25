@@ -3,7 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.lib.ScreenInfo;
+import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 public class CompoundArranger {
@@ -41,6 +41,20 @@ public class CompoundArranger {
 
     public static Compound zoomToStandard(Compound compound, float ratio) {
         zoom(compound, Configuration.LINE_LENGTH / atomDistance(compound) * ratio);
+
+        return compound;
+    }
+
+    public static Compound adjustDoubleBondType(Compound compound) {
+        TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+            @Override
+            public boolean visit(Atom a1, Atom a2, Object... args) {
+                if (a1.getBondType(a2) == Bond.BondType.DOUBLE && (a1.bondNumber() == 1 || a2.bondNumber() == 1)) {
+                    a1.setBond(a2, Bond.BondType.DOUBLE_MIDDLE);
+                }
+                return false;
+            }
+        }, compound);
 
         return compound;
     }

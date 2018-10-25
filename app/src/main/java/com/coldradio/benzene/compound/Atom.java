@@ -78,16 +78,6 @@ public class Atom {
         return mPoint;
     }
 
-    public Bond.BondType getBondType(Atom atom) {
-        Bond bond = findBond(atom);
-
-        if (bond != null) {
-            return bond.getBondType();
-        } else {
-            return Bond.BondType.NONE;
-        }
-    }
-
     public boolean cutBond(Atom atom) {
         for (Iterator<Bond> it = mBonds.iterator(); it.hasNext(); ) {
             Bond bond = it.next();
@@ -146,11 +136,11 @@ public class Atom {
         return mMarker;
     }
 
-    public Bond.BondType getDetailedBondType(Atom atom) {
+    public Bond.BondType getBondType(Atom atom) {
         Bond bond = findBond(atom);
 
         if (bond != null) {
-            return bond.getDetailedBondType();
+            return bond.getBondType();
         }
         return Bond.BondType.NONE;
     }

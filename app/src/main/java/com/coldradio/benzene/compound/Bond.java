@@ -14,14 +14,6 @@ public class Bond {
     }
 
     public BondType getBondType() {
-        if (mBondType == BondType.DOUBLE_MIDDLE || mBondType == BondType.DOUBLE_OTHER_SIDE) {
-            return BondType.DOUBLE;
-        } else {
-            return mBondType;
-        }
-    }
-
-    public BondType getDetailedBondType() {
         return mBondType;
     }
 

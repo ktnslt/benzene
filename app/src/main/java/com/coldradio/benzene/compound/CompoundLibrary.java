@@ -46,6 +46,7 @@ public class CompoundLibrary {
         }
 
         CompoundArranger.zoomToStandard(compound, 0.5f);
+        CompoundArranger.adjustDoubleBondType(compound);
 
         return compound;
     }
