@@ -3,6 +3,7 @@ package com.coldradio.benzene.project;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
@@ -171,6 +172,14 @@ public class Project {
     public void markSelectedAtomWithStart() {
         if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
             mElementSelector.getSelectedAtom().markWithStar();
+        }
+    }
+
+    public void cycleHydrogenMode() {
+        switch (mElementSelector.selection()) {
+            case ATOM:
+                mElementSelector.getSelectedAtom().cycleHydrogenMode();
+                break;
         }
     }
 }

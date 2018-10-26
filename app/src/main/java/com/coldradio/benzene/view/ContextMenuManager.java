@@ -26,9 +26,9 @@ public class ContextMenuManager {
         showItem(mTopToolbar, R.id.action_copy, copy);
     }
 
-    private void setBottomToolbar(boolean change_atom, boolean rs, boolean star_mark, boolean bond, boolean synthesize, boolean auto_adjust, boolean trashcan, boolean select_by_rect, boolean select_by_finger) {
+    private void setBottomToolbar(boolean change_atom, boolean to_letter, boolean star_mark, boolean bond, boolean synthesize, boolean auto_adjust, boolean trashcan, boolean select_by_rect, boolean select_by_finger) {
         showItem(mBottomToolbar, R.id.action_change_atom, change_atom);
-        showItem(mBottomToolbar, R.id.action_3d, rs);
+        showItem(mBottomToolbar, R.id.action_cycle_hmode, to_letter);
         showItem(mBottomToolbar, R.id.action_star, star_mark);
         showItem(mBottomToolbar, R.id.action_bond, bond);
         showItem(mBottomToolbar, R.id.action_synthesize, synthesize);

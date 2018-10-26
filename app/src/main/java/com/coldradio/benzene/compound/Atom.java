@@ -13,12 +13,16 @@ public class Atom {
     public enum Marker {
         NONE, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
+    public enum HydrogenMode {
+        LETTERING_H, HIDE_H_BOND, SHOW_H_BOND
+    }
 
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is only valid in CompoundLibrary during initial setup. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
     private Marker mMarker = Marker.NONE;
+    private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -32,6 +36,10 @@ public class Atom {
     public Atom(int aid, AtomicNumber atomicNumber) {
         mAID = aid;
         mAtomicNumber = atomicNumber;
+
+        if (mAtomicNumber == AtomicNumber.C) {
+            mHydrogenMode = HydrogenMode.HIDE_H_BOND;
+        }
     }
 
     public int getAID() {
@@ -112,6 +120,17 @@ public class Atom {
         return mBonds.size();
     }
 
+    public int bondNumber(AtomicNumber atomicNumber) {
+        int cnt = 0;
+
+        for (Bond bond : mBonds) {
+            if (bond.getBoundAtom().getAtomicNumber() == atomicNumber)
+                ++cnt;
+        }
+
+        return cnt;
+    }
+
     public void cycleBond(Atom atom) {
         Bond bond = findBond(atom);
 
@@ -147,5 +166,13 @@ public class Atom {
 
     public boolean isHydrogenBoundTo(AtomicNumber c) {
         return mAtomicNumber == AtomicNumber.H && mBonds.size() == 1 && mBonds.get(0).getBoundAtom().getAtomicNumber() == c;
+    }
+
+    public void cycleHydrogenMode() {
+        mHydrogenMode = HydrogenMode.values()[(mHydrogenMode.ordinal() + 1) % HydrogenMode.values().length];
+    }
+
+    public HydrogenMode getHydrogenMode() {
+        return mHydrogenMode;
     }
 }

@@ -73,6 +73,7 @@ public class GenericDrawer {
     }
 
     private static void drawTextToCenter(PointF center, String text, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
+        // TODO center is NOT center. it shall be left for CH2, and right for HO. subscript shall be considered
         int prevColor = paint.getColor();
         Rect bounds = new Rect();
 
@@ -109,10 +110,55 @@ public class GenericDrawer {
         drawTextToCenter(xy, Character.toString(Configuration.ATOM_MARKER), false, 0, canvas, paint);
     }
 
-    private static boolean isCarbonHydrogenBond(Atom a1, Atom a2) {
-        AtomicNumber a1an = a1.getAtomicNumber(), a2an = a2.getAtomicNumber();
+    private static boolean isDrawable(Atom atom) {
+        if (atom.getAtomicNumber() == AtomicNumber.H && atom.bondNumber() == 1) {
+            Atom boundAtom = atom.getBonds().get(0).getBoundAtom();
 
-        return (a1an == AtomicNumber.C && a2an == AtomicNumber.H) || (a1an == AtomicNumber.H && a2an == AtomicNumber.C);
+            return boundAtom.getHydrogenMode() == Atom.HydrogenMode.SHOW_H_BOND;
+        }
+        return true;
+    }
+
+    private static boolean isNameDrawable(Atom atom) {
+        AtomicNumber an = atom.getAtomicNumber();
+
+        if (an == AtomicNumber.C) {
+            return atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H;
+        } else if (an == AtomicNumber.H && atom.bondNumber() == 1) {
+            return isDrawable(atom);
+        }
+        return true;
+    }
+
+    private static boolean hydrogenLetterPosition(Atom atom) {
+        int right = 0;
+
+        for (Bond bond : atom.getBonds()) {
+            Atom boundAtom = bond.getBoundAtom();
+
+            if (boundAtom.getAtomicNumber() == AtomicNumber.H) {
+                right += atom.getPoint().x <= bond.getBoundAtom().getPoint().x ? 1 : -1;
+            }
+        }
+
+        return right >= 0;
+    }
+
+    private static String atomToString(Atom atom) {
+        String text = atom.getAtomicNumber().toString();
+
+        if (atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H) {
+            int hNumber = atom.bondNumber(AtomicNumber.H);
+            boolean hydrogenInRight = hydrogenLetterPosition(atom);
+
+            if (hNumber == 1) {
+                text = hydrogenInRight ? text + "H" : "H" + text;
+            } else if (hNumber > 1) {
+                text = hydrogenInRight ? text + "H" + String.valueOf(hNumber) : "H" + String.valueOf(hNumber) + text;
+            }
+        }
+
+        return text;
     }
 
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
@@ -120,7 +166,7 @@ public class GenericDrawer {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (isCarbonHydrogenBond(a1, a2))
+                if (! isDrawable(a1) || ! isDrawable(a2))
                     return false;
 
                 Canvas canvas = (Canvas) args[0];
@@ -162,8 +208,8 @@ public class GenericDrawer {
                 Canvas canvas = (Canvas) args[0];
                 Paint paint = (Paint) args[1];
 
-                if (atom.getAtomicNumber() != AtomicNumber.C && !atom.isHydrogenBoundTo(AtomicNumber.C)) {
-                    drawTextToCenter(atom.getPoint(), atom.getAtomicNumber().toString(), true, Color.WHITE, canvas, paint);
+                if (isNameDrawable(atom)) {
+                    drawTextToCenter(atom.getPoint(), atomToString(atom), true, Color.WHITE, canvas, paint);
                 }
                 if (atom.getMarker() != Atom.Marker.NONE) {
                     drawMarker(atom, canvas, paint);

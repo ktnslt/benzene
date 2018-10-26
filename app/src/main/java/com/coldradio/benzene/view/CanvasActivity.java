@@ -93,6 +93,8 @@ public class CanvasActivity extends AppCompatActivity {
 
         } else if (id == R.id.action_star) {
             Project.instance().markSelectedAtomWithStart();
+        } else if (id == R.id.action_cycle_hmode) {
+            Project.instance().cycleHydrogenMode();
         } else {
             ret = false;
         }
