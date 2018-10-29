@@ -3,8 +3,6 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.coldradio.benzene.lib.AtomicNumber;
-import com.coldradio.benzene.lib.Edge;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.project.Project;
 

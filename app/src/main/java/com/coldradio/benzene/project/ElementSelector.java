@@ -5,7 +5,7 @@ import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.lib.Edge;
+import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
 

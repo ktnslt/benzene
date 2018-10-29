@@ -2,8 +2,6 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
-import com.coldradio.benzene.lib.AtomicNumber;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,6 +19,7 @@ public class Atom {
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is only valid in CompoundLibrary during initial setup. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
+    private String mArbitraryName;
     private Marker mMarker = Marker.NONE;
     private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
 
@@ -52,6 +51,15 @@ public class Atom {
 
     public AtomicNumber getAtomicNumber() {
         return mAtomicNumber;
+    }
+
+    public void setArbitraryName(String atomName) {
+        mAtomicNumber = AtomicNumber.TEXT;
+        mArbitraryName = atomName;
+    }
+
+    public String getArbitraryName() {
+        return mArbitraryName;
     }
 
     public void setBond(Atom atom, Bond.BondType bondType) {

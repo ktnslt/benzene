@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.lib.AtomicNumber;
 import com.coldradio.benzene.lib.Helper;
 import com.coldradio.benzene.lib.ScreenInfo;
 import com.coldradio.benzene.project.Project;
@@ -121,7 +120,7 @@ public class CanvasActivity extends AppCompatActivity {
 
         if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
-                Project.instance().changeSelectedAtom(AtomicNumber.valueOf(data.getData().toString()));
+                Project.instance().changeSelectedAtom(data.getData().toString());
                 mCanvasView.invalidate();
             }
         }

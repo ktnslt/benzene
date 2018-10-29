@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.lib.AtomicNumber;
 import com.google.gson.Gson;
 
 import java.io.InputStreamReader;

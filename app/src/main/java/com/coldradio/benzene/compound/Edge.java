@@ -1,6 +1,4 @@
-package com.coldradio.benzene.lib;
-
-import com.coldradio.benzene.compound.Atom;
+package com.coldradio.benzene.compound;
 
 public class Edge {
     public final Atom first;

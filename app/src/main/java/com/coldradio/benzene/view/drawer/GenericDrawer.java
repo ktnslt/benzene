@@ -3,13 +3,14 @@ package com.coldradio.benzene.view.drawer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.lib.AtomicNumber;
+import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.lib.Geometry;
 import com.coldradio.benzene.lib.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -72,21 +73,49 @@ public class GenericDrawer {
         }
     }
 
-    private static void drawTextToCenter(PointF center, String text, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
-        // TODO center is NOT center. it shall be left for CH2, and right for HO. subscript shall be considered
+    private static void drawChar(char c, Point leftBottom, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
         int prevColor = paint.getColor();
         Rect bounds = new Rect();
 
-        paint.getTextBounds(text, 0, text.length(), bounds);
-
-        float textWidth = (bounds.right - bounds.left) + 5, textHeight = (bounds.bottom - bounds.top);
+        paint.getTextBounds(String.valueOf(c), 0, 1, bounds);
+        bounds.right += 4;
+        bounds.offsetTo(leftBottom.x, leftBottom.y - (bounds.bottom - bounds.top));
 
         if (bgOn) {
             paint.setColor(bgColor);
-            canvas.drawRect(center.x - textWidth / 2, center.y - textHeight / 2, center.x + textWidth / 2, center.y + textHeight / 2, paint);
+            canvas.drawRect(bounds, paint);
             paint.setColor(prevColor);
         }
-        canvas.drawText(text, center.x - textWidth / 2, center.y + textHeight / 2 + 2, paint);
+        canvas.drawText(String.valueOf(c), bounds.left, bounds.bottom, paint);
+        // leftBottom is updated to indicate the next character's leftBottom
+        leftBottom.offset(bounds.right - bounds.left, 0);
+    }
+
+    private static void drawText(String text, PointF centerOfFirstLetter, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
+        Rect bounds = new Rect();
+        float origTextSize = paint.getTextSize();
+        Point leftBottom = new Point();
+
+        // decide the left bottom position of Text
+        paint.getTextBounds(text, 0, 1, bounds);
+        leftBottom.offset((int)(centerOfFirstLetter.x - (bounds.right - bounds.left) / 2),
+                (int)(centerOfFirstLetter.y + (bounds.bottom - bounds.top) / 2));
+
+        int subscriptDown = (int)((bounds.right - bounds.left)*0.3f);
+        for (int ii = 0; ii < text.length(); ++ii) {
+            char c = text.charAt(ii);
+
+            if (Character.isDigit(c)) {
+                paint.setTextSize(origTextSize * 0.7f);
+                leftBottom.y += subscriptDown;
+                leftBottom.x += 3;
+                drawChar(c, leftBottom, bgOn, bgColor, canvas, paint);
+                leftBottom.y -= subscriptDown;
+                paint.setTextSize(origTextSize);
+            } else {
+                drawChar(c, leftBottom, bgOn, bgColor, canvas, paint);
+            }
+        }
     }
 
     private static void drawMarker(Atom atom, Canvas canvas, Paint paint) {
@@ -107,7 +136,7 @@ public class GenericDrawer {
                 xy.offset(offset, offset);
                 break;
         }
-        drawTextToCenter(xy, Character.toString(Configuration.ATOM_MARKER), false, 0, canvas, paint);
+        drawText(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
     }
 
     private static boolean isDrawable(Atom atom) {
@@ -147,7 +176,9 @@ public class GenericDrawer {
     private static String atomToString(Atom atom) {
         String text = atom.getAtomicNumber().toString();
 
-        if (atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H) {
+        if (atom.getAtomicNumber() == AtomicNumber.TEXT) {
+            text = atom.getArbitraryName();
+        } else if (atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H) {
             int hNumber = atom.bondNumber(AtomicNumber.H);
             boolean hydrogenInRight = hydrogenLetterPosition(atom);
 
@@ -209,7 +240,7 @@ public class GenericDrawer {
                 Paint paint = (Paint) args[1];
 
                 if (isNameDrawable(atom)) {
-                    drawTextToCenter(atom.getPoint(), atomToString(atom), true, Color.WHITE, canvas, paint);
+                    drawText(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
                 }
                 if (atom.getMarker() != Atom.Marker.NONE) {
                     drawMarker(atom, canvas, paint);

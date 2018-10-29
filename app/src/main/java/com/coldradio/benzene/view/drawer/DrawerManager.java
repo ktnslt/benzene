@@ -5,9 +5,10 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Typeface;
 
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.lib.Edge;
+import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
@@ -34,6 +35,7 @@ public class DrawerManager {
         mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
         mPaint.setTextSize(Configuration.FONT_SIZE);
         mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setTypeface(Typeface.create("Arial", Typeface.NORMAL));
 
         mThickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mThickPaint.setStrokeWidth(Configuration.LINE_THICKNESS * 7);

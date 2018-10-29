@@ -7,7 +7,7 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.lib.AtomicNumber;
+import com.coldradio.benzene.compound.AtomicNumber;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -163,9 +163,15 @@ public class Project {
         return mCopiedCompound != null;
     }
 
-    public void changeSelectedAtom(AtomicNumber ele) {
+    public void changeSelectedAtom(String atomName) {
         if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
-            mElementSelector.getSelectedAtom().setAtomicNumber(ele);
+            Atom atom = mElementSelector.getSelectedAtom();
+
+            try {
+                atom.setAtomicNumber(AtomicNumber.valueOf(atomName));
+            } catch (IllegalArgumentException iae) {
+                atom.setArbitraryName(atomName);
+            }
         }
     }
 

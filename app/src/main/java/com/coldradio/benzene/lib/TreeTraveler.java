@@ -3,6 +3,7 @@ package com.coldradio.benzene.lib;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.Edge;
 
 import java.util.HashSet;
 
