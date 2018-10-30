@@ -8,4 +8,5 @@ public class Configuration {
     public static int ROTATION_PIVOT_SIZE = 20;
     public static int FONT_SIZE = 50;
     public static char ATOM_MARKER = '*';
+    public static float SUBSCRIPT_SIZE_RATIO = 0.7f;
 }

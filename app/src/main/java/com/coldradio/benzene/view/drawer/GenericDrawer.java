@@ -3,9 +3,7 @@ package com.coldradio.benzene.view.drawer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
@@ -73,51 +71,6 @@ public class GenericDrawer {
         }
     }
 
-    private static void drawChar(char c, Point leftBottom, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
-        int prevColor = paint.getColor();
-        Rect bounds = new Rect();
-
-        paint.getTextBounds(String.valueOf(c), 0, 1, bounds);
-        bounds.right += 4;
-        bounds.offsetTo(leftBottom.x, leftBottom.y - (bounds.bottom - bounds.top));
-
-        if (bgOn) {
-            paint.setColor(bgColor);
-            canvas.drawRect(bounds, paint);
-            paint.setColor(prevColor);
-        }
-        canvas.drawText(String.valueOf(c), bounds.left, bounds.bottom, paint);
-        // leftBottom is updated to indicate the next character's leftBottom
-        leftBottom.offset(bounds.right - bounds.left, 0);
-    }
-
-    private static void drawText(String text, PointF centerOfFirstLetter, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
-        Rect bounds = new Rect();
-        float origTextSize = paint.getTextSize();
-        Point leftBottom = new Point();
-
-        // decide the left bottom position of Text
-        paint.getTextBounds(text, 0, 1, bounds);
-        leftBottom.offset((int)(centerOfFirstLetter.x - (bounds.right - bounds.left) / 2),
-                (int)(centerOfFirstLetter.y + (bounds.bottom - bounds.top) / 2));
-
-        int subscriptDown = (int)((bounds.right - bounds.left)*0.3f);
-        for (int ii = 0; ii < text.length(); ++ii) {
-            char c = text.charAt(ii);
-
-            if (Character.isDigit(c)) {
-                paint.setTextSize(origTextSize * 0.7f);
-                leftBottom.y += subscriptDown;
-                leftBottom.x += 3;
-                drawChar(c, leftBottom, bgOn, bgColor, canvas, paint);
-                leftBottom.y -= subscriptDown;
-                paint.setTextSize(origTextSize);
-            } else {
-                drawChar(c, leftBottom, bgOn, bgColor, canvas, paint);
-            }
-        }
-    }
-
     private static void drawMarker(Atom atom, Canvas canvas, Paint paint) {
         PointF xy = new PointF(atom.getPoint().x, atom.getPoint().y);
         int offset = 20;
@@ -136,7 +89,7 @@ public class GenericDrawer {
                 xy.offset(offset, offset);
                 break;
         }
-        drawText(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
+        AtomTextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
     }
 
     private static boolean isDrawable(Atom atom) {
@@ -159,45 +112,12 @@ public class GenericDrawer {
         return true;
     }
 
-    private static boolean hydrogenLetterPosition(Atom atom) {
-        int right = 0;
-
-        for (Bond bond : atom.getBonds()) {
-            Atom boundAtom = bond.getBoundAtom();
-
-            if (boundAtom.getAtomicNumber() == AtomicNumber.H) {
-                right += atom.getPoint().x <= bond.getBoundAtom().getPoint().x ? 1 : -1;
-            }
-        }
-
-        return right >= 0;
-    }
-
-    private static String atomToString(Atom atom) {
-        String text = atom.getAtomicNumber().toString();
-
-        if (atom.getAtomicNumber() == AtomicNumber.TEXT) {
-            text = atom.getArbitraryName();
-        } else if (atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H) {
-            int hNumber = atom.bondNumber(AtomicNumber.H);
-            boolean hydrogenInRight = hydrogenLetterPosition(atom);
-
-            if (hNumber == 1) {
-                text = hydrogenInRight ? text + "H" : "H" + text;
-            } else if (hNumber > 1) {
-                text = hydrogenInRight ? text + "H" + String.valueOf(hNumber) : "H" + String.valueOf(hNumber) + text;
-            }
-        }
-
-        return text;
-    }
-
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         // draw edges
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (! isDrawable(a1) || ! isDrawable(a2))
+                if (!isDrawable(a1) || !isDrawable(a2))
                     return false;
 
                 Canvas canvas = (Canvas) args[0];
@@ -240,7 +160,7 @@ public class GenericDrawer {
                 Paint paint = (Paint) args[1];
 
                 if (isNameDrawable(atom)) {
-                    drawText(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
+                    AtomTextDrawer.draw(atom, true, Color.WHITE, canvas, paint);
                 }
                 if (atom.getMarker() != Atom.Marker.NONE) {
                     drawMarker(atom, canvas, paint);
