@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_change_atom"
-        android:orderInCategory="1"
+        android:orderInCategory="10"
         android:title="Change Atom"
         android:icon="@drawable/ic_menu_atom"
         android:visible="false"
@@ -12,15 +12,23 @@
 
     <item
         android:id="@+id/action_cycle_hmode"
-        android:orderInCategory="2"
+        android:orderInCategory="20"
         android:title="Mark"
         android:icon="@drawable/ic_menu_cycle_hmode"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_electron"
+        android:orderInCategory="25"
+        android:title="Electron"
+        android:icon="@drawable/ic_menu_electron"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_star"
-        android:orderInCategory="3"
+        android:orderInCategory="30"
         android:title="Mark"
         android:icon="@drawable/ic_menu_star"
         android:visible="false"
@@ -28,7 +36,7 @@
 
     <item
         android:id="@+id/action_bond"
-        android:orderInCategory="4"
+        android:orderInCategory="40"
         android:title="Bond"
         android:icon="@drawable/ic_menu_bond"
         android:visible="false"
@@ -36,7 +44,7 @@
 
     <item
         android:id="@+id/action_synthesize"
-        android:orderInCategory="5"
+        android:orderInCategory="50"
         android:title="Synthesize"
         android:icon="@drawable/ic_menu_synthesis"
         android:visible="false"
@@ -44,15 +52,15 @@
 
     <item
         android:id="@+id/action_adjust"
-        android:orderInCategory="6"
+        android:orderInCategory="60"
         android:title="Delete"
-        android:icon="@drawable/ic_menu_adjust"
+        android:icon="@drawable/ic_menu_electron"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_trashcan"
-        android:orderInCategory="7"
+        android:orderInCategory="70"
         android:title="Delete"
         android:icon="@drawable/ic_menu_trashcan"
         android:visible="false"
@@ -60,21 +68,21 @@
 
     <item
         android:id="@+id/action_select_by_rect"
-        android:orderInCategory="8"
+        android:orderInCategory="80"
         android:title="Select"
         android:icon="@drawable/ic_menu_select_by_rect"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_select_by_finger"
-        android:orderInCategory="9"
+        android:orderInCategory="90"
         android:title="Delete"
         android:icon="@drawable/ic_menu_select_by_finger"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_add"
-        android:orderInCategory="10"
+        android:orderInCategory="99"
         android:title="Add"
         android:icon="@drawable/ic_menu_add"
         app:showAsAction="always" />
