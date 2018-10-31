@@ -26,19 +26,14 @@ public class GenericDrawer {
         }
     }
 
-    private static int indexSameSideOfLineBondAndCenter(Atom atom, Atom lineAtom, PointF[] centers) {
-        for (Bond bond : atom.getBonds()) {
-            Atom boundAtom = bond.getBoundAtom();
+    private static int centerBias(Atom atom, PointF center, PointF l1, PointF l2) {
+        int bias = 0;
 
-            if (boundAtom != lineAtom) {
-                if (Geometry.sameSideOfLine(boundAtom.getPoint(), centers[0], atom.getPoint(), lineAtom.getPoint())) {
-                    return 0;
-                } else if (Geometry.sameSideOfLine(boundAtom.getPoint(), centers[1], atom.getPoint(), lineAtom.getPoint())) {
-                    return 1;
-                }
-            }
+        for (Bond bond : atom.getBonds()) {
+            bias += (Geometry.sameSideOfLine(bond.getBoundAtom().getPoint(), center, l1, l2) ? 1 : -1);
         }
-        return 0;
+
+        return bias;
     }
 
     private static PointF centerForDoubleBond(Atom a1, Atom a2) {
@@ -53,16 +48,12 @@ public class GenericDrawer {
             return new PointF((a1p.x + a2p.x + before_a1p.x) / 3, (a1p.y + a2p.y + before_a1p.y) / 3);
         } else {
             PointF[] centers = Geometry.regularTrianglePoint(a1p, a2p);
+            int centerBiasTo0 = 0;
             int centerIndex;
-            int bondNumber_a1 = a1.bondNumber(), bondNumber_a2 = a2.bondNumber();
 
-            if (bondNumber_a1 == 0 && bondNumber_a2 == 0) {
-                centerIndex = 0;
-            } else if (bondNumber_a1 >= bondNumber_a2) {
-                centerIndex = indexSameSideOfLineBondAndCenter(a1, a2, centers);
-            } else {
-                centerIndex = indexSameSideOfLineBondAndCenter(a2, a1, centers);
-            }
+            centerBiasTo0 += centerBias(a1, centers[0], a1p, a2p);
+            centerBiasTo0 += centerBias(a2, centers[0], a1p, a2p);
+            centerIndex = centerBiasTo0 > 0 ? 0 : 1;
 
             if (a1.getBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE) {
                 centerIndex = (centerIndex + 1) % 2;
@@ -92,22 +83,13 @@ public class GenericDrawer {
         AtomTextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
     }
 
-    private static boolean isDrawable(Atom atom) {
-        if (atom.getAtomicNumber() == AtomicNumber.H && atom.bondNumber() == 1) {
-            Atom boundAtom = atom.getBonds().get(0).getBoundAtom();
-
-            return boundAtom.getHydrogenMode() == Atom.HydrogenMode.SHOW_H_BOND;
-        }
-        return true;
-    }
-
     private static boolean isNameDrawable(Atom atom) {
         AtomicNumber an = atom.getAtomicNumber();
 
         if (an == AtomicNumber.C) {
             return atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H;
         } else if (an == AtomicNumber.H && atom.bondNumber() == 1) {
-            return isDrawable(atom);
+            return atom.isSelectable();
         }
         return true;
     }
@@ -117,7 +99,7 @@ public class GenericDrawer {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (!isDrawable(a1) || !isDrawable(a2))
+                if (! a1.isSelectable() || ! a2.isSelectable())
                     return false;
 
                 Canvas canvas = (Canvas) args[0];

@@ -183,4 +183,13 @@ public class Atom {
     public HydrogenMode getHydrogenMode() {
         return mHydrogenMode;
     }
+
+    public boolean isSelectable() {
+        if (getAtomicNumber() == AtomicNumber.H && bondNumber() == 1) {
+            Atom boundAtom = getBonds().get(0).getBoundAtom();
+
+            return boundAtom.getHydrogenMode() == Atom.HydrogenMode.SHOW_H_BOND;
+        }
+        return true;
+    }
 }
