@@ -12,8 +12,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.coldradio.benzene.lib.Helper;
-import com.coldradio.benzene.lib.ScreenInfo;
+import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.drawer.DrawerManager;
 import com.coldradio.benzene.view.drawer.SelectedRegionDrawer;
@@ -33,7 +32,6 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         super(context);
         setOnTouchListener(this);
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        Helper.instance().setContext(this.getContext());
         mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
 
         // register drawer
@@ -67,7 +65,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
             mClickedPoint.set(event.getX(), event.getY());
             mMovedAfterActionDown = false;
             return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP && ! mMovedAfterActionDown) {
+        } else if (event.getAction() == MotionEvent.ACTION_UP && !mMovedAfterActionDown) {
             // this event happens only if the ACTION_DOWN returns true
             Project.instance().select(actualPoint);
             updateContextMenu();
@@ -111,10 +109,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public void onLongPress(MotionEvent e) {
-//        if (mMode == Mode.BROWSE) {
-//            Project.instance().regionSelect(mClickedPoint, -1);
-//            invalidate();
-//        }
+
     }
 
     @Override
@@ -129,7 +124,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (! Project.instance().tryToSelect(actualClickedPosition(e))) {
+        if (!Project.instance().tryToSelect(actualClickedPosition(e))) {
             PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
 
             setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);

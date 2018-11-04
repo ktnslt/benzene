@@ -17,7 +17,7 @@ public class Atom {
 
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
-    private int mAID;   // AID is only valid in CompoundLibrary during initial setup. When merging two compounds into one, the uniqueness will be broken
+    private int mAID;   // AID is valid only temporary. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
     private String mArbitraryName;
     private Marker mMarker = Marker.NONE;
@@ -191,5 +191,17 @@ public class Atom {
             return boundAtom.getHydrogenMode() == Atom.HydrogenMode.SHOW_H_BOND;
         }
         return true;
+    }
+
+    public void preSerialization() {
+        for (Bond bond : mBonds) {
+            bond.preSerialization();
+        }
+    }
+
+    public void postDeserialization(Compound compound) {
+        for (Bond bond : mBonds) {
+            bond.postDeserialization(compound);
+        }
     }
 }

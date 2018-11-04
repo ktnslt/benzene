@@ -15,7 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.coldradio.benzene.lib.ScreenInfo;
+import com.coldradio.benzene.library.CompoundLibrary;
+import com.coldradio.benzene.util.ScreenInfo;
+import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.view.ProjectView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO delete this line
+                ProjectFileManager.instance().load("", Project.instance());
                 startActivity(new Intent("com.coldradio.benzene.CANVAS"));
             }
         });

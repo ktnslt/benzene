@@ -5,7 +5,8 @@ public class Bond {
         NONE, SINGLE, DOUBLE, DOUBLE_OTHER_SIDE, DOUBLE_MIDDLE, TRIPLE
     }
 
-    private Atom mAtom;
+    private transient Atom mAtom;
+    private int mAIDForAtom;    // this is hack for resolving the circular reference caused by the mAtom during serialization.
     private BondType mBondType;
 
     public Bond(Atom bondTo, BondType bondType) {
@@ -33,5 +34,13 @@ public class Bond {
         mBondType = BondType.values()[(mBondType.ordinal() + 1) % BondType.values().length];
         if (mBondType == BondType.NONE)
             mBondType = BondType.SINGLE;
+    }
+
+    public void preSerialization() {
+        mAIDForAtom = mAtom.getAID();
+    }
+
+    public void postDeserialization(Compound compound) {
+        mAtom = compound.getAtom(mAIDForAtom);
     }
 }

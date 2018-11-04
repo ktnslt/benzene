@@ -1,4 +1,4 @@
-package com.coldradio.benzene.lib;
+package com.coldradio.benzene.util;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;

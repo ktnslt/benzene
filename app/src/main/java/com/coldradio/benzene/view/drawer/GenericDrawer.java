@@ -9,8 +9,8 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.AtomicNumber;
-import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.lib.TreeTraveler;
+import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 public class GenericDrawer {

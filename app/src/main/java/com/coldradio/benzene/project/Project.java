@@ -30,8 +30,10 @@ public class Project {
         return Collections.unmodifiableList(mCompoundList);
     }
 
-    public void addCompound(Compound compound) {
-        mCompoundList.add(compound);
+    public void resetWithCompounds(List<Compound> compounds) {
+        mCompoundList.clear();
+        mCompoundList = compounds;
+        mElementSelector.reset();
     }
 
     public void addCompoundAsSelected(Compound compound) {
@@ -186,6 +188,18 @@ public class Project {
             case ATOM:
                 mElementSelector.getSelectedAtom().cycleHydrogenMode();
                 break;
+        }
+    }
+
+    public void preSerialization() {
+        for (Compound compound : mCompoundList) {
+            compound.preSerialization();
+        }
+    }
+
+    public void postDeserialization() {
+        for (Compound compound : mCompoundList) {
+            compound.postDeserialization();
         }
     }
 }

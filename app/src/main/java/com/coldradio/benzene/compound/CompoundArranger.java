@@ -2,8 +2,8 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
-import com.coldradio.benzene.lib.Geometry;
-import com.coldradio.benzene.lib.TreeTraveler;
+import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 public class CompoundArranger {

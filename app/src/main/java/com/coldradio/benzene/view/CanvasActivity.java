@@ -10,9 +10,10 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.lib.Helper;
-import com.coldradio.benzene.lib.ScreenInfo;
+import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 
 public class CanvasActivity extends AppCompatActivity {
     private enum ActivityRequestCode {
@@ -124,5 +125,11 @@ public class CanvasActivity extends AppCompatActivity {
                 mCanvasView.invalidate();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ProjectFileManager.instance().save(Project.instance());
     }
 }

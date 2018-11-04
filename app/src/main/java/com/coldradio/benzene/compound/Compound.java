@@ -3,7 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.coldradio.benzene.lib.Geometry;
+import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.project.Project;
 
 import java.util.ArrayList;
@@ -85,13 +85,6 @@ public class Compound {
         return this;
     }
 
-    public void fillCarbon(int carbonNumber) {
-        mAtoms.clear();
-        for (int ii = 0; ii < carbonNumber; ++ii) {
-            mAtoms.add(new Atom(ii + 1, AtomicNumber.C));
-        }
-    }
-
     public List<Atom> getAtoms() {
         return Collections.unmodifiableList(mAtoms);
     }
@@ -163,6 +156,20 @@ public class Compound {
                 it.remove();
                 break;
             }
+        }
+    }
+
+    public void preSerialization() {
+        resetAID();
+
+        for (Atom atom : mAtoms) {
+            atom.preSerialization();
+        }
+    }
+
+    public void postDeserialization() {
+        for (Atom atom : mAtoms) {
+            atom.postDeserialization(this);
         }
     }
 }

@@ -1,9 +1,12 @@
-package com.coldradio.benzene.compound;
+package com.coldradio.benzene.library;
 
 import android.content.res.Resources;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.google.gson.Gson;
 
 import java.io.InputStreamReader;

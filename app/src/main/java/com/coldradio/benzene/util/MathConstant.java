@@ -1,4 +1,4 @@
-package com.coldradio.benzene.lib;
+package com.coldradio.benzene.util;
 
 public class MathConstant {
     public static final float ROOT_2 = 1.41421f;

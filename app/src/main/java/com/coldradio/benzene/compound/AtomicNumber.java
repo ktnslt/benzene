@@ -1,7 +1,6 @@
 package com.coldradio.benzene.compound;
 
 public enum AtomicNumber {
-    // TODO: rename to Element
     NONE,
     H, He,
     Li, Be, B, C, N, O, F, Ne,

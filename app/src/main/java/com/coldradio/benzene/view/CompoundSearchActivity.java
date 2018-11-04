@@ -10,8 +10,8 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.CompoundLibrary;
-import com.coldradio.benzene.compound.StringSearchFilter;
+import com.coldradio.benzene.library.CompoundLibrary;
+import com.coldradio.benzene.library.StringSearchFilter;
 
 public class CompoundSearchActivity extends AppCompatActivity implements TextWatcher {
     private RecyclerView.Adapter mAdapter;

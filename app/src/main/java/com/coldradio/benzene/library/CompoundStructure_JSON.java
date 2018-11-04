@@ -1,4 +1,7 @@
-package com.coldradio.benzene.compound;
+package com.coldradio.benzene.library;
+
+import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.Bond;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,8 +32,13 @@ class PC_Compound_JSON {
     }
 
     public Bond.BondType bondType(int bondIndex) {
-        // 1 --> SINGLE, 2 --> DOUBLE, 3 --> TRIPLE
-        return Bond.BondType.values()[bonds.order[bondIndex]];
+        if (bonds.order[bondIndex] == 2) {
+            return Bond.BondType.DOUBLE;
+        } else if (bonds.order[bondIndex] == 3) {
+            return Bond.BondType.TRIPLE;
+        } else {
+            return Bond.BondType.SINGLE;
+        }
     }
 
     public String preferredIUPACName() {

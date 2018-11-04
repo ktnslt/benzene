@@ -7,7 +7,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-import com.coldradio.benzene.lib.Geometry;
+import com.coldradio.benzene.util.Geometry;
 
 public class RectSelector implements IRegionSelector {
     enum MarkerIndex {

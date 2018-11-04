@@ -15,7 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.lib.Helper;
+import com.coldradio.benzene.util.Helper;
 
 public class ChangeAtomActivity extends AppCompatActivity {
     private void setTextViewOnClickListener(TableLayout tableLayout) {
