@@ -21,6 +21,7 @@ public class Project {
     private IRegionSelector mRegionSelector;    // TODO move to ElementSelector
     private ElementSelector mElementSelector = new ElementSelector();
     private Compound mCopiedCompound;
+    private ProjectFile mProjectFile;
 
     public static Project instance() {
         return project;
@@ -201,5 +202,15 @@ public class Project {
         for (Compound compound : mCompoundList) {
             compound.postDeserialization();
         }
+    }
+
+    public void createNew(ProjectFile projectFile) {
+        mProjectFile = projectFile;
+        mCompoundList.clear();
+        mElementSelector.reset();
+    }
+
+    public ProjectFile getProjectFile() {
+        return mProjectFile;
     }
 }

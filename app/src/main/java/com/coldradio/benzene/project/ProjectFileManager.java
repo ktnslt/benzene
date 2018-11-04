@@ -21,10 +21,22 @@ import java.util.List;
 
 public class ProjectFileManager {
     private static ProjectFileManager smInstance = new ProjectFileManager();
-    private List<ProjectFile> mProjectFiles = new ArrayList<>();
+    private List<ProjectFile> mSavedProjects = new ArrayList<>();
     private String mProjectFileRootDir;
-    private Type mCompoundListType = new TypeToken<List<Compound>>(){}.getType();
-    Gson mGson = new GsonBuilder().create();
+    private Type mCompoundListType = new TypeToken<List<Compound>>() {
+    }.getType();
+    private Gson mGson = new GsonBuilder().create();
+    private String FILE_EXTENSION = ".bzn";
+
+    private String defaultProjectName() {
+        for (int ii = 1; ; ++ii) {
+            String defaultName = "Untitled" + String.valueOf(ii);
+
+            if (getProjectFile(defaultName) == null) {
+                return defaultName;
+            }
+        }
+    }
 
     public static ProjectFileManager instance() {
         return smInstance;
@@ -38,7 +50,7 @@ public class ProjectFileManager {
         Writer writer = null;
 
         try {
-            File file = new File(mProjectFileRootDir + "outputtest.bzn");
+            File file = new File(mProjectFileRootDir + project.getProjectFile().getName() + FILE_EXTENSION);
             file.createNewFile();
 
             writer = new FileWriter(file);
@@ -60,7 +72,7 @@ public class ProjectFileManager {
         Reader reader = null;
 
         try {
-            File file = new File(mProjectFileRootDir + "outputtest.bzn");
+            File file = new File(mProjectFileRootDir + fileName + FILE_EXTENSION);
             reader = new FileReader(file);
 
             List<Compound> readCompounds = mGson.fromJson(reader, mCompoundListType);
@@ -76,5 +88,42 @@ public class ProjectFileManager {
                 } catch (Exception e) {/* ignores this */}
             }
         }
+    }
+
+    public void load() {
+        mSavedProjects.clear();
+        File dir = new File(mProjectFileRootDir);
+
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+
+            for (int ii = 0; ii < files.length; ++ii) {
+                if (! files[ii].isDirectory() && files[ii].getName().endsWith(FILE_EXTENSION)) {
+                    String nameWithoutExtension = files[ii].getName().substring(0, files[ii].getName().length() - FILE_EXTENSION.length());
+                    mSavedProjects.add(new ProjectFile(nameWithoutExtension));
+                }
+            }
+        }
+    }
+
+    public ProjectFile createNew() {
+        return new ProjectFile(defaultProjectName());
+    }
+
+    public ProjectFile getProjectFile(String projectName) {
+        for (ProjectFile file : mSavedProjects) {
+            if (file.getName().equals(projectName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    public ProjectFile getProjectFile(int index) {
+        return mSavedProjects.get(index);
+    }
+
+    public int projectFileNumber() {
+        return mSavedProjects.size();
     }
 }

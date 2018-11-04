@@ -9,13 +9,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // add ProjectView
         ViewGroup project_layout = findViewById(R.id.project_main);
         if (project_layout != null) {
-            ProjectView projectView = new ProjectView(this);
+            ProjectView projectView = new ProjectView(this, (RecyclerView)findViewById(R.id.project_recycler_view));
 
             project_layout.addView(projectView);
         }
@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO delete this line
-                ProjectFileManager.instance().load("", Project.instance());
+                Project.instance().createNew(ProjectFileManager.instance().createNew());
                 startActivity(new Intent("com.coldradio.benzene.CANVAS"));
             }
         });

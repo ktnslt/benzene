@@ -1,8 +1,13 @@
 package com.coldradio.benzene.project;
 
-import java.util.Date;
-
 public class ProjectFile {
-    private String mFileName;
-    private Date mCreationDate;
+    private String mName;
+
+    public ProjectFile(String fileName) {
+        mName = fileName;
+    }
+
+    public String getName() {
+        return mName;
+    }
 }
