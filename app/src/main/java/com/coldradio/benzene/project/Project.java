@@ -213,4 +213,8 @@ public class Project {
     public ProjectFile getProjectFile() {
         return mProjectFile;
     }
+
+    public boolean isEmpty() {
+        return mCompoundList.isEmpty();
+    }
 }

@@ -16,9 +16,6 @@ import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 
 public class CanvasActivity extends AppCompatActivity {
-    private enum ActivityRequestCode {
-        CHANGE_ATOM_REQ
-    }
     private CanvasView mCanvasView;
 
     @Override
@@ -128,8 +125,8 @@ public class CanvasActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         ProjectFileManager.instance().save(Project.instance());
     }
 }

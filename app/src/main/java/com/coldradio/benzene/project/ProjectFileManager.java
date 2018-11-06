@@ -50,12 +50,21 @@ public class ProjectFileManager {
         Writer writer = null;
 
         try {
+            ProjectFile projectFile = project.getProjectFile();
+
+            if (! projectFile.hasSavedFile() && project.isEmpty()) {
+                return ;
+            }
             File file = new File(mProjectFileRootDir + project.getProjectFile().getName() + FILE_EXTENSION);
             file.createNewFile();
 
             writer = new FileWriter(file);
             project.preSerialization();
             mGson.toJson(project.getCompounds(), writer);
+
+            if (getProjectFile(projectFile.getName()) == null) {
+                mSavedProjects.add(projectFile);
+            }
         } catch (IOException ioe) {
             Helper.instance().notification("Saving Errors");
         } finally {
@@ -107,7 +116,7 @@ public class ProjectFileManager {
     }
 
     public ProjectFile createNew() {
-        return new ProjectFile(defaultProjectName());
+        return new ProjectFile(defaultProjectName(), true);
     }
 
     public ProjectFile getProjectFile(String projectName) {

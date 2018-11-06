@@ -1,14 +1,16 @@
-package com.coldradio.benzene;
+package com.coldradio.benzene.view;
 
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.coldradio.benzene.util.ScreenInfo;
+import com.coldradio.benzene.R;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
-import com.coldradio.benzene.view.ProjectView;
+import com.coldradio.benzene.util.ScreenInfo;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private RecyclerView.Adapter mProjectViewAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +51,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // add ProjectView
         ViewGroup project_layout = findViewById(R.id.project_main);
         if (project_layout != null) {
-            ProjectView projectView = new ProjectView(this, (RecyclerView)findViewById(R.id.project_recycler_view));
+            ProjectView projectView = new ProjectView(this);
 
             project_layout.addView(projectView);
+            // attach CardView Adapter
+            RecyclerView recyclerView = findViewById(R.id.project_recycler_view);
+            recyclerView.setHasFixedSize(true);
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+
+            mProjectViewAdapter = new ProjectViewAdapter();
+            recyclerView.setAdapter(mProjectViewAdapter);
         }
 
         // add FloatingActionBar
@@ -58,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 Project.instance().createNew(ProjectFileManager.instance().createNew());
-                startActivity(new Intent("com.coldradio.benzene.CANVAS"));
+                startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.CANVAS_REQ.ordinal());
             }
         });
     }
@@ -108,5 +121,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ActivityRequestCode.CANVAS_REQ.ordinal()) {
+            // Regardless of the resultCode, refresh the list
+            // First, I tried to setData(RESULT_OK) in the CanvasActivity.onDestroy(), but this onActivityResult() called first before onDestroy() called.
+            // It means, I should call setData() in the event handler such as backPressed() or back arrow in the title bar.
+            mProjectViewAdapter.notifyDataSetChanged();
+        }
     }
 }
