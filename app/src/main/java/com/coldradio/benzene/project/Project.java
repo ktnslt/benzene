@@ -217,4 +217,20 @@ public class Project {
     public boolean isEmpty() {
         return mCompoundList.isEmpty();
     }
+
+    public RectF rectRegion() {
+        RectF rect = null;
+
+        for (Compound compound : mCompoundList) {
+            RectF compoundRegion = compound.rectRegion();
+
+            if (rect == null) {
+                rect = compoundRegion;
+            } else {
+                rect.union(compoundRegion);
+            }
+        }
+
+        return rect;
+    }
 }

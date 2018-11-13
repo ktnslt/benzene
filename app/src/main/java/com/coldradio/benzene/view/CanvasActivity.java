@@ -127,6 +127,6 @@ public class CanvasActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        ProjectFileManager.instance().save(Project.instance());
+        ProjectFileManager.instance().save(Project.instance(), mCanvasView);
     }
 }

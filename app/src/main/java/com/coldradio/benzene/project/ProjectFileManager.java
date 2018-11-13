@@ -1,6 +1,7 @@
 package com.coldradio.benzene.project;
 
 import android.content.Context;
+import android.view.View;
 
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.util.Helper;
@@ -46,7 +47,7 @@ public class ProjectFileManager {
         mProjectFileRootDir = context.getFilesDir().getPath() + "/";
     }
 
-    public void save(Project project) {
+    public void save(Project project, View view) {
         Writer writer = null;
 
         try {
@@ -65,6 +66,7 @@ public class ProjectFileManager {
             if (getProjectFile(projectFile.getName()) == null) {
                 mSavedProjects.add(projectFile);
             }
+            ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
         } catch (IOException ioe) {
             Helper.instance().notification("Saving Errors");
         } finally {
@@ -134,5 +136,9 @@ public class ProjectFileManager {
 
     public int projectFileNumber() {
         return mSavedProjects.size();
+    }
+
+    public String projectFileRootDir() {
+        return mProjectFileRootDir;
     }
 }
