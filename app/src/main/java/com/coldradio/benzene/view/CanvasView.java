@@ -12,8 +12,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.view.drawer.DrawerManager;
 import com.coldradio.benzene.view.drawer.SelectedRegionDrawer;
 
@@ -40,6 +40,14 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     public void updateContextMenu() {
         mContextMenuManager.update();
+    }
+
+    public void toCenter() {
+        PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+
+        setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
+        // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
+        setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
     }
 
     @Override
@@ -125,11 +133,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         if (!Project.instance().tryToSelect(actualClickedPosition(e))) {
-            PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
-
-            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
-            // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
-            setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
+            toCenter();
         }
 
         return true;

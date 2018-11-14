@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
 
-            mProjectViewAdapter = new ProjectViewAdapter();
+            mProjectViewAdapter = new ProjectViewAdapter(this);
             recyclerView.setAdapter(mProjectViewAdapter);
         }
 

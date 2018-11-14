@@ -31,12 +31,6 @@ public class Project {
         return Collections.unmodifiableList(mCompoundList);
     }
 
-    public void resetWithCompounds(List<Compound> compounds) {
-        mCompoundList.clear();
-        mCompoundList = compounds;
-        mElementSelector.reset();
-    }
-
     public void addCompoundAsSelected(Compound compound) {
         mCompoundList.add(compound);
         mElementSelector.selectCompound(compound);
@@ -210,6 +204,13 @@ public class Project {
         mElementSelector.reset();
     }
 
+    public void createFromFile(List<Compound> compounds, ProjectFile projectFile) {
+        mCompoundList.clear();
+        mCompoundList = compounds;
+        mElementSelector.reset();
+        mProjectFile = projectFile;
+    }
+
     public ProjectFile getProjectFile() {
         return mProjectFile;
     }
@@ -231,6 +232,14 @@ public class Project {
             }
         }
 
-        return rect;
+        return rect != null ? rect : new RectF();
+    }
+
+    public void offsetTo(float newLeft, float newTop) {
+        RectF region = rectRegion();
+
+        for (Compound compound : mCompoundList) {
+            compound.offset(newLeft - region.left, newTop - region.top);
+        }
     }
 }

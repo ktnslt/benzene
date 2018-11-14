@@ -53,11 +53,13 @@ public class ProjectFileManager {
         try {
             ProjectFile projectFile = project.getProjectFile();
 
-            if (! projectFile.hasSavedFile() && project.isEmpty()) {
-                return ;
+            if (!projectFile.hasSavedFile() && project.isEmpty()) {
+                return;
             }
             File file = new File(mProjectFileRootDir + project.getProjectFile().getName() + FILE_EXTENSION);
             file.createNewFile();
+
+            project.offsetTo(0, 0);
 
             writer = new FileWriter(file);
             project.preSerialization();
@@ -88,7 +90,14 @@ public class ProjectFileManager {
 
             List<Compound> readCompounds = mGson.fromJson(reader, mCompoundListType);
 
-            project.resetWithCompounds(readCompounds);
+            if (readCompounds == null) {
+                ProjectFile projectFile = getProjectFile(fileName);
+
+                project.createFromFile(new ArrayList<Compound>(), projectFile);
+                Helper.instance().notification("No Compound loaded from " + projectFile.getName());
+            } else {
+                project.createFromFile(readCompounds, getProjectFile(fileName));
+            }
             project.postDeserialization();
         } catch (FileNotFoundException fnfe) {
             Helper.instance().notification("File Not Found.");
@@ -109,7 +118,7 @@ public class ProjectFileManager {
             File[] files = dir.listFiles();
 
             for (int ii = 0; ii < files.length; ++ii) {
-                if (! files[ii].isDirectory() && files[ii].getName().endsWith(FILE_EXTENSION)) {
+                if (!files[ii].isDirectory() && files[ii].getName().endsWith(FILE_EXTENSION)) {
                     String nameWithoutExtension = files[ii].getName().substring(0, files[ii].getName().length() - FILE_EXTENSION.length());
                     mSavedProjects.add(new ProjectFile(nameWithoutExtension));
                 }

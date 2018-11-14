@@ -33,6 +33,7 @@ public class CanvasActivity extends AppCompatActivity {
         if (canvas_layout != null) {
             mCanvasView = new CanvasView(this, topToolbar, (Toolbar)findViewById(R.id.canvas_bottom_toolbar));
             canvas_layout.addView(mCanvasView);
+            mCanvasView.toCenter();
         }
     }
 
