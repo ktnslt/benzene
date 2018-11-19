@@ -2,10 +2,13 @@ package com.coldradio.benzene.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,9 +27,27 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
 
         ProjectViewHolder(View v) {
             super(v);
-            mProjectName = v.findViewById(R.id.project_name);
-            mImageView = v.findViewById(R.id.project_preview);
+            mProjectName = v.findViewById(R.id.project_view_name);
+            mImageView = v.findViewById(R.id.project_view_preview);
             v.setOnClickListener(this);
+
+            // More Menu Button
+            final ImageButton btn = v.findViewById(R.id.project_view_button);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(smMainActivity, v);
+
+                    popup.getMenuInflater().inflate(R.menu.project_view_popup_menu, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            return true;
+                        }
+                    });
+                    popup.show();
+                }
+            });
         }
 
         @Override
