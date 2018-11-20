@@ -9,10 +9,16 @@ import java.util.List;
 
 public class Atom {
     public enum Marker {
-        NONE, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
+        NONE, MARKER_1, MARKER_2, MARKER_3, MARKER_4, MARKER_5, MARKER_6, MARKER_7, MARKER_8
     }
     public enum HydrogenMode {
         LETTERING_H, HIDE_H_BOND, SHOW_H_BOND
+    }
+    public enum UnsharedElectron {
+        NONE, SINGLE, DOUBLE
+    }
+    public enum Direction {
+        TOP, BOTTOM, LEFT, RIGHT
     }
 
     private PointF mPoint = new PointF();
@@ -22,6 +28,8 @@ public class Atom {
     private String mArbitraryName;
     private Marker mMarker = Marker.NONE;
     private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
+    private UnsharedElectron[] mUnsharedElectron = new UnsharedElectron[4];
+    private int mCharge;
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -155,8 +163,8 @@ public class Atom {
         mAtomicNumber = ele;
     }
 
-    public void markWithStar() {
-        mMarker = Marker.values()[(mMarker.ordinal() + 1) % Marker.values().length];
+    public void setMarker(Marker marker) {
+        mMarker = marker;
     }
 
     public Marker getMarker() {
@@ -203,5 +211,21 @@ public class Atom {
         for (Bond bond : mBonds) {
             bond.postDeserialization(compound);
         }
+    }
+
+    public UnsharedElectron getUnsharedElectron(Direction direction) {
+        return mUnsharedElectron[direction.ordinal()];
+    }
+
+    public void setUnsharedElectron(Direction direction, UnsharedElectron unsharedElectron) {
+        mUnsharedElectron[direction.ordinal()] = unsharedElectron;
+    }
+
+    public void setCharge(int charge) {
+        mCharge = charge;
+    }
+
+    public int getCharge() {
+        return mCharge;
     }
 }

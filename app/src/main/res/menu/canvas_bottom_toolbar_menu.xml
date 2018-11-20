@@ -19,18 +19,10 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_electron"
-        android:orderInCategory="25"
-        android:title="Electron"
-        android:icon="@drawable/ic_menu_electron"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_star"
+        android:id="@+id/action_atom_deco"
         android:orderInCategory="30"
         android:title="Mark"
-        android:icon="@drawable/ic_menu_star"
+        android:icon="@drawable/ic_menu_atom_deco"
         android:visible="false"
         app:showAsAction="always" />
 
@@ -47,14 +39,6 @@
         android:orderInCategory="50"
         android:title="Synthesize"
         android:icon="@drawable/ic_menu_synthesis"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_adjust"
-        android:orderInCategory="60"
-        android:title="Delete"
-        android:icon="@drawable/ic_menu_electron"
         android:visible="false"
         app:showAsAction="always" />
 

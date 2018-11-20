@@ -172,9 +172,9 @@ public class Project {
         }
     }
 
-    public void markSelectedAtomWithStart() {
+    public void markSelectedAtom(Atom.Marker marker) {
         if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
-            mElementSelector.getSelectedAtom().markWithStar();
+            mElementSelector.getSelectedAtom().setMarker(marker);
         }
     }
 

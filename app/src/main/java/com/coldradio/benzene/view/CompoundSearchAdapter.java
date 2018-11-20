@@ -22,6 +22,7 @@ import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
+import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
     public static class CompoundViewHolder extends RecyclerView.ViewHolder {
@@ -35,15 +36,11 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
             mCompoundDescriptionTextView = v.findViewById(R.id.compound_description);
 
             // set compound review
+            // TODO : Creating Painting object may not be necessary. Is there any way to reuse?
             ViewGroup preview = v.findViewById(R.id.compound_holder_main);
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-            paint.setStrokeWidth(Configuration.LINE_THICKNESS);
-            paint.setStyle(Paint.Style.STROKE);
 
             if (preview != null) {
                 mCompoundPreview = new CompoundPreview(v.getContext());
-                mCompoundPreview.setPaint(paint);
                 preview.addView(mCompoundPreview);
             }
         }
@@ -97,7 +94,6 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
 
 class CompoundPreview extends View implements View.OnClickListener {
     private CompoundIndex mCompoundIndex;
-    private Paint mPaint;
 
     public CompoundPreview(Context context) {
         super(context);
@@ -107,10 +103,6 @@ class CompoundPreview extends View implements View.OnClickListener {
     public void setCompoundIndex(CompoundIndex compoundIndex) {
         mCompoundIndex = compoundIndex;
         CompoundArranger.alignCenter(mCompoundIndex.compound, new PointF(getWidth()/5, getHeight()/2));
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
     }
 
     @Override
@@ -123,7 +115,7 @@ class CompoundPreview extends View implements View.OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        GenericDrawer.draw(mCompoundIndex.compound, canvas, mPaint);
+        GenericDrawer.draw(mCompoundIndex.compound, canvas, PaintSet.instance().general());
     }
 
     @Override

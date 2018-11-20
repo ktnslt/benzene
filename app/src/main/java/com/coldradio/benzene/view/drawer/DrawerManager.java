@@ -17,37 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrawerManager {
-    private Paint mPaint;
-    private Paint mThickPaint;
-    private Paint mDashedLinePaint;
     private List<ICompoundDrawer> mCompoundDrawer = new ArrayList<>();
 
     private void drawSelectedCompoundAccessory(ElementSelector elementSelector, Canvas canvas) {
         PointF pivot = elementSelector.getRotationPivotPoint();
         PointF center = elementSelector.getSelectedCompound().centerOfRectangle();
+        Paint dashedLinePaint = PaintSet.instance().dashedLine();
 
-        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, mDashedLinePaint);
-        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, mDashedLinePaint);
-    }
-
-    public DrawerManager() {
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStrokeWidth(Configuration.LINE_THICKNESS);
-        mPaint.setTextSize(Configuration.FONT_SIZE);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setTypeface(Typeface.create("Arial", Typeface.NORMAL));
-
-        mThickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mThickPaint.setStrokeWidth(Configuration.LINE_THICKNESS * 7);
-        mThickPaint.setStrokeCap(Paint.Cap.ROUND);
-        mThickPaint.setStyle(Paint.Style.STROKE);
-        mThickPaint.setColor(Color.rgb(140, 180, 250));
-
-        mDashedLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mDashedLinePaint.setStrokeWidth(4);
-        mDashedLinePaint.setColor(Color.rgb(60, 60, 60));
-        mDashedLinePaint.setStyle(Paint.Style.STROKE);
-        mDashedLinePaint.setPathEffect(new DashPathEffect(new float[]{5, 5},0));
+        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, dashedLinePaint);
+        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, dashedLinePaint);
     }
 
     public void addCompoundDrawer(ICompoundDrawer newCompoundDrawer) {
@@ -66,34 +44,36 @@ public class DrawerManager {
 
     public void draw(Canvas canvas) {
         ElementSelector elementSelector = Project.instance().getElementSelector();
+        Paint generalPaint = PaintSet.instance().general();
+        Paint thickPaint = PaintSet.instance().thick();
 
         switch (elementSelector.selection()) {
             case ATOM:
                 PointF p = elementSelector.getSelectedAtom().getPoint();
 
-                canvas.drawCircle(p.x, p.y, 10, mThickPaint);
+                canvas.drawCircle(p.x, p.y, 10, thickPaint);
                 break;
             case EDGE:
                 Edge edge = elementSelector.getSelectedEdge();
                 PointF p1 = edge.first.getPoint();
                 PointF p2 = edge.second.getPoint();
 
-                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, mThickPaint);
+                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, thickPaint);
                 break;
             case COMPOUND:
-                GenericDrawer.draw(elementSelector.getSelectedCompound(), canvas, mThickPaint);
+                GenericDrawer.draw(elementSelector.getSelectedCompound(), canvas, thickPaint);
                 break;
         }
 
         for (Compound compound : Project.instance().getCompounds()) {
             boolean drawn = false;
             for (ICompoundDrawer componentDrawer : mCompoundDrawer) {
-                if (drawn = componentDrawer.draw(compound, canvas, mPaint)) {
+                if (drawn = componentDrawer.draw(compound, canvas, generalPaint)) {
                     break;
                 }
             }
             if (! drawn) {
-                GenericDrawer.draw(compound, canvas, mPaint);
+                GenericDrawer.draw(compound, canvas, generalPaint);
             }
         }
 

@@ -66,20 +66,20 @@ public class GenericDrawer {
         PointF xy = new PointF(atom.getPoint().x, atom.getPoint().y);
         int offset = 20;
 
-        switch (atom.getMarker()) {
-            case LEFT_TOP:
-                xy.offset(-offset, -offset);
-                break;
-            case RIGHT_TOP:
-                xy.offset(offset, -offset);
-                break;
-            case LEFT_BOTTOM:
-                xy.offset(-offset, offset);
-                break;
-            case RIGHT_BOTTOM:
-                xy.offset(offset, offset);
-                break;
-        }
+//        switch (atom.getMarker()) {
+//            case LEFT_TOP:
+//                xy.offset(-offset, -offset);
+//                break;
+//            case RIGHT_TOP:
+//                xy.offset(offset, -offset);
+//                break;
+//            case LEFT_BOTTOM:
+//                xy.offset(-offset, offset);
+//                break;
+//            case RIGHT_BOTTOM:
+//                xy.offset(offset, offset);
+//                break;
+//        }
         AtomTextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
     }
 
