@@ -30,6 +30,7 @@ public class Atom {
     private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
     private UnsharedElectron[] mUnsharedElectron = new UnsharedElectron[4];
     private int mCharge;
+    private boolean mShowElement;
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -46,6 +47,8 @@ public class Atom {
 
         if (mAtomicNumber == AtomicNumber.C) {
             mHydrogenMode = HydrogenMode.HIDE_H_BOND;
+        } else {
+            mShowElement = true;
         }
     }
 
@@ -227,5 +230,13 @@ public class Atom {
 
     public int getCharge() {
         return mCharge;
+    }
+
+    public boolean showElement() {
+        return mShowElement;
+    }
+
+    public void setShowElement(boolean showElement) {
+        mShowElement = showElement;
     }
 }

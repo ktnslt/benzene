@@ -59,6 +59,8 @@ public class ProjectFileManager {
             File file = new File(mProjectFileRootDir + project.getProjectFile().getName() + FILE_EXTENSION);
             file.createNewFile();
 
+            // when saving, the project is offset to zero. this might be helpful to capture Atoms among zero points.
+            // In case that Atom's position is too large, the precision might be problems.
             project.offsetTo(0, 0);
 
             writer = new FileWriter(file);

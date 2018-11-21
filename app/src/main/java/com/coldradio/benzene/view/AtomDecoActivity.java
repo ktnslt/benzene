@@ -2,13 +2,15 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
@@ -16,6 +18,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
+import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AtomDecoActivity extends AppCompatActivity {
     private EditText mChargeET;
@@ -27,6 +30,8 @@ public class AtomDecoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.atom_deco_main);
+
+        readCurrentConfiguration();
 
         // copy previous values to be modified in this activity. the original values will be used when canceling this activity
         Atom atom = Project.instance().getElementSelector().getSelectedAtom();
@@ -91,6 +96,18 @@ public class AtomDecoActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        // setting for show element
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Atom atom = Project.instance().getElementSelector().getSelectedAtom();
+
+                if (atom != null) {
+                    atom.setShowElement(isChecked);
+                }
             }
         });
 
@@ -196,12 +213,11 @@ public class AtomDecoActivity extends AppCompatActivity {
         });
 
         // setting for AtomDecoView
-        View preview = findViewById(R.id.atom_deco_view);
+        ViewGroup preview = findViewById(R.id.atom_deco_view);
 
-//        if (preview != null) {
-//            AtomDecoView atomDecoView = new AtomDecoView(this);
-//            preview.addView(mCompoundPreview);
-//        }
+        if (preview != null) {
+            preview.addView(new AtomDecoView(this));
+        }
     }
 
     private void offsetCharge(int offset) {
@@ -228,29 +244,28 @@ public class AtomDecoActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void readCurrentConfiguration() {
+
+    }
 }
 
 class AtomDecoView extends View {
-    private Paint mPaint;
-
     public AtomDecoView(Context context) {
         super(context);
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        //CompoundArranger.alignCenter(mCompoundIndex.compound, new PointF(w/5, h/2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        float dx = 0, dy = 0;
+        Atom atom = Project.instance().getElementSelector().getSelectedAtom();
 
-        //GenericDrawer.draw(mCompoundIndex.compound, canvas, mPaint);
+        if (atom != null) {
+            dx = -atom.getPoint().x + getWidth() / 2;
+            dy = -atom.getPoint().y + getHeight() / 2;
+        }
+
+        GenericDrawer.draw(Project.instance().getElementSelector().getSelectedCompound(), canvas, PaintSet.instance().general(), dx, dy);
     }
 }

@@ -65,6 +65,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_coloring"
+        android:orderInCategory="95"
+        android:title="Coloring"
+        android:icon="@drawable/ic_menu_coloring"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_add"
         android:orderInCategory="99"
         android:title="Add"

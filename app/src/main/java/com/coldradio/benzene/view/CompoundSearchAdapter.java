@@ -36,7 +36,6 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
             mCompoundDescriptionTextView = v.findViewById(R.id.compound_description);
 
             // set compound review
-            // TODO : Creating Painting object may not be necessary. Is there any way to reuse?
             ViewGroup preview = v.findViewById(R.id.compound_holder_main);
 
             if (preview != null) {

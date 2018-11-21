@@ -19,7 +19,7 @@ public class ElementSelector {
     private Selection mSelection = Selection.NONE;
     private Atom mSelectedAtom;
     private Edge mSelectedEdge;
-    private Compound mSelectedCompound;
+    private Compound mSelectedCompound;     // the selected compound or the compound that the selected Atom belongs to
     private PointF mRotationPivotPoint = new PointF();
     private boolean mIsRotating = false;
 
