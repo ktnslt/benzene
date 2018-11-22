@@ -1,18 +1,70 @@
 package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Bond;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Configuration;
+import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.TreeTraveler;
 
-public class AtomTextDrawer {
+public class AtomDecorationDrawer implements ICompoundDrawer {
+    private static boolean isNameDrawable(Atom atom) {
+        AtomicNumber an = atom.getAtomicNumber();
+
+        if (an == AtomicNumber.C) {
+            return atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H;
+        } else if (an == AtomicNumber.H && atom.bondNumber() == 1) {
+            return atom.isSelectable();
+        }
+        return true;
+    }
+
+    private static void drawMarker(Atom atom, Canvas canvas, Paint paint) {
+        PointF atomXY = atom.getPoint();
+        PointF xy = new PointF(atomXY.x, atomXY.y);
+
+        xy.offset(0, -35);
+        xy = Geometry.rotatePoint(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getMarker().ordinal() - 1)));
+        xy.offset(0, 15);
+
+        AtomTextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
+    }
+
+    @Override
+    public boolean draw(Compound compound, Canvas canvas, Paint paint) {
+        TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
+            @Override
+            public boolean visit(Atom atom, Object... args) {
+                Canvas canvas = (Canvas) args[0];
+                Paint paint = (Paint) args[1];
+
+                if (isNameDrawable(atom)) {
+                    AtomTextDrawer.draw(atom, true, Color.WHITE, canvas, paint);
+                }
+                if (atom.getAtomDecoration().getMarker() != AtomDecoration.Marker.NONE) {
+                    drawMarker(atom, canvas, paint);
+                }
+                return false;
+            }
+        }, compound, canvas, paint);
+        return true;
+    }
+
+    @Override
+    public String getID() {
+        return "AtomDecorationDrawer";
+    }
+}
+
+class AtomTextDrawer {
     private static boolean hydrogenPositionInRight(Atom atom) {
         int right = 0;
 
@@ -51,7 +103,7 @@ public class AtomTextDrawer {
         Rect bounds = new Rect();
 
         paint.getTextBounds(String.valueOf(c), 0, 1, bounds);
-        bounds.offsetTo((int)leftBottom.x, (int)leftBottom.y - bounds.height());
+        bounds.offsetTo((int) leftBottom.x, (int) leftBottom.y - bounds.height());
 
         if (bgOn) {
             paint.setColor(bgColor);

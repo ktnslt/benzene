@@ -1,15 +1,12 @@
 package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -63,38 +60,6 @@ public class GenericDrawer {
         }
     }
 
-    private static void drawMarker(Atom atom, Canvas canvas, Paint paint) {
-        PointF xy = new PointF(atom.getPoint().x, atom.getPoint().y);
-        int offset = 20;
-
-//        switch (atom.getMarker()) {
-//            case LEFT_TOP:
-//                xy.offset(-offset, -offset);
-//                break;
-//            case RIGHT_TOP:
-//                xy.offset(offset, -offset);
-//                break;
-//            case LEFT_BOTTOM:
-//                xy.offset(-offset, offset);
-//                break;
-//            case RIGHT_BOTTOM:
-//                xy.offset(offset, offset);
-//                break;
-//        }
-        AtomTextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
-    }
-
-    private static boolean isNameDrawable(Atom atom) {
-        AtomicNumber an = atom.getAtomicNumber();
-
-        if (an == AtomicNumber.C) {
-            return atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H;
-        } else if (an == AtomicNumber.H && atom.bondNumber() == 1) {
-            return atom.isSelectable();
-        }
-        return true;
-    }
-
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         return draw(compound, canvas, paint, 0, 0);
     }
@@ -135,23 +100,6 @@ public class GenericDrawer {
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
                         break;
-                }
-                return false;
-            }
-        }, compound, canvas, paint);
-
-        // draw Atom name when it is NOT carbon. draw this later unless it will be overwritten by the edge
-        TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
-            @Override
-            public boolean visit(Atom atom, Object... args) {
-                Canvas canvas = (Canvas) args[0];
-                Paint paint = (Paint) args[1];
-
-                if (isNameDrawable(atom)) {
-                    AtomTextDrawer.draw(atom, true, Color.WHITE, canvas, paint);
-                }
-                if (atom.getAtomDecoration().getMarker() != AtomDecoration.Marker.NONE) {
-                    drawMarker(atom, canvas, paint);
                 }
                 return false;
             }

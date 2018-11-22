@@ -14,7 +14,10 @@ import android.view.View;
 
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.ScreenInfo;
+import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.DrawerManager;
+import com.coldradio.benzene.view.drawer.SelectedElementAccessoryDrawer;
+import com.coldradio.benzene.view.drawer.SelectedElementBackgroundDrawer;
 import com.coldradio.benzene.view.drawer.SelectedRegionDrawer;
 
 public class CanvasView extends View implements View.OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -35,7 +38,10 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
 
         // register drawer
-        mDrawerManager.addCompoundDrawer(new SelectedRegionDrawer());
+        mDrawerManager.addPreCompoundDrawer(new SelectedRegionDrawer());
+        mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
+        mDrawerManager.addPostCompoundDrawer(new SelectedElementAccessoryDrawer());
+        mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
     }
 
     public void updateContextMenu() {

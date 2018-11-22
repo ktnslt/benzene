@@ -18,8 +18,11 @@ import android.widget.TextView;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
+import com.coldradio.benzene.view.drawer.DrawerManager;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
@@ -261,6 +264,8 @@ public class AtomDecoActivity extends AppCompatActivity {
 }
 
 class AtomDecoView extends View {
+    private AtomDecorationDrawer mAtomDecorationDrawer = new AtomDecorationDrawer();
+
     public AtomDecoView(Context context) {
         super(context);
     }
@@ -276,6 +281,9 @@ class AtomDecoView extends View {
             dy = -atom.getPoint().y + getHeight() / 2;
         }
 
-        GenericDrawer.draw(Project.instance().getElementSelector().getSelectedCompound(), canvas, PaintSet.instance().general(), dx, dy);
+        Compound compound = Project.instance().getElementSelector().getSelectedCompound();
+
+        GenericDrawer.draw(compound, canvas, PaintSet.instance().general(), dx, dy);
+        mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().general());
     }
 }

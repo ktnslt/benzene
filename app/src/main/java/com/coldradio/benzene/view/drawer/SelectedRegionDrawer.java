@@ -17,6 +17,7 @@ public class SelectedRegionDrawer implements ICompoundDrawer {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(Color.argb(255, 0, 255, 0));
     }
+
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
         IRegionSelector regionSelector = Project.instance().getRegionSelector();
@@ -30,7 +31,7 @@ public class SelectedRegionDrawer implements ICompoundDrawer {
                 }
             }
         }
-        return false;   // always returns false to make the other drawer draws on it
+        return true;
     }
 
     @Override
