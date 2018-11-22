@@ -8,29 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Atom {
-    public enum Marker {
-        NONE, MARKER_1, MARKER_2, MARKER_3, MARKER_4, MARKER_5, MARKER_6, MARKER_7, MARKER_8
-    }
     public enum HydrogenMode {
         LETTERING_H, HIDE_H_BOND, SHOW_H_BOND
     }
-    public enum UnsharedElectron {
-        NONE, SINGLE, DOUBLE
-    }
-    public enum Direction {
-        TOP, BOTTOM, LEFT, RIGHT
-    }
-
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is valid only temporary. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
     private String mArbitraryName;
-    private Marker mMarker = Marker.NONE;
     private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
-    private UnsharedElectron[] mUnsharedElectron = new UnsharedElectron[4];
-    private int mCharge;
-    private boolean mShowElement;
+    private AtomDecoration mAtomDecoration = new AtomDecoration();
 
     private Bond findBond(Atom atom) {
         for (Bond bond : mBonds) {
@@ -45,10 +32,11 @@ public class Atom {
         mAID = aid;
         mAtomicNumber = atomicNumber;
 
+        // TODO below shall be refactored as Strategy.
         if (mAtomicNumber == AtomicNumber.C) {
             mHydrogenMode = HydrogenMode.HIDE_H_BOND;
         } else {
-            mShowElement = true;
+            mAtomDecoration.setShowElement(true);
         }
     }
 
@@ -166,14 +154,6 @@ public class Atom {
         mAtomicNumber = ele;
     }
 
-    public void setMarker(Marker marker) {
-        mMarker = marker;
-    }
-
-    public Marker getMarker() {
-        return mMarker;
-    }
-
     public Bond.BondType getBondType(Atom atom) {
         Bond bond = findBond(atom);
 
@@ -216,27 +196,11 @@ public class Atom {
         }
     }
 
-    public UnsharedElectron getUnsharedElectron(Direction direction) {
-        return mUnsharedElectron[direction.ordinal()];
+    public AtomDecoration getAtomDecoration() {
+        return mAtomDecoration;
     }
 
-    public void setUnsharedElectron(Direction direction, UnsharedElectron unsharedElectron) {
-        mUnsharedElectron[direction.ordinal()] = unsharedElectron;
-    }
-
-    public void setCharge(int charge) {
-        mCharge = charge;
-    }
-
-    public int getCharge() {
-        return mCharge;
-    }
-
-    public boolean showElement() {
-        return mShowElement;
-    }
-
-    public void setShowElement(boolean showElement) {
-        mShowElement = showElement;
+    public void setAtomDecoration(AtomDecoration atomDecoration) {
+        mAtomDecoration = atomDecoration;
     }
 }

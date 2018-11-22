@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.AtomicNumber;
@@ -149,7 +150,7 @@ public class GenericDrawer {
                 if (isNameDrawable(atom)) {
                     AtomTextDrawer.draw(atom, true, Color.WHITE, canvas, paint);
                 }
-                if (atom.getMarker() != Atom.Marker.NONE) {
+                if (atom.getAtomDecoration().getMarker() != AtomDecoration.Marker.NONE) {
                     drawMarker(atom, canvas, paint);
                 }
                 return false;

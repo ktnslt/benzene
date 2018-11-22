@@ -172,12 +172,6 @@ public class Project {
         }
     }
 
-    public void markSelectedAtom(Atom.Marker marker) {
-        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
-            mElementSelector.getSelectedAtom().setMarker(marker);
-        }
-    }
-
     public void cycleHydrogenMode() {
         switch (mElementSelector.selection()) {
             case ATOM:

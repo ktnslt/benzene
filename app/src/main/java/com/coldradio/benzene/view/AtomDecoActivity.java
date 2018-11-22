@@ -13,35 +13,46 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AtomDecoActivity extends AppCompatActivity {
+    private Atom mSelectedAtom;
+    private AtomDecoration mSelectedAtomDecoration;
+    private AtomDecoration mCopiedOriginalAtomDecoration;
+    private View mAtomDecoView;
+
     private EditText mChargeET;
-    private Atom.Marker mOriginalMarker;
-    private Atom.UnsharedElectron[] mOriginalUnsharedElectron = new Atom.UnsharedElectron[4];
-    private int mOriginalCharge;
+    private SeekBar mChargeAsCircleSeekBox;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.atom_deco_main);
 
-        readCurrentConfiguration();
+        mSelectedAtom = Project.instance().getElementSelector().getSelectedAtom();
 
-        // copy previous values to be modified in this activity. the original values will be used when canceling this activity
-        Atom atom = Project.instance().getElementSelector().getSelectedAtom();
+        if (mSelectedAtom == null) {
+            finish();
+            Helper.instance().notification("No Selected Atom");
+            return;
+        }
+        mSelectedAtomDecoration = mSelectedAtom.getAtomDecoration();
+        readAndSaveAtomDecoration();
 
-        if (atom != null) {
-            mOriginalMarker = atom.getMarker();
-            for (int ii = 0; ii < mOriginalUnsharedElectron.length; ++ii) {
-                mOriginalUnsharedElectron[ii] = atom.getUnsharedElectron(Atom.Direction.values()[ii]);
-            }
-            mOriginalCharge = atom.getCharge();
+        // setting for AtomDecoView
+        ViewGroup preview = findViewById(R.id.atom_deco_view);
+
+        if (preview != null) {
+            mAtomDecoView = new AtomDecoView(this);
+            preview.addView(mAtomDecoView);
         }
 
         // setting for charge
@@ -50,10 +61,12 @@ public class AtomDecoActivity extends AppCompatActivity {
         mChargeET.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Atom atom = Project.instance().getElementSelector().getSelectedAtom();
+                int charge = Integer.parseInt(s.toString());
 
-                if (atom != null)
-                    atom.setCharge(Integer.parseInt(s.toString()));
+                mSelectedAtomDecoration.setCharge(charge);
+                mChargeAsCircleSeekBox.setEnabled(charge * charge == 1);
+
+                mAtomDecoView.invalidate();
             }
 
             @Override
@@ -79,15 +92,28 @@ public class AtomDecoActivity extends AppCompatActivity {
             }
         });
 
-        // setting for marker
-        SeekBar starmarkSeekbar = findViewById(R.id.atom_deco_sb_starmark);
-        starmarkSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mChargeAsCircleSeekBox.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Atom atom = Project.instance().getElementSelector().getSelectedAtom();
+                mSelectedAtomDecoration.setChargeAsCircle(AtomDecoration.Marker.values()[progress]);
+                mAtomDecoView.invalidate();
+            }
 
-                if (atom != null && progress >= 0 && progress < Atom.Marker.values().length)
-                    atom.setMarker(Atom.Marker.values()[progress]);
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        // setting for marker
+        ((SeekBar)findViewById(R.id.atom_deco_sb_starmark)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mSelectedAtomDecoration.setMarker(AtomDecoration.Marker.values()[progress]);
+                mAtomDecoView.invalidate();
             }
 
             @Override
@@ -103,11 +129,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Atom atom = Project.instance().getElementSelector().getSelectedAtom();
-
-                if (atom != null) {
-                    atom.setShowElement(isChecked);
-                }
+                mSelectedAtomDecoration.setShowElement(isChecked);
             }
         });
 
@@ -115,7 +137,6 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                restoreOriginal();
                 finish();
             }
         });
@@ -123,6 +144,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSelectedAtom.setAtomDecoration(mCopiedOriginalAtomDecoration);
                 finish();
             }
         });
@@ -131,93 +153,86 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_up_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.TOP, Atom.UnsharedElectron.NONE);
+                unsharedElectron(AtomDecoration.Direction.TOP, AtomDecoration.UnsharedElectron.NONE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_up_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.TOP, Atom.UnsharedElectron.SINGLE);
+                unsharedElectron(AtomDecoration.Direction.TOP, AtomDecoration.UnsharedElectron.SINGLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_up_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.TOP, Atom.UnsharedElectron.DOUBLE);
+                unsharedElectron(AtomDecoration.Direction.TOP, AtomDecoration.UnsharedElectron.DOUBLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_down_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.BOTTOM, Atom.UnsharedElectron.NONE);
+                unsharedElectron(AtomDecoration.Direction.BOTTOM, AtomDecoration.UnsharedElectron.NONE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_down_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.BOTTOM, Atom.UnsharedElectron.SINGLE);
+                unsharedElectron(AtomDecoration.Direction.BOTTOM, AtomDecoration.UnsharedElectron.SINGLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_down_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.BOTTOM, Atom.UnsharedElectron.DOUBLE);
+                unsharedElectron(AtomDecoration.Direction.BOTTOM, AtomDecoration.UnsharedElectron.DOUBLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_left_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.LEFT, Atom.UnsharedElectron.NONE);
+                unsharedElectron(AtomDecoration.Direction.LEFT, AtomDecoration.UnsharedElectron.NONE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_left_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.LEFT, Atom.UnsharedElectron.SINGLE);
+                unsharedElectron(AtomDecoration.Direction.LEFT, AtomDecoration.UnsharedElectron.SINGLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_left_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.LEFT, Atom.UnsharedElectron.DOUBLE);
+                unsharedElectron(AtomDecoration.Direction.LEFT, AtomDecoration.UnsharedElectron.DOUBLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_right_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.RIGHT, Atom.UnsharedElectron.NONE);
+                unsharedElectron(AtomDecoration.Direction.RIGHT, AtomDecoration.UnsharedElectron.NONE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_right_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.RIGHT, Atom.UnsharedElectron.SINGLE);
+                unsharedElectron(AtomDecoration.Direction.RIGHT, AtomDecoration.UnsharedElectron.SINGLE);
             }
         });
 
         findViewById(R.id.atom_deco_btn_right_2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unsharedElectron(Atom.Direction.RIGHT, Atom.UnsharedElectron.DOUBLE);
+                unsharedElectron(AtomDecoration.Direction.RIGHT, AtomDecoration.UnsharedElectron.DOUBLE);
             }
         });
-
-        // setting for AtomDecoView
-        ViewGroup preview = findViewById(R.id.atom_deco_view);
-
-        if (preview != null) {
-            preview.addView(new AtomDecoView(this));
-        }
     }
 
     private void offsetCharge(int offset) {
@@ -226,27 +241,22 @@ public class AtomDecoActivity extends AppCompatActivity {
         }
     }
 
-    private void unsharedElectron(Atom.Direction direction, Atom.UnsharedElectron unsharedElectron) {
-        Atom atom = Project.instance().getElementSelector().getSelectedAtom();
-
-        if (atom != null)
-            atom.setUnsharedElectron(direction, unsharedElectron);
+    private void unsharedElectron(AtomDecoration.Direction direction, AtomDecoration.UnsharedElectron unsharedElectron) {
+        mSelectedAtomDecoration.setUnsharedElectron(direction, unsharedElectron);
     }
 
-    private void restoreOriginal() {
-        Atom atom = Project.instance().getElementSelector().getSelectedAtom();
+    private void readAndSaveAtomDecoration() {
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElement());
 
-        if (atom != null) {
-            atom.setMarker(mOriginalMarker);
-            atom.setCharge(mOriginalCharge);
-            for (int ii = 0; ii < mOriginalUnsharedElectron.length; ++ii) {
-                atom.setUnsharedElectron(Atom.Direction.values()[ii], mOriginalUnsharedElectron[ii]);
-            }
-        }
-    }
+        ((EditText)findViewById(R.id.atom_deco_et_charge)).setText(String.valueOf(mSelectedAtomDecoration.getCharge()));
 
-    private void readCurrentConfiguration() {
+        mChargeAsCircleSeekBox = findViewById(R.id.atom_deco_sb_charge_circle);
+        mChargeAsCircleSeekBox.setProgress(mSelectedAtomDecoration.getChargeAsCircle().ordinal());
+        mChargeAsCircleSeekBox.setEnabled(mSelectedAtomDecoration.getCharge() == 1 || mSelectedAtomDecoration.getCharge() == -1);
 
+        ((SeekBar)findViewById(R.id.atom_deco_sb_starmark)).setProgress(mSelectedAtomDecoration.getMarker().ordinal());
+
+        mCopiedOriginalAtomDecoration = mSelectedAtomDecoration.copy();
     }
 }
 
