@@ -114,7 +114,7 @@ class CompoundPreview extends View implements View.OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        GenericDrawer.draw(mCompoundIndex.compound, canvas, PaintSet.instance().general());
+        GenericDrawer.draw(mCompoundIndex.compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
     }
 
     @Override

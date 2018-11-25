@@ -17,7 +17,7 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer{
         if (elementSelector.selection() == ElementSelector.Selection.COMPOUND && elementSelector.getSelectedCompound() == compound) {
             PointF pivot = elementSelector.getRotationPivotPoint();
             PointF center = elementSelector.getSelectedCompound().centerOfRectangle();
-            Paint dashedLinePaint = PaintSet.instance().dashedLine();
+            Paint dashedLinePaint = PaintSet.instance().paint(PaintSet.PaintType.DASHED_LINE);
 
             canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, dashedLinePaint);
             canvas.drawLine(pivot.x, pivot.y, center.x, center.y, dashedLinePaint);

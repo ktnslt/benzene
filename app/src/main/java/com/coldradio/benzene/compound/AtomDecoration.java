@@ -19,6 +19,12 @@ public class AtomDecoration {
     private Marker mChargeAsCircle = Marker.NONE;
     private Marker mStarMarker = Marker.NONE;
 
+    public AtomDecoration() {
+        for (int ii = 0; ii < mUnsharedElectron.length; ++ii) {
+            mUnsharedElectron[ii] = UnsharedElectron.NONE;
+        }
+    }
+
     public void setMarker(Marker marker) {
         mStarMarker = marker;
     }

@@ -37,7 +37,7 @@ public class DrawerManager {
     }
 
     public void draw(Canvas canvas) {
-        Paint generalPaint = PaintSet.instance().general();
+        Paint generalPaint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
 
         for (Compound compound : Project.instance().getCompounds()) {
             for (ICompoundDrawer componentDrawer : mPreCompoundDrawer) {

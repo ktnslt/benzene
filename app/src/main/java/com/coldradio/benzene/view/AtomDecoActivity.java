@@ -246,6 +246,7 @@ public class AtomDecoActivity extends AppCompatActivity {
 
     private void unsharedElectron(AtomDecoration.Direction direction, AtomDecoration.UnsharedElectron unsharedElectron) {
         mSelectedAtomDecoration.setUnsharedElectron(direction, unsharedElectron);
+        mAtomDecoView.invalidate();
     }
 
     private void readAndSaveAtomDecoration() {
@@ -283,7 +284,7 @@ class AtomDecoView extends View {
 
         Compound compound = Project.instance().getElementSelector().getSelectedCompound();
 
-        GenericDrawer.draw(compound, canvas, PaintSet.instance().general(), dx, dy);
-        mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().general());
+        GenericDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL), dx, dy);
+        mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
     }
 }

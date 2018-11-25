@@ -9,4 +9,6 @@ public class Configuration {
     public static int FONT_SIZE = 50;
     public static char ATOM_MARKER = '*';
     public static float SUBSCRIPT_SIZE_RATIO = 0.7f;
+    public static float ELECTRON_RADIUS = 4f;
+    public static float CHARGE_CIRCLE_RADIUS = 10f;
 }

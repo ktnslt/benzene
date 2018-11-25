@@ -17,7 +17,7 @@ public class SelectedElementBackgroundDrawer implements ICompoundDrawer {
         if (elementSelector.selection() == ElementSelector.Selection.NONE || elementSelector.getSelectedCompound() != compound)
             return false;
 
-        Paint thickPaint = PaintSet.instance().thick();
+        Paint thickPaint = PaintSet.instance().paint(PaintSet.PaintType.THICK);
 
         switch (elementSelector.selection()) {
             case ATOM:
