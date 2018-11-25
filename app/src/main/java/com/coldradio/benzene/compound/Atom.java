@@ -163,10 +163,6 @@ public class Atom {
         return Bond.BondType.NONE;
     }
 
-    public boolean isHydrogenBoundTo(AtomicNumber c) {
-        return mAtomicNumber == AtomicNumber.H && mBonds.size() == 1 && mBonds.get(0).getBoundAtom().getAtomicNumber() == c;
-    }
-
     public void cycleHydrogenMode() {
         mHydrogenMode = HydrogenMode.values()[(mHydrogenMode.ordinal() + 1) % HydrogenMode.values().length];
     }
