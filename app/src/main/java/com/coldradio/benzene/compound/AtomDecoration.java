@@ -13,7 +13,7 @@ public class AtomDecoration {
         NONE, SINGLE, DOUBLE
     }
 
-    private boolean mShowElement;
+    private boolean mShowElementName = true;
     private UnsharedElectron[] mUnsharedElectron = new UnsharedElectron[4];
     private int mCharge = 0;
     private Marker mChargeAsCircle = Marker.NONE;
@@ -57,18 +57,18 @@ public class AtomDecoration {
         return mCharge;
     }
 
-    public boolean getShowElement() {
-        return mShowElement;
+    public boolean getShowElementName() {
+        return mShowElementName;
     }
 
-    public void setShowElement(boolean showElement) {
-        mShowElement = showElement;
+    public void setShowElementName(boolean show) {
+        mShowElementName = show;
     }
 
     public AtomDecoration copy() {
         AtomDecoration copied = new AtomDecoration();
 
-        copied.mShowElement = mShowElement;
+        copied.mShowElementName = mShowElementName;
         for (int ii = 0; ii < mUnsharedElectron.length; ++ii) {
             copied.mUnsharedElectron[ii] = mUnsharedElectron[ii];
         }

@@ -27,7 +27,7 @@ public class ElementSelector {
         return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (!a1.isSelectable() || !a2.isSelectable())
+                if (!a1.isVisible() || !a2.isVisible())
                     return false;
                 PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
                 float lineLength = Geometry.distanceFromPointToPoint(p1, p2);
@@ -41,7 +41,7 @@ public class ElementSelector {
 
     private Atom selectAtom(PointF point, Compound compound) {
         for (Atom atom : compound.getAtoms()) {
-            if (atom.isSelectable() && Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.SELECT_RANGE) {
+            if (atom.isVisible() && Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.SELECT_RANGE) {
                 return atom;
             }
         }

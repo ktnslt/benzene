@@ -7,6 +7,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
+import com.coldradio.benzene.library.rule.RuleSet;
 import com.google.gson.Gson;
 
 import java.io.InputStreamReader;
@@ -71,9 +72,9 @@ public class CompoundLibrary {
                 try {
                     Reader reader = new InputStreamReader(resources.openRawResource(field.getInt(field)));
                     PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
+                    Compound cmpd = RuleSet.instance().apply(compoundFromStructure(compound_json));
 
-                    mAllCompounds.add(new CompoundIndex(compound_json.preferredIUPACName(), compound_json.otherNames(),
-                            compoundFromStructure(compound_json)));
+                    mAllCompounds.add(new CompoundIndex(compound_json.preferredIUPACName(), compound_json.otherNames(), cmpd));
                 } catch (IllegalAccessException iae) {
                     // skip this resource
                 }

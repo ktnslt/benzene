@@ -48,17 +48,6 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         return text;
     }
 
-    private static boolean isNameDrawable(Atom atom) {
-        AtomicNumber an = atom.getAtomicNumber();
-
-        if (an == AtomicNumber.C) {
-            return atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H;
-        } else if (an == AtomicNumber.H && atom.bondNumber() == 1) {
-            return atom.isSelectable();
-        }
-        return true;
-    }
-
     private static void drawMarker(Atom atom, Canvas canvas, Paint paint) {
         PointF atomXY = atom.getPoint();
         PointF xy = new PointF(atomXY.x, atomXY.y);
@@ -165,7 +154,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
                 Paint paint = (Paint) args[1];
                 AtomDecoration atomDecoration = atom.getAtomDecoration();
 
-                if (isNameDrawable(atom)) {
+                if (atom.getAtomDecoration().getShowElementName()) {
                     TextDrawer.draw(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
                 }
                 if (atomDecoration.getMarker() != AtomDecoration.Marker.NONE) {

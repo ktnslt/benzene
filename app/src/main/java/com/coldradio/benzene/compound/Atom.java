@@ -2,6 +2,8 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
+import com.coldradio.benzene.util.Helper;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,16 +30,30 @@ public class Atom {
         return null;
     }
 
+    private void showAllHydrogenElementName(boolean show) {
+        for (Bond bond : mBonds) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (that_atom.getAtomicNumber() == AtomicNumber.H) {
+                that_atom.getAtomDecoration().setShowElementName(show);
+            }
+        }
+    }
+
     public Atom(int aid, AtomicNumber atomicNumber) {
         mAID = aid;
         mAtomicNumber = atomicNumber;
+    }
 
-        // TODO below shall be refactored as Strategy.
-        if (mAtomicNumber == AtomicNumber.C) {
-            mHydrogenMode = HydrogenMode.HIDE_H_BOND;
-        } else {
-            mAtomDecoration.setShowElement(true);
-        }
+    public Atom copy() {
+        Atom copied = new Atom(mAID, mAtomicNumber);
+
+        copied.setPoint(mPoint);
+        copied.mArbitraryName = mArbitraryName;
+        copied.mHydrogenMode = mHydrogenMode;
+        copied.mAtomDecoration = mAtomDecoration.copy();
+
+        return copied;
     }
 
     public int getAID() {
@@ -164,14 +180,31 @@ public class Atom {
     }
 
     public void cycleHydrogenMode() {
-        mHydrogenMode = HydrogenMode.values()[(mHydrogenMode.ordinal() + 1) % HydrogenMode.values().length];
+        setHydrogenMode(HydrogenMode.values()[(mHydrogenMode.ordinal() + 1) % HydrogenMode.values().length]);
+    }
+
+    public void setHydrogenMode(HydrogenMode hydrogenMode) {
+        mHydrogenMode = hydrogenMode;
+        if (mHydrogenMode == HydrogenMode.LETTERING_H) {
+            mAtomDecoration.setShowElementName(true);
+            showAllHydrogenElementName(false);
+        } else if (mHydrogenMode == HydrogenMode.SHOW_H_BOND) {
+            showAllHydrogenElementName(true);
+            mAtomDecoration.setShowElementName(mAtomicNumber != AtomicNumber.C);
+        } else {
+            showAllHydrogenElementName(false);
+            mAtomDecoration.setShowElementName(mAtomicNumber != AtomicNumber.C);
+        }
+        Helper.instance().notification(hydrogenMode.toString());
     }
 
     public HydrogenMode getHydrogenMode() {
         return mHydrogenMode;
     }
 
-    public boolean isSelectable() {
+    public boolean isVisible() {
+        // returns whether the Atom is visible on the screen. Only H may be invisible
+        // though AtomDecoration.ShowElementName returns false, the atom can be visible such as C
         if (getAtomicNumber() == AtomicNumber.H && bondNumber() == 1) {
             Atom boundAtom = getBonds().get(0).getBoundAtom();
 

@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
@@ -22,7 +21,6 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
-import com.coldradio.benzene.view.drawer.DrawerManager;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
@@ -132,7 +130,8 @@ public class AtomDecoActivity extends AppCompatActivity {
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mSelectedAtomDecoration.setShowElement(isChecked);
+                mSelectedAtomDecoration.setShowElementName(isChecked);
+                mAtomDecoView.invalidate();
             }
         });
 
@@ -250,7 +249,7 @@ public class AtomDecoActivity extends AppCompatActivity {
     }
 
     private void readAndSaveAtomDecoration() {
-        ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElement());
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElementName());
 
         ((EditText)findViewById(R.id.atom_deco_et_charge)).setText(String.valueOf(mSelectedAtomDecoration.getCharge()));
 

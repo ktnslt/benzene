@@ -41,19 +41,15 @@ public class Compound {
 
     public Compound copy() {
         Compound that_compound = new Compound();
-        int this_aid = 1;
 
         for (Atom this_atom : mAtoms) {
-            Atom that_atom = new Atom(this_aid++, this_atom.getAtomicNumber());
-
-            that_atom.setPoint(this_atom.getPoint());
-            that_compound.mAtoms.add(that_atom);
+            that_compound.mAtoms.add(this_atom.copy());
         }
-
+        that_compound.resetAID();
         that_compound.mCenterOfRectangle = this.mCenterOfRectangle;
 
         // now copy bonds
-        resetAID();
+        resetAID(); // at this point, AIDs of that_compound and this_compound are aligned
         for (int from_aid = 1; from_aid <= size(); ++from_aid) {
             Atom from_atom = mAtoms.get(from_aid - 1);
 

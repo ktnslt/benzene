@@ -174,7 +174,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
-        android:text="Show Element"
+        android:text="Show Element Name"
         app:layout_constraintStart_toEndOf="@id/atom_deco_btn_right_0"
         app:layout_constraintTop_toTopOf="@id/atom_deco_btn_up_0"/>
 

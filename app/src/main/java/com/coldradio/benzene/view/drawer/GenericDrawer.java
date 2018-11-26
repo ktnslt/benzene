@@ -70,7 +70,7 @@ public class GenericDrawer {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (! a1.isSelectable() || ! a2.isSelectable())
+                if (! a1.isVisible() || ! a2.isVisible())
                     return false;
 
                 Canvas canvas = (Canvas) args[0];
