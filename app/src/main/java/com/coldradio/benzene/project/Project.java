@@ -127,10 +127,6 @@ public class Project {
         return mElementSelector.moveSelectedElement(distance);
     }
 
-    public boolean hasSelectedCompound() {
-        return mElementSelector.hasSelectedCompound();
-    }
-
     public boolean hasSelectedElement() {
         return mElementSelector.hasSelectedElement();
     }

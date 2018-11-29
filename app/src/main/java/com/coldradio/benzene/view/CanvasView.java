@@ -1,10 +1,7 @@
 package com.coldradio.benzene.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.Toolbar;
@@ -20,20 +17,23 @@ import com.coldradio.benzene.view.drawer.SelectedElementAccessoryDrawer;
 import com.coldradio.benzene.view.drawer.SelectedElementBackgroundDrawer;
 import com.coldradio.benzene.view.drawer.SelectedRegionDrawer;
 
-public class CanvasView extends View implements View.OnTouchListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
-    private PointF mClickedPoint = new PointF();
+public class CanvasView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private GestureDetectorCompat mGestureDetector;
     private ContextMenuManager mContextMenuManager;
     private DrawerManager mDrawerManager = new DrawerManager();
-    private boolean mMovedAfterActionDown;
+    private boolean mMoveSelectedElement;
+    private PointF mActualClickedPosition = new PointF();
+    private boolean mScrolledAfterSelected;
 
-    private PointF actualClickedPosition(MotionEvent e) {
-        return new PointF(e.getX() + getScrollX(), e.getY() + getScrollY());
+    private void calcActualClickedPosition(MotionEvent e) {
+        mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
     }
 
     public CanvasView(Context context, Toolbar topToolbar, Toolbar bottomToolbar) {
         super(context);
-        setOnTouchListener(this);
+
+        // here getWidth() and getHeight() returns 0
+
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
         mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
 
@@ -42,6 +42,9 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
         mDrawerManager.addPostCompoundDrawer(new SelectedElementAccessoryDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
+
+        // When View is created, the default x, y are 0, hence reset Screen's x and y
+        ScreenInfo.instance().setScreenXY((int) getX(), (int) getY());
     }
 
     public void updateContextMenu() {
@@ -49,44 +52,56 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
     }
 
     public void toCenter() {
-        PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+        // The project is offset to zero. this might be helpful to keep Atoms among zero points.
+        // In case that Atom's position is too large, the precision might be problems.
+        if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
+            Project.instance().offsetTo(0, 0);
 
-        setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
-        // TODO: 150 shall be calculated by adding the height of top title bar + bottom navigation bar + soft navigation bar
-        setScrollY((int) centerOfAllCompounds.y - (ScreenInfo.instance().screenHeight() / 2 - 150));
+            PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+
+            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
+            setScrollY((int) centerOfAllCompounds.y - ScreenInfo.instance().screenHeight() / 2);
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        ScreenInfo.instance().setScreenSize(getWidth(), getHeight());
         mDrawerManager.draw(canvas);
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        PointF actualPoint = actualClickedPosition(event);
+    public boolean onTouchEvent(MotionEvent event) {
+        calcActualClickedPosition(event);
 
-        if (Project.instance().regionSelect(actualPoint, event.getAction())) {
-            invalidate();
-            return true;
-        } else if (Project.instance().rotateSelectedCompound(actualPoint, event.getAction())) {
+        if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
-            return true;
-        } else if (mGestureDetector.onTouchEvent(event)) {
-            return true;
-        } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mClickedPoint.set(event.getX(), event.getY());
-            mMovedAfterActionDown = false;
-            return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP && !mMovedAfterActionDown) {
-            // this event happens only if the ACTION_DOWN returns true
-            Project.instance().select(actualPoint);
-            updateContextMenu();
-            invalidate();
-            return true;
+        } else {
+            int maskedAction = event.getActionMasked();
+
+            switch (maskedAction) {
+                case MotionEvent.ACTION_UP:
+                    if (!mScrolledAfterSelected) {
+                        Project.instance().select(mActualClickedPosition);
+                        updateContextMenu();
+                        invalidate();
+                    }
+                    mScrolledAfterSelected = false;
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    mMoveSelectedElement = true;
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    mMoveSelectedElement = false;
+                    break;
+            }
         }
-        return false;
+
+        mGestureDetector.onTouchEvent(event);
+
+        return true;
     }
 
     @Override
@@ -104,14 +119,15 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
         return false;
     }
 
+    private PointF pmScrollDistance = new PointF();
+
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        mMovedAfterActionDown = true;
+        pmScrollDistance.set(-distanceX, -distanceY);
+        mScrolledAfterSelected = true;
 
-        if (Project.instance().isSelectingRegion()) {
-            return false;
-        } else if (Project.instance().hasSelectedElement()) {
-            Project.instance().moveSelectedElement(new PointF(-distanceX, -distanceY));
+        if (mMoveSelectedElement && Project.instance().hasSelectedElement()) {
+            Project.instance().moveSelectedElement(pmScrollDistance);
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);
@@ -138,7 +154,7 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (!Project.instance().tryToSelect(actualClickedPosition(e))) {
+        if (!Project.instance().tryToSelect(mActualClickedPosition)) {
             toCenter();
         }
 
@@ -148,14 +164,5 @@ public class CanvasView extends View implements View.OnTouchListener, GestureDet
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
-    }
-
-    @Override
-    protected void onConfigurationChanged(Configuration newConfig) {
-        Point screenSize = new Point();
-
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getSize(screenSize);
-        ScreenInfo.instance().setScreenSize(screenSize.x, screenSize.y);
-        super.onConfigurationChanged(newConfig);
     }
 }

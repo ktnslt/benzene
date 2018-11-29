@@ -115,6 +115,7 @@ public class ElementSelector {
     }
 
     public Compound getSelectedCompound() {
+        // In case that Atom or Edge is selected, this returns the Compound that contains it.
         return mSelectedCompound;
     }
 
@@ -128,7 +129,7 @@ public class ElementSelector {
 
     public boolean moveSelectedElement(PointF distance) {
         // TODO: shall move both the Atom and Edge or anything selected
-        if (hasSelectedCompound()) {
+        if (mSelection == Selection.COMPOUND) {
             mRotationPivotPoint.offset(distance.x, distance.y);
             mSelectedCompound.offset(distance.x, distance.y);
             return true;
@@ -155,10 +156,6 @@ public class ElementSelector {
 
     public Selection selection() {
         return mSelection;
-    }
-
-    public boolean hasSelectedCompound() {
-        return mSelection == Selection.COMPOUND;
     }
 
     public boolean hasSelectedElement() {

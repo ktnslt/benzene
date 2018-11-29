@@ -10,10 +10,10 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
-import com.coldradio.benzene.project.ProjectFileManager;
 
 public class CanvasActivity extends AppCompatActivity {
     private CanvasView mCanvasView;
@@ -33,7 +33,6 @@ public class CanvasActivity extends AppCompatActivity {
         if (canvas_layout != null) {
             mCanvasView = new CanvasView(this, topToolbar, (Toolbar)findViewById(R.id.canvas_bottom_toolbar));
             canvas_layout.addView(mCanvasView);
-            mCanvasView.toCenter();
         }
     }
 

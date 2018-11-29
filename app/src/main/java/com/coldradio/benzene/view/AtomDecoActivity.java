@@ -283,7 +283,9 @@ class AtomDecoView extends View {
 
         Compound compound = Project.instance().getElementSelector().getSelectedCompound();
 
-        GenericDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL), dx, dy);
+        canvas.translate(dx, dy);
+
+        GenericDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
         mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
     }
 }

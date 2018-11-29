@@ -4,6 +4,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
 
 public class ContextMenuManager {
@@ -45,7 +46,7 @@ public class ContextMenuManager {
 
     public void update() {
         // tom toolbar update
-        if (Project.instance().hasSelectedCompound()) {
+        if (Project.instance().getElementSelector().selection() != ElementSelector.Selection.NONE) {
             setTopToolbar(false, true, true);
         } else if (Project.instance().hasCopiedCompound()) {
             setTopToolbar(true, false, false);

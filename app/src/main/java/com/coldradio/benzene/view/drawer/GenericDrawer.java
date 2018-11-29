@@ -61,11 +61,6 @@ public class GenericDrawer {
     }
 
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
-        return draw(compound, canvas, paint, 0, 0);
-    }
-
-    public static boolean draw(Compound compound, Canvas canvas, Paint paint, float dx, float dy) {
-        canvas.translate(dx, dy);
         // draw edges
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override

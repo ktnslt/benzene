@@ -42,12 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // set screen size
-        Point screenSize = new Point();
-
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
-        ScreenInfo.instance().setScreenSize(screenSize.x, screenSize.y);
-
         // add ProjectView
         ViewGroup project_layout = findViewById(R.id.project_main);
         if (project_layout != null) {
