@@ -1,7 +1,6 @@
 package com.coldradio.benzene.view;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -89,7 +88,7 @@ public class ChangeAtomActivity extends AppCompatActivity {
                 TextView atomName = findViewById(R.id.selectedAtom);
 
                 if (atomName != null && atomName.getText().length() > 0) {
-                    data.setData(Uri.parse(atomName.getText().toString()));
+                    data.putExtra("AtomName", atomName.getText());
                     setResult(RESULT_OK, data);
                     finish();
                 } else {

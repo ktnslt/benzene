@@ -36,6 +36,10 @@ public class Project {
         mElementSelector.selectCompound(compound);
     }
 
+    public void addToSelectedBond(int edgeNumber, boolean oppositeSite) {
+
+    }
+
     public ElementSelector getElementSelector() {
         return mElementSelector;
     }

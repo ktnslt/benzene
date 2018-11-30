@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.util.ScreenInfo;
@@ -81,7 +82,15 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_trashcan) {
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_add) {
-            startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
+            ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
+
+            if (selection == ElementSelector.Selection.ATOM) {
+
+            } else if (selection == ElementSelector.Selection.EDGE) {
+                startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
+            } else {
+                startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
+            }
         } else if (id == R.id.action_change_atom) {
             startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
         } else if (id == R.id.action_bond) {
@@ -118,7 +127,16 @@ public class CanvasActivity extends AppCompatActivity {
 
         if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
-                Project.instance().changeSelectedAtom(data.getData().toString());
+                String atomName = data.getStringExtra("AtomName");
+
+                if (atomName != null && atomName.length() >= 1) {
+                    Project.instance().changeSelectedAtom(atomName);
+                    mCanvasView.invalidate();
+                }
+            }
+        } else if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
+            if (resultCode == RESULT_OK) {
+                Project.instance().addToSelectedBond(data.getIntExtra("EdgeNumber", 6), data.getBooleanExtra("OppositeSite", false));
                 mCanvasView.invalidate();
             }
         }
