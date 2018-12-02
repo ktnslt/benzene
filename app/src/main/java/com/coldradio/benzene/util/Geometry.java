@@ -61,8 +61,8 @@ public class Geometry {
         return args;
     }
 
-    public static float interiorDegreeOfPolygon(int numberOfSide) {
-        return (180.0f * numberOfSide - 360) / numberOfSide;
+    public static float interiorAngleOfPolygon(int numberOfSide) {
+        return (float)Math.toRadians((180.0f * numberOfSide - 360) / numberOfSide);
     }
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {

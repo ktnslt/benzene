@@ -2,6 +2,8 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
+import com.coldradio.benzene.util.Geometry;
+
 public class Edge {
     public final Atom first;
     public final Atom second;
@@ -24,8 +26,10 @@ public class Edge {
     }
 
     public PointF center() {
-        PointF p1 = first.getPoint(), p2 = second.getPoint();
+        return Geometry.centerPoint(first.getPoint(), second.getPoint());
+    }
 
-        return new PointF((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    public Atom atomInUpperDirection() {
+        return (first.getPoint().x <= second.getPoint().x) ? first : second;
     }
 }

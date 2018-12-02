@@ -1,7 +1,5 @@
 package com.coldradio.benzene.view;
 
-import android.content.Context;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,18 +15,14 @@ import android.widget.SeekBar;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
-import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Helper;
-import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
-import com.coldradio.benzene.view.drawer.GenericDrawer;
-import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AtomDecoActivity extends AppCompatActivity {
     private Atom mSelectedAtom;
     private AtomDecoration mSelectedAtomDecoration;
     private AtomDecoration mCopiedOriginalAtomDecoration;
-    private View mAtomDecoView;
+    private Preview mAtomDecoView;
 
     private EditText mChargeET;
     private SeekBar mChargeAsCircleSeekBox;
@@ -52,7 +46,8 @@ public class AtomDecoActivity extends AppCompatActivity {
         ViewGroup preview = findViewById(R.id.atom_deco_view);
 
         if (preview != null) {
-            mAtomDecoView = new AtomDecoView(this);
+            mAtomDecoView = new Preview(this);
+            mAtomDecoView.setCenter(mSelectedAtom.getPoint());
             preview.addView(mAtomDecoView);
         }
 
@@ -260,32 +255,5 @@ public class AtomDecoActivity extends AppCompatActivity {
         ((SeekBar)findViewById(R.id.atom_deco_sb_starmark)).setProgress(mSelectedAtomDecoration.getMarker().ordinal());
 
         mCopiedOriginalAtomDecoration = mSelectedAtomDecoration.copy();
-    }
-}
-
-class AtomDecoView extends View {
-    private AtomDecorationDrawer mAtomDecorationDrawer = new AtomDecorationDrawer();
-
-    public AtomDecoView(Context context) {
-        super(context);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        float dx = 0, dy = 0;
-        Atom atom = Project.instance().getElementSelector().getSelectedAtom();
-
-        if (atom != null) {
-            dx = -atom.getPoint().x + getWidth() / 2;
-            dy = -atom.getPoint().y + getHeight() / 2;
-        }
-
-        Compound compound = Project.instance().getElementSelector().getSelectedCompound();
-
-        canvas.translate(dx, dy);
-
-        GenericDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
-        mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
     }
 }

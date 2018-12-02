@@ -136,7 +136,7 @@ public class CanvasActivity extends AppCompatActivity {
             }
         } else if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
-                Project.instance().addToSelectedBond(data.getIntExtra("EdgeNumber", 6), data.getBooleanExtra("OppositeSite", false));
+                Project.instance().addCyclicToSelectedBond(data.getIntExtra("EdgeNumber", 6), data.getBooleanExtra("OppositeSite", false));
                 mCanvasView.invalidate();
             }
         }

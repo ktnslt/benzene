@@ -168,4 +168,25 @@ public class Compound {
             atom.postDeserialization(this);
         }
     }
+
+    public void addCyclicToBond(int edgeNumber, boolean oppositeSite, Edge edge) {
+        float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber) * (oppositeSite ? -1 : 1);
+        Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation
+        Atom rotatingAtom = (centerAtom == edge.first) ? edge.second : edge.first;
+        Atom lastAtom = rotatingAtom;
+
+        for (int ii = 0; ii < edgeNumber - 2; ++ii) {
+            Atom newAtom = new Atom(1, AtomicNumber.C);
+
+            newAtom.setPoint(Geometry.rotatePoint(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
+            newAtom.singleBond(centerAtom);
+            newAtom.getAtomDecoration().setShowElementName(false);
+            mAtoms.add(newAtom);
+
+            rotatingAtom = centerAtom;
+            centerAtom = newAtom;
+        }
+
+        centerAtom.singleBond(lastAtom);
+    }
 }

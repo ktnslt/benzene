@@ -36,8 +36,10 @@ public class Project {
         mElementSelector.selectCompound(compound);
     }
 
-    public void addToSelectedBond(int edgeNumber, boolean oppositeSite) {
-
+    public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite) {
+        if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
+            mElementSelector.getSelectedCompound().addCyclicToBond(edgeNumber, oppositeSite, mElementSelector.getSelectedEdge());
+        }
     }
 
     public ElementSelector getElementSelector() {

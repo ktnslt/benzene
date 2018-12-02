@@ -2,6 +2,7 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.View;
 
@@ -10,9 +11,11 @@ import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
+import com.coldradio.benzene.view.drawer.SelectedElementBackgroundDrawer;
 
 class Preview extends View {
     private AtomDecorationDrawer mAtomDecorationDrawer = new AtomDecorationDrawer();
+    private SelectedElementBackgroundDrawer mSelectedElementBackgroundDrawer = new SelectedElementBackgroundDrawer();
     private PointF mCenter;
 
     public Preview(Context context) {
@@ -27,11 +30,13 @@ class Preview extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Compound compound = Project.instance().getElementSelector().getSelectedCompound();
-
         canvas.translate(-mCenter.x + getWidth() / 2, -mCenter.y + getHeight() / 2);
 
-        GenericDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
-        mAtomDecorationDrawer.draw(compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
+        Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
+        Compound compound = Project.instance().getElementSelector().getSelectedCompound();
+
+        mSelectedElementBackgroundDrawer.draw(compound, canvas, paint);
+        GenericDrawer.draw(compound, canvas, paint);
+        mAtomDecorationDrawer.draw(compound, canvas, paint);
     }
 }

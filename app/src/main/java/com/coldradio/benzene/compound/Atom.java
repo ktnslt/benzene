@@ -42,7 +42,7 @@ public class Atom {
 
     public Atom(int aid, AtomicNumber atomicNumber) {
         mAID = aid;
-        mAtomicNumber = atomicNumber;
+        setAtomicNumber(atomicNumber);
     }
 
     public Atom copy() {

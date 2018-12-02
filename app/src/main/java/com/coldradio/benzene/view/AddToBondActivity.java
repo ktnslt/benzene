@@ -1,6 +1,13 @@
 package com.coldradio.benzene.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +18,16 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.view.drawer.PaintSet;
+import com.coldradio.benzene.view.drawer.SelectedElementBackgroundDrawer;
 
 public class AddToBondActivity extends AppCompatActivity {
-    private Preview mPreview;
+    private AddToBondPreview mPreview;
     private EditText mEdgeNumber;
     private boolean mOppositeSite;
 
@@ -37,8 +48,7 @@ public class AddToBondActivity extends AppCompatActivity {
         ViewGroup previewLayout = findViewById(R.id.a2b_view);
 
         if (previewLayout != null) {
-            mPreview = new Preview(this);
-            mPreview.setCenter(edge.center());
+            mPreview = new AddToBondPreview(this, edge);
             previewLayout.addView(mPreview);
         }
 
@@ -47,6 +57,8 @@ public class AddToBondActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mOppositeSite = isChecked;
+                mPreview.setOppositeSite(mOppositeSite);
+                mPreview.invalidate();
             }
         });
 
@@ -132,5 +144,41 @@ public class AddToBondActivity extends AppCompatActivity {
             if (newVal >= 3)
                 mEdgeNumber.setText(String.valueOf(newVal));
         }
+    }
+}
+
+class AddToBondPreview extends Preview {
+    private boolean mOppositeSite;
+    private Edge mSelectedEdge;
+    private PointF mAddSite;
+
+    public AddToBondPreview(Context context, Edge edge) {
+        super(context);
+
+        PointF center = edge.center();
+
+        setCenter(center);
+        mSelectedEdge = edge;
+        setOppositeSite(mOppositeSite);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
+
+        int color = paint.getColor();
+        paint.setColor(Color.BLUE);
+        canvas.drawCircle(mAddSite.x, mAddSite.y, 20, paint);
+        paint.setColor(color);
+    }
+
+    public void setOppositeSite(boolean oppositeSite) {
+        mOppositeSite = oppositeSite;
+
+        Atom centerAtom = mSelectedEdge.atomInUpperDirection();
+        Atom rotatingAtom = mSelectedEdge.first == centerAtom ? mSelectedEdge.second : mSelectedEdge.first;
+        mAddSite = Geometry.rotatePoint(rotatingAtom.getPoint(), centerAtom.getPoint(), (float)Math.toRadians(60) * (mOppositeSite ? -1 : 1));
     }
 }

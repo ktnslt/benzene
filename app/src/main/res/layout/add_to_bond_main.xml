@@ -55,7 +55,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
-        android:text="Opposite site"
+        android:text="Add To Opposite"
         app:layout_constraintStart_toEndOf="@id/a2b_view"
         app:layout_constraintTop_toTopOf="@id/a2b_view"/>
 
