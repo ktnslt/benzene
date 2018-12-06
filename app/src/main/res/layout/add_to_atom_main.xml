@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Add Functional Group to Atom"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+
+    <TextView
+        android:id="@+id/a2a_attach_site"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Attach Site"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"/>
+
+    <LinearLayout
+        android:id="@+id/a2a_view"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="50dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/a2a_attach_site"/>
+
+    <Button
+        android:id="@+id/a2a_btn_attach_site_back"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:padding="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:gravity="center"
+        android:text="&lt;&lt;"
+        app:layout_constraintTop_toTopOf="@id/a2a_view"
+        app:layout_constraintLeft_toRightOf="@id/a2a_view"/>
+
+    <Button
+        android:id="@+id/a2a_btn_attach_site_forward"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:padding="0dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="&gt;&gt;"
+        app:layout_constraintTop_toTopOf="@id/a2a_view"
+        app:layout_constraintLeft_toRightOf="@id/a2a_btn_attach_site_back"/>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/a2a_view"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        app:layout_constraintBottom_toTopOf="@+id/a2a_btn_ok">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/a2a_tv_alkane"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:text="Alkane, Alkene, Alkyne"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_c1"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="C1"
+                app:layout_constraintTop_toBottomOf="@id/a2a_tv_alkane"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_c2"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="C2"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c1"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_c1"/>
+
+            <Button
+                android:id="@+id/a2a_btn_c3"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="C3"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c1"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_c2"/>
+
+            <Button
+                android:id="@+id/a2a_btn_iso_c3"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="iso-C3"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c1"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_c3"/>
+
+            <Button
+                android:id="@+id/a2a_btn_c4"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="C4"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_iso_c3"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_sec_c4"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="sec-C4"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c4"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_c4"/>
+
+            <Button
+                android:id="@+id/a2a_btn_tert_c4"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="tert-C4"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c4"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_sec_c4"/>
+
+            <Button
+                android:id="@+id/a2a_btn_iso_c4"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="iso-C4"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_c4"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_tert_c4"/>
+
+            <TextView
+                android:id="@+id/a2a_tv_cyclic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Cyclic"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_c4"/>
+
+            <Button
+                android:id="@+id/a2a_btn_cyc_c5"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Cyc-C5"
+                app:layout_constraintTop_toBottomOf="@id/a2a_tv_cyclic"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_conj_c5"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="Conj-C5"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_cyc_c5"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_cyc_c5"/>
+
+            <Button
+                android:id="@+id/a2a_btn_cyc_c6"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="Cyc-C6"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_cyc_c5"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_conj_c5"/>
+
+            <Button
+                android:id="@+id/a2a_btn_phe"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="Phe"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_cyc_c5"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_cyc_c6"/>
+
+            <TextView
+                android:id="@+id/a2a_tv_oxygen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Oxygen"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_cyc_c5"/>
+
+            <Button
+                android:id="@+id/a2a_btn_oh"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="OH"
+                app:layout_constraintTop_toBottomOf="@id/a2a_tv_oxygen"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_o"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="=O"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_oh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_oh"/>
+
+            <Button
+                android:id="@+id/a2a_btn_cho"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="CHO"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_oh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_o"/>
+
+            <Button
+                android:id="@+id/a2a_btn_coo"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="COO-"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_oh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_cho"/>
+
+            <Button
+                android:id="@+id/a2a_btn_cooh"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="COOH"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_oh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_coo"/>
+
+            <Button
+                android:id="@+id/a2a_btn_coch3"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="COCH3"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_oh"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <TextView
+                android:id="@+id/a2a_tv_nitrogen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Nitrogen"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_coch3"/>
+
+            <Button
+                android:id="@+id/a2a_btn_conh"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="CONH"
+                app:layout_constraintTop_toBottomOf="@id/a2a_tv_nitrogen"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_nh2"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="NH2"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_nmeh"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="NMeH"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nh2"/>
+
+            <Button
+                android:id="@+id/a2a_btn_nme2"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="NMe2"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nmeh"/>
+
+            <Button
+                android:id="@+id/a2a_btn_nnn"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="N=N=N"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nme2"/>
+
+            <Button
+                android:id="@+id/a2a_btn_ocn"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="O-C-N"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nnn"/>
+
+            <Button
+                android:id="@+id/a2a_btn_nco"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="N=C=O"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_no2"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="NO2"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_conh"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nco"/>
+
+            <TextView
+                android:id="@+id/a2a_tv_sulfur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Sulfur"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_no2"/>
+
+            <Button
+                android:id="@+id/a2a_btn_so2me"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="SO2Me"
+                app:layout_constraintTop_toBottomOf="@id/a2a_tv_sulfur"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <Button
+                android:id="@+id/a2a_btn_so2oh"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:text="SO2OH"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_so2me"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_so2me"/>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/a2a_btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/a2a_btn_ok"/>
+
+    <Button
+        android:id="@+id/a2a_btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</android.support.constraint.ConstraintLayout>

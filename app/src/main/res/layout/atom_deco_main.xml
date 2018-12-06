@@ -178,102 +178,124 @@
         app:layout_constraintStart_toEndOf="@id/atom_deco_btn_right_0"
         app:layout_constraintTop_toTopOf="@id/atom_deco_btn_up_0"/>
 
-    <TextView
-        android:id="@+id/atom_deco_tv_charge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:text="Charge"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/atom_deco_btn_down_0"/>
 
-    <EditText
-        android:id="@+id/atom_deco_et_charge"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:text="0"
-        app:layout_constraintLeft_toLeftOf="@id/atom_deco_tv_charge"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_charge" />
-
-    <Button
-        android:id="@+id/atom_deco_btn_charge_down"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:padding="0dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="-"
-        app:layout_constraintTop_toTopOf="@+id/atom_deco_et_charge"
-        app:layout_constraintLeft_toRightOf="@+id/atom_deco_et_charge"/>
-
-    <Button
-        android:id="@+id/atom_deco_btn_charge_up"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:padding="0dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="+"
-        app:layout_constraintTop_toTopOf="@+id/atom_deco_et_charge"
-        app:layout_constraintLeft_toRightOf="@+id/atom_deco_btn_charge_down"/>
-
-    <TextView
-        android:id="@+id/atom_deco_tv_charge_as_circle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="Charge As Circle for Carbocation or Carbanion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_et_charge"/>
-
-    <SeekBar
-        android:id="@+id/atom_deco_sb_charge_circle"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:max="8"
-        android:progress="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_charge_as_circle"/>
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        app:layout_constraintBottom_toTopOf="@+id/atom_deco_btn_ok">
 
-    <TextView
-        android:id="@+id/atom_deco_tv_starmark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:text="Mark"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_sb_charge_circle"/>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <SeekBar
-        android:id="@+id/atom_deco_sb_starmark"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:max="8"
-        android:progress="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_starmark"/>
+            <TextView
+                android:id="@+id/atom_deco_tv_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:text="Charge"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <EditText
+                android:id="@+id/atom_deco_et_charge"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="numberSigned"
+                android:text="0"
+                app:layout_constraintLeft_toLeftOf="@id/atom_deco_tv_charge"
+                app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_charge" />
+
+            <Button
+                android:id="@+id/atom_deco_btn_charge_down"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="-"
+                app:layout_constraintTop_toTopOf="@+id/atom_deco_et_charge"
+                app:layout_constraintLeft_toRightOf="@+id/atom_deco_et_charge"/>
+
+            <Button
+                android:id="@+id/atom_deco_btn_charge_up"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="+"
+                app:layout_constraintTop_toTopOf="@+id/atom_deco_et_charge"
+                app:layout_constraintLeft_toRightOf="@+id/atom_deco_btn_charge_down"/>
+
+            <TextView
+                android:id="@+id/atom_deco_tv_charge_as_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:text="Charge As Circle for Carbocation or Carbanion"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/atom_deco_et_charge"/>
+
+            <SeekBar
+                android:id="@+id/atom_deco_sb_charge_circle"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:max="8"
+                android:progress="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_charge_as_circle"/>
+
+            <TextView
+                android:id="@+id/atom_deco_tv_starmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:text="Mark"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/atom_deco_sb_charge_circle"/>
+
+            <SeekBar
+                android:id="@+id/atom_deco_sb_starmark"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:max="8"
+                android:progress="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/atom_deco_tv_starmark"/>
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/atom_deco_btn_cancel"
@@ -281,7 +303,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
         android:text="Cancel"
-        app:layout_constraintTop_toBottomOf="@id/atom_deco_sb_starmark"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/atom_deco_btn_ok"/>
 
     <Button
@@ -289,6 +311,6 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="Ok"
-        app:layout_constraintTop_toTopOf="@id/atom_deco_btn_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 </android.support.constraint.ConstraintLayout>

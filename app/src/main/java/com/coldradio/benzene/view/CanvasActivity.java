@@ -85,7 +85,7 @@ public class CanvasActivity extends AppCompatActivity {
             ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
 
             if (selection == ElementSelector.Selection.ATOM) {
-
+                startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_ATOM"), ActivityRequestCode.ADD_TO_ATOM_REQ.ordinal());
             } else if (selection == ElementSelector.Selection.EDGE) {
                 startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
             } else {

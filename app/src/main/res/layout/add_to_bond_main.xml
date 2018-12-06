@@ -11,7 +11,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Add to Bond"
+        android:text="Add Cyclic to Bond"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -63,101 +63,114 @@
         android:id="@+id/divider2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/a2b_view"/>
 
-    <TextView
-        android:id="@+id/a2b_tv_edge_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:text="Edge number to be added"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider2"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        app:layout_constraintBottom_toTopOf="@+id/a2b_btn_ok">
 
-    <EditText
-        android:id="@+id/a2b_et_edge_number"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:text="6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/a2b_tv_edge_number" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/a2b_btn_edge_down"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:padding="0dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="-"
-        app:layout_constraintTop_toTopOf="@+id/a2b_et_edge_number"
-        app:layout_constraintLeft_toRightOf="@+id/a2b_et_edge_number"/>
+            <TextView
+                android:id="@+id/a2b_tv_edge_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:text="Edge number to be added"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-        android:id="@+id/a2b_btn_edge_up"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:padding="0dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:text="+"
-        app:layout_constraintTop_toTopOf="@+id/a2b_et_edge_number"
-        app:layout_constraintLeft_toRightOf="@+id/a2b_btn_edge_down"/>
+            <EditText
+                android:id="@+id/a2b_et_edge_number"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="numberSigned"
+                android:text="6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/a2b_tv_edge_number" />
 
-    <ImageButton
-        android:id="@+id/a2b_btn_tri"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/ic_menu_tri"
-        app:layout_constraintTop_toBottomOf="@+id/a2b_et_edge_number"
-        app:layout_constraintStart_toStartOf="parent"/>
+            <Button
+                android:id="@+id/a2b_btn_edge_down"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="-"
+                app:layout_constraintTop_toTopOf="@+id/a2b_et_edge_number"
+                app:layout_constraintLeft_toRightOf="@+id/a2b_et_edge_number"/>
 
-    <ImageButton
-        android:id="@+id/a2b_btn_tetra"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/ic_menu_tetra"
-        app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
-        app:layout_constraintStart_toEndOf="@id/a2b_btn_tri"/>
+            <Button
+                android:id="@+id/a2b_btn_edge_up"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:padding="0dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="+"
+                app:layout_constraintTop_toTopOf="@+id/a2b_et_edge_number"
+                app:layout_constraintLeft_toRightOf="@+id/a2b_btn_edge_down"/>
 
-    <ImageButton
-        android:id="@+id/a2b_btn_pent"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/ic_menu_pent"
-        app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
-        app:layout_constraintStart_toEndOf="@id/a2b_btn_tetra"/>
+            <ImageButton
+                android:id="@+id/a2b_btn_tri"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_menu_tri"
+                app:layout_constraintTop_toBottomOf="@+id/a2b_et_edge_number"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-    <ImageButton
-        android:id="@+id/a2b_btn_hex"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/ic_menu_hex"
-        app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
-        app:layout_constraintStart_toEndOf="@id/a2b_btn_pent"/>
+            <ImageButton
+                android:id="@+id/a2b_btn_tetra"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_menu_tetra"
+                app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
+                app:layout_constraintStart_toEndOf="@id/a2b_btn_tri"/>
+
+            <ImageButton
+                android:id="@+id/a2b_btn_pent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_menu_pent"
+                app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
+                app:layout_constraintStart_toEndOf="@id/a2b_btn_tetra"/>
+
+            <ImageButton
+                android:id="@+id/a2b_btn_hex"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_menu_hex"
+                app:layout_constraintTop_toBottomOf="@id/a2b_et_edge_number"
+                app:layout_constraintStart_toEndOf="@id/a2b_btn_pent"/>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/a2b_btn_cancel"
@@ -165,7 +178,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="25dp"
         android:text="Cancel"
-        app:layout_constraintTop_toBottomOf="@id/a2b_btn_hex"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/a2b_btn_ok"/>
 
     <Button
@@ -173,7 +186,7 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="Ok"
-        app:layout_constraintTop_toTopOf="@id/a2b_btn_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
