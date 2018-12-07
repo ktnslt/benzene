@@ -1,15 +1,197 @@
 package com.coldradio.benzene.view;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
+import com.coldradio.benzene.compound.funcgroup.Methyl_FG;
+import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.view.drawer.GenericDrawer;
+import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AddToAtomActivity extends AppCompatActivity {
+    private IFunctionalGroup mFuncGroup;
+    private TextView mFuncGroupName;
+    AddToAtomPreview mPreview;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_to_atom_main);
+
+        final Atom attachAtom = Project.instance().getElementSelector().getSelectedAtom();
+        mFuncGroupName = findViewById(R.id.a2a_tv_func_group_name);
+
+        if (attachAtom == null) {
+            finish();
+            Helper.instance().notification("No Atom Selected");
+            return;
+        }
+
+        // setting for Preview
+        ViewGroup previewLayout = findViewById(R.id.a2a_view);
+
+        if (previewLayout != null) {
+            mPreview = new AddToAtomPreview(this);
+            mPreview.setCenter(attachAtom.getPoint());
+            previewLayout.addView(mPreview);
+        }
+
+        // setting for prev next button
+        findViewById(R.id.a2a_btn_attach_form_prev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFuncGroup != null) {
+                    mPreview.setFunctionalGroup(mFuncGroup.prevForm());
+                    mPreview.invalidate();
+                } else {
+                    Helper.instance().notification("Select Functional Group First");
+                }
+            }
+        });
+
+        findViewById(R.id.a2a_btn_attach_form_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFuncGroup != null) {
+                    mPreview.setFunctionalGroup(mFuncGroup.nextForm());
+                    mPreview.invalidate();
+                } else {
+                    Helper.instance().notification("Select Functional Group First");
+                }
+            }
+        });
+
+        // setting for buttons - alkane, alkene, alkyne
+        findViewById(R.id.a2a_btn_c1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new Methyl_FG(attachAtom);
+                mFuncGroupName.setText(mFuncGroup.getName());
+                mPreview.setFunctionalGroup(mFuncGroup.nextForm());
+            }
+        });
+
+        findViewById(R.id.a2a_btn_c2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_c3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_iso_c3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_c4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_iso_c4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_sec_c4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_tert_c4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        // settings buttons - cyclic
+        findViewById(R.id.a2a_btn_cyc_c5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_conj_c5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_cyc_c6).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        findViewById(R.id.a2a_btn_phe).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        // settings for buttons - oxygen
+        findViewById(R.id.a2a_btn_oh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+}
+
+class AddToAtomPreview extends Preview {
+    private Compound mFunctionalGroup;
+
+    public AddToAtomPreview(Context context) {
+        super(context);
+    }
+
+    public void setFunctionalGroup(Compound funcGroup) {
+        mFunctionalGroup = funcGroup;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (mFunctionalGroup != null) {
+            Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
+
+            int color = paint.getColor();
+            paint.setColor(Color.BLUE);
+            GenericDrawer.draw(mFunctionalGroup, canvas, paint);
+            paint.setColor(color);
+        }
     }
 }

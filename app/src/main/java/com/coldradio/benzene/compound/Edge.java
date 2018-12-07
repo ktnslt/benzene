@@ -26,7 +26,7 @@ public class Edge {
     }
 
     public PointF center() {
-        return Geometry.centerPoint(first.getPoint(), second.getPoint());
+        return Geometry.centerOfLine(first.getPoint(), second.getPoint());
     }
 
     public Atom atomInUpperDirection() {

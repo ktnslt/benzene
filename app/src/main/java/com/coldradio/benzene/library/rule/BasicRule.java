@@ -9,7 +9,7 @@ public class BasicRule implements ICompoundRule {
     @Override
     public Compound apply(Compound compound) {
         // methane case
-        Atom carbon = CompoundInspector.returnCIfC11Hn(compound);
+        Atom carbon = CompoundInspector.returnCarbonIfC1Hn(compound);
 
         if (carbon != null) {
             carbon.setHydrogenMode(Atom.HydrogenMode.LETTERING_H);

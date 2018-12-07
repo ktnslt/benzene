@@ -105,6 +105,10 @@ public class Atom {
         mPoint.set(point);
     }
 
+    public void setPoint(float x, float y) {
+        mPoint.set(x, y);
+    }
+
     public PointF getPoint() {
         return mPoint;
     }

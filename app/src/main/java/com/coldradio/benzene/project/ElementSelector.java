@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
@@ -51,7 +52,7 @@ public class ElementSelector {
     private void rotateToPoint(PointF point) {
         float angle = Geometry.cwAngle(mRotationPivotPoint, point, mSelectedCompound.centerOfRectangle());
 
-        mSelectedCompound.rotate(angle);
+        CompoundArranger.rotateByCenterOfRectangle(mSelectedCompound, angle);
         mRotationPivotPoint = Geometry.rotatePoint(mRotationPivotPoint, mSelectedCompound.centerOfRectangle(), angle);
     }
 

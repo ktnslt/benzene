@@ -121,12 +121,6 @@ public class Compound {
         mCenterOfRectangle = null;
     }
 
-    public void rotate(float angle) {
-        for (Atom atom : mAtoms) {
-            atom.setPoint(Geometry.rotatePoint(atom.getPoint(), centerOfRectangle(), angle));
-        }
-    }
-
     public void makeBond(int aid1, int aid2, Bond.BondType bondType) {
         Atom a1 = getAtom(aid1), a2 = getAtom(aid2);
 

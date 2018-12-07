@@ -58,4 +58,18 @@ public class CompoundArranger {
 
         return compound;
     }
+
+    public static Compound rotateByCenterOfRectangle(Compound compound, float angle) {
+        for (Atom atom : compound.getAtoms())
+            atom.setPoint(Geometry.rotatePoint(atom.getPoint(), compound.centerOfRectangle(), angle));
+
+        return compound;
+    }
+
+    public static Compound rotate(Compound compound, PointF center, float angle) {
+        for (Atom atom : compound.getAtoms())
+            atom.setPoint(Geometry.rotatePoint(atom.getPoint(), center, angle));
+
+        return compound;
+    }
 }

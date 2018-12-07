@@ -34,7 +34,7 @@ public class Geometry {
         return (p.x - l1.x) * (l2.y - l1.y) - (p.y - l1.y) * (l2.x - l1.x);
     }
 
-    public static PointF centerPoint(PointF p1, PointF p2) {
+    public static PointF centerOfLine(PointF p1, PointF p2) {
         return new PointF((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
     }
 
@@ -97,5 +97,15 @@ public class Geometry {
         shifted[1] = zoom(shifted[1].x, shifted[1].y, l2, shiftRatio);
 
         return shifted;
+    }
+
+    public static PointF centerOfAngle(PointF p1, PointF p2, PointF c, boolean largerSide) {
+        float angle = cwAngle(p1, p2, c);
+
+        if (angle >= MathConstant.RADIAN_180 && largerSide) {
+            return rotatePoint(p1, c, angle/2);
+        } else {
+            return rotatePoint(p1, c, -(MathConstant.RADIAN_360-angle)/2);
+        }
     }
 }
