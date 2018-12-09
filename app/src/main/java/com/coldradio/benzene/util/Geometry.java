@@ -62,18 +62,29 @@ public class Geometry {
     }
 
     public static float interiorAngleOfPolygon(int numberOfSide) {
-        return (float)Math.toRadians((180.0f * numberOfSide - 360) / numberOfSide);
+        return (float) Math.toRadians((180.0f * numberOfSide - 360) / numberOfSide);
     }
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
         return new PointF[]{rotatePoint(p1, p2, (float) Math.toRadians(60)), rotatePoint(p1, p2, (float) Math.toRadians(-60))};
     }
 
-    public static float cwAngle(PointF pointFrom, PointF pointTo, PointF center) {
-        float pointFromX = pointFrom.x - center.x, pointFromY = pointFrom.y - center.y;
-        float pointToX = pointTo.x - center.x, pointToY = pointTo.y - center.y;
+    public static float angle(PointF from, PointF to, PointF center) {
+        // this function returns positive or negative value depending on the rotation direction.
+        // clock-wise is positive direction
+        float pointFromX = from.x - center.x, pointFromY = from.y - center.y;
+        float pointToX = to.x - center.x, pointToY = to.y - center.y;
 
         return (float) (Math.atan2(pointToY, pointToX) - Math.atan2(pointFromY, pointFromX));
+    }
+
+    public static float cwAngle(PointF from, PointF to, PointF center) {
+        // this function returns always positive value
+        float angle = angle(from, to, center);
+
+        if (angle < 0)
+            angle = MathConstant.RADIAN_360 + angle;
+        return angle;
     }
 
     public static float center(float[] points) {
@@ -99,13 +110,7 @@ public class Geometry {
         return shifted;
     }
 
-    public static PointF centerOfAngle(PointF p1, PointF p2, PointF c, boolean largerSide) {
-        float angle = cwAngle(p1, p2, c);
-
-        if (angle >= MathConstant.RADIAN_180 && largerSide) {
-            return rotatePoint(p1, c, angle/2);
-        } else {
-            return rotatePoint(p1, c, -(MathConstant.RADIAN_360-angle)/2);
-        }
+    public static PointF cwCenterOfAngle(PointF from, PointF to, PointF c) {
+        return rotatePoint(from, c, cwAngle(from, to, c) / 2);
     }
 }

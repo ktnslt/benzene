@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
 import com.coldradio.benzene.compound.funcgroup.Methyl_FG;
 import com.coldradio.benzene.project.Project;
@@ -54,7 +54,7 @@ public class AddToAtomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mFuncGroup != null) {
-                    mPreview.setFunctionalGroup(mFuncGroup.prevForm());
+                    mFuncGroup.prevForm();
                     mPreview.invalidate();
                 } else {
                     Helper.instance().notification("Select Functional Group First");
@@ -66,11 +66,27 @@ public class AddToAtomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mFuncGroup != null) {
-                    mPreview.setFunctionalGroup(mFuncGroup.nextForm());
+                    mFuncGroup.nextForm();
                     mPreview.invalidate();
                 } else {
                     Helper.instance().notification("Select Functional Group First");
                 }
+            }
+        });
+
+        // setting for ok, cancel button
+        findViewById(R.id.a2a_btn_ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Project.instance().getElementSelector().getSelectedCompound().addFunctionalGroupToAtom(mFuncGroup, attachAtom);
+                finish();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -80,7 +96,7 @@ public class AddToAtomActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mFuncGroup = new Methyl_FG(attachAtom);
                 mFuncGroupName.setText(mFuncGroup.getName());
-                mPreview.setFunctionalGroup(mFuncGroup.nextForm());
+                mPreview.setFunctionalGroup(mFuncGroup);
             }
         });
 
@@ -171,14 +187,15 @@ public class AddToAtomActivity extends AppCompatActivity {
 }
 
 class AddToAtomPreview extends Preview {
-    private Compound mFunctionalGroup;
+    private IFunctionalGroup mFunctionalGroup;
 
     public AddToAtomPreview(Context context) {
         super(context);
     }
 
-    public void setFunctionalGroup(Compound funcGroup) {
+    public void setFunctionalGroup(IFunctionalGroup funcGroup) {
         mFunctionalGroup = funcGroup;
+        invalidate();
     }
 
     @Override
@@ -187,10 +204,13 @@ class AddToAtomPreview extends Preview {
 
         if (mFunctionalGroup != null) {
             Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
+            PointF selectedAtomPoint = getCenter();
+            PointF attachPointInFuncGroup = mFunctionalGroup.attachAtom().getPoint();
 
             int color = paint.getColor();
             paint.setColor(Color.BLUE);
-            GenericDrawer.draw(mFunctionalGroup, canvas, paint);
+            canvas.drawLine(selectedAtomPoint.x, selectedAtomPoint.y, attachPointInFuncGroup.x, attachPointInFuncGroup.y, paint);
+            GenericDrawer.draw(mFunctionalGroup.curForm(), canvas, paint);
             paint.setColor(color);
         }
     }

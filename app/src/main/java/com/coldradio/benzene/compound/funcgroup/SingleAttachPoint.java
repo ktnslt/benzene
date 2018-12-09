@@ -8,52 +8,66 @@ import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.Geometry;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class SingleAttachPoint {
-    private List<PointF> mCandidates = new ArrayList<>();
+    private class AtomCwComparator implements Comparator<Atom> {
+        private PointF mBasePoint;
+        private PointF mCenter;
 
-    private void fillCandidateWithCenterOfAngle(Atom attachAtom, boolean largerAngleFirst) {
-        List<Atom> allBoundCarbon = CompoundInspector.allBoundCarbon(attachAtom);
-
-        for (int ii = 0; ii < allBoundCarbon.size() - 1; ++ii) {
-            PointF a1p = allBoundCarbon.get(ii).getPoint();
-            PointF a2p = allBoundCarbon.get(ii + 1).getPoint();
-
-            mCandidates.add(Geometry.centerOfAngle(a1p, a2p, attachAtom.getPoint(), largerAngleFirst));
+        public AtomCwComparator(PointF base, PointF center) {
+            mBasePoint = base;
+            mCenter = center;
         }
 
-        for (int ii = 0; ii < allBoundCarbon.size() - 1; ++ii) {
-            PointF a1p = allBoundCarbon.get(ii).getPoint();
-            PointF a2p = allBoundCarbon.get(ii + 1).getPoint();
-
-            mCandidates.add(Geometry.centerOfAngle(a1p, a2p, attachAtom.getPoint(), !largerAngleFirst));
+        @Override
+        public int compare(Atom o1, Atom o2) {
+            return Float.compare(Geometry.cwAngle(mBasePoint, o1.getPoint(), mCenter), Geometry.cwAngle(mBasePoint, o2.getPoint(), mCenter));
         }
     }
 
-    public SingleAttachPoint(Atom attachAtom) {
-        int boundCarbon = CompoundInspector.numberOfBoundCarbon(attachAtom);
+    private List<PointF> mCandidates = new ArrayList<>();
+
+    private void fillCandidateWithCenterOfAngle(Atom selectedAtom) {
+        List<Atom> boundSkeleton = CompoundInspector.boundSkeletonAtom(selectedAtom);
+
+        //    3        this case shall be sorted to    2
+        //    |                                        |
+        // 1--+--2                                  1--+--3
+        Collections.sort(boundSkeleton, new AtomCwComparator(boundSkeleton.get(0).getPoint(), selectedAtom.getPoint()));
+
+        for (int ii = 0; ii < boundSkeleton.size(); ++ii) {
+            // circular. If there are three skeleton. 0-1, 1-2, 2-0
+            PointF a1p = boundSkeleton.get(ii).getPoint();
+            PointF a2p = boundSkeleton.get((ii + 1) % boundSkeleton.size()).getPoint();
+
+            mCandidates.add(Geometry.cwCenterOfAngle(a1p, a2p, selectedAtom.getPoint()));
+        }
+    }
+
+    public SingleAttachPoint(Atom selectedAtom) {
+        int boundCarbon = CompoundInspector.numberOfBoundSkeletonAtom(selectedAtom);
 
         // fill candidates position
         if (boundCarbon == 0) {
             // attach to methane
             PointF p = new PointF();
 
-            p.set(attachAtom.getPoint());
-            p.offset(0, -Configuration.LINE_LENGTH);
+            p.set(selectedAtom.getPoint());
+            p.offset(0, -Configuration.BOND_LENGTH);
 
             for (int ii = 0; ii < 360 / 45; ++ii) {
-                mCandidates.add(Geometry.rotatePoint(p, attachAtom.getPoint(), (float) Math.toRadians(45) * ii));
+                mCandidates.add(Geometry.rotatePoint(p, selectedAtom.getPoint(), (float) Math.toRadians(45) * ii));
             }
         } else if (boundCarbon == 1) {
-            PointF boundCarbonPoint = attachAtom.getBonds().get(0).getBoundAtom().getPoint();
+            PointF boundCarbonPoint = selectedAtom.getBonds().get(0).getBoundAtom().getPoint();
 
-            mCandidates.add(Geometry.rotatePoint(boundCarbonPoint, attachAtom.getPoint(), (float) Math.toRadians(120)));
-            mCandidates.add(Geometry.rotatePoint(boundCarbonPoint, attachAtom.getPoint(), (float) Math.toRadians(-120)));
-        } else if (boundCarbon == 2) {
-            fillCandidateWithCenterOfAngle(attachAtom, true);
+            mCandidates.add(Geometry.rotatePoint(boundCarbonPoint, selectedAtom.getPoint(), (float) Math.toRadians(120)));
+            mCandidates.add(Geometry.rotatePoint(boundCarbonPoint, selectedAtom.getPoint(), (float) Math.toRadians(-120)));
         } else {
-            fillCandidateWithCenterOfAngle(attachAtom, false);
+            fillCandidateWithCenterOfAngle(selectedAtom);
         }
     }
 

@@ -15,7 +15,7 @@ public class GenericDrawer {
     private static void drawDoubleBond(float x1, float y1, float x2, float y2, PointF center, Canvas canvas, Paint paint) {
         if (center != null) {
             float distanceCenterToBond = Geometry.distanceFromPointToLine(center, new PointF(x1, y1), new PointF(x2, y2));
-            float zoomOutRation = distanceCenterToBond < Configuration.LINE_LENGTH / 2 ? 0.55f : 0.8f;
+            float zoomOutRation = distanceCenterToBond < Configuration.BOND_LENGTH / 2 ? 0.55f : 0.8f;
 
             PointF p1 = Geometry.zoom(x1, y1, center, zoomOutRation);
             PointF p2 = Geometry.zoom(x2, y2, center, zoomOutRation);

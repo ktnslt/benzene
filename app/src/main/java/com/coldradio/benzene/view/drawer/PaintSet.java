@@ -25,7 +25,7 @@ public class PaintSet {
         // GENERAL
         ii = 0;
         mPaints[ii] = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaints[ii].setStrokeWidth(Configuration.LINE_THICKNESS);
+        mPaints[ii].setStrokeWidth(Configuration.BOND_THICKNESS);
         mPaints[ii].setTextSize(Configuration.FONT_SIZE);
         mPaints[ii].setStyle(Paint.Style.FILL);
         mPaints[ii].setTypeface(Typeface.create("Consolas", Typeface.NORMAL));
@@ -35,7 +35,7 @@ public class PaintSet {
         ii = 1;
         mPaints[ii] = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaints[ii] = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaints[ii].setStrokeWidth(Configuration.LINE_THICKNESS * 7);
+        mPaints[ii].setStrokeWidth(Configuration.BOND_THICKNESS * 7);
         mPaints[ii].setStrokeCap(Paint.Cap.ROUND);
         mPaints[ii].setStyle(Paint.Style.STROKE);
         mPaints[ii].setColor(Color.rgb(140, 180, 250));

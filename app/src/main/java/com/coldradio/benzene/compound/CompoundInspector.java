@@ -20,24 +20,24 @@ public class CompoundInspector {
         return c;
     }
 
-    public static int numberOfBoundCarbon(Atom atom) {
-        int boundCarbon = 0;
+    public static int numberOfBoundSkeletonAtom(Atom atom) {
+        int boundSkeleton = 0;
 
         for (Bond bond : atom.getBonds()) {
-            if (bond.getBoundAtom().getAtomicNumber() == AtomicNumber.C)
-                ++boundCarbon;
+            if (bond.getBoundAtom().getAtomicNumber() != AtomicNumber.H)
+                ++boundSkeleton;
         }
 
-        return boundCarbon;
+        return boundSkeleton;
     }
 
-    public static List<Atom> allBoundCarbon(Atom atom) {
+    public static List<Atom> boundSkeletonAtom(Atom atom) {
         List<Atom> carbons = new ArrayList<>();
 
         for (Bond bond : atom.getBonds()) {
             Atom that_atom = bond.getBoundAtom();
 
-            if (that_atom.getAtomicNumber() == AtomicNumber.C)
+            if (that_atom.getAtomicNumber() != AtomicNumber.H)
                 carbons.add(that_atom);
         }
 

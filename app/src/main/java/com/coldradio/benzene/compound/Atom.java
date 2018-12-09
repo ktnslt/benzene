@@ -199,7 +199,6 @@ public class Atom {
             showAllHydrogenElementName(false);
             mAtomDecoration.setShowElementName(mAtomicNumber != AtomicNumber.C);
         }
-        Helper.instance().notification(hydrogenMode.toString());
     }
 
     public HydrogenMode getHydrogenMode() {

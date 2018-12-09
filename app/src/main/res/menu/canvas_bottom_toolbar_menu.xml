@@ -77,4 +77,20 @@
         android:title="Add"
         android:icon="@drawable/ic_menu_add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_func_group"
+        android:orderInCategory="110"
+        android:title="Add"
+        android:icon="@drawable/ic_menu_func_group"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_cyclic_to_bond"
+        android:orderInCategory="120"
+        android:title="Add"
+        android:icon="@drawable/ic_menu_add_cyclic_to_bond"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>

@@ -21,22 +21,31 @@ public class ContextMenuManager {
         }
     }
 
+    private ContextMenuManager show(int id) {
+        showItem(mBottomToolbar, id, true);
+        return this;
+    }
+
+    private ContextMenuManager hideAll() {
+        showItem(mBottomToolbar, R.id.action_change_atom, false);
+        showItem(mBottomToolbar, R.id.action_cycle_hmode, false);
+        showItem(mBottomToolbar, R.id.action_atom_deco, false);
+        showItem(mBottomToolbar, R.id.action_bond, false);
+        showItem(mBottomToolbar, R.id.action_synthesize, false);
+        showItem(mBottomToolbar, R.id.action_trashcan, false);
+        showItem(mBottomToolbar, R.id.action_select_by_rect, false);
+        showItem(mBottomToolbar, R.id.action_select_by_finger, false);
+        showItem(mBottomToolbar, R.id.action_coloring, false);
+        showItem(mBottomToolbar, R.id.action_add, false);
+        showItem(mBottomToolbar, R.id.action_func_group, false);
+        showItem(mBottomToolbar, R.id.action_add_cyclic_to_bond, false);
+        return this;
+    }
+
     private void setTopToolbar(boolean paste, boolean cut, boolean copy) {
         showItem(mTopToolbar, R.id.action_paste, paste);
         showItem(mTopToolbar, R.id.action_cut, cut);
         showItem(mTopToolbar, R.id.action_copy, copy);
-    }
-
-    private void setBottomToolbar(boolean change_atom, boolean to_letter, boolean atom_deco, boolean bond, boolean synthesize, boolean trashcan, boolean select_by_rect, boolean select_by_finger, boolean coloring) {
-        showItem(mBottomToolbar, R.id.action_change_atom, change_atom);
-        showItem(mBottomToolbar, R.id.action_cycle_hmode, to_letter);
-        showItem(mBottomToolbar, R.id.action_atom_deco, atom_deco);
-        showItem(mBottomToolbar, R.id.action_bond, bond);
-        showItem(mBottomToolbar, R.id.action_synthesize, synthesize);
-        showItem(mBottomToolbar, R.id.action_trashcan, trashcan);
-        showItem(mBottomToolbar, R.id.action_select_by_rect, select_by_rect);
-        showItem(mBottomToolbar, R.id.action_select_by_finger, select_by_finger);
-        showItem(mBottomToolbar, R.id.action_coloring, coloring);
     }
 
     public ContextMenuManager(Toolbar topToolbar, Toolbar bottomToolbar) {
@@ -56,16 +65,31 @@ public class ContextMenuManager {
         // bottom toolbar update
         switch(Project.instance().getElementSelector().selection()) {
             case ATOM:
-                setBottomToolbar(true, true, true, false, true, true, false, false, false);
+                hideAll().
+                        show(R.id.action_change_atom).
+                        show(R.id.action_cycle_hmode).
+                        show(R.id.action_atom_deco).
+                        show(R.id.action_synthesize).
+                        show(R.id.action_trashcan).
+                        show(R.id.action_func_group);
                 break;
             case EDGE:
-                setBottomToolbar(false, false, false, true, false, true, false, false, false);
+                hideAll().
+                        show(R.id.action_bond).
+                        show(R.id.action_trashcan).
+                        show(R.id.action_add_cyclic_to_bond);
                 break;
             case COMPOUND:
-                setBottomToolbar(false, false, false, false, false, true, false, false, false);
+                hideAll().
+                        show(R.id.action_trashcan).
+                        show(R.id.action_coloring);
                 break;
             case NONE:
-                setBottomToolbar(false, false, false, false, false, false, true, true, true);
+                hideAll().
+                        show(R.id.action_select_by_rect).
+                        show(R.id.action_select_by_finger).
+                        show(R.id.action_coloring).
+                        show(R.id.action_add);
                 break;
         }
     }

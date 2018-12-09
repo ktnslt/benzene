@@ -82,15 +82,11 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_trashcan) {
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_add) {
-            ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
-
-            if (selection == ElementSelector.Selection.ATOM) {
-                startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_ATOM"), ActivityRequestCode.ADD_TO_ATOM_REQ.ordinal());
-            } else if (selection == ElementSelector.Selection.EDGE) {
-                startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
-            } else {
-                startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
-            }
+            startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
+        } else if (id == R.id.action_func_group) {
+            startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_ATOM"), ActivityRequestCode.ADD_TO_ATOM_REQ.ordinal());
+        } else if (id == R.id.action_add_cyclic_to_bond) {
+            startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
         } else if (id == R.id.action_change_atom) {
             startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
         } else if (id == R.id.action_bond) {

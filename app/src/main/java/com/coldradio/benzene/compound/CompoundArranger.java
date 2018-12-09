@@ -9,7 +9,7 @@ import com.coldradio.benzene.project.Configuration;
 public class CompoundArranger {
     private static float atomDistance(Compound compound) {
         if (compound.size() == 1) {
-            return Configuration.LINE_LENGTH;
+            return Configuration.BOND_LENGTH;
         } else {
             Atom a1 = compound.getAtoms().get(0);
             Atom a2 = a1.getBonds().get(0).getBoundAtom();
@@ -40,7 +40,7 @@ public class CompoundArranger {
     }
 
     public static Compound zoomToStandard(Compound compound, float ratio) {
-        zoom(compound, Configuration.LINE_LENGTH / atomDistance(compound) * ratio);
+        zoom(compound, Configuration.BOND_LENGTH / atomDistance(compound) * ratio);
 
         return compound;
     }

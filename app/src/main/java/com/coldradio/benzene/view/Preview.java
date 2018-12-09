@@ -26,6 +26,10 @@ class Preview extends View {
         mCenter = center;
     }
 
+    public PointF getCenter() {
+        return mCenter;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

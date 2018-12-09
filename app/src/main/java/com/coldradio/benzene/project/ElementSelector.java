@@ -50,7 +50,7 @@ public class ElementSelector {
     }
 
     private void rotateToPoint(PointF point) {
-        float angle = Geometry.cwAngle(mRotationPivotPoint, point, mSelectedCompound.centerOfRectangle());
+        float angle = Geometry.angle(mRotationPivotPoint, point, mSelectedCompound.centerOfRectangle());
 
         CompoundArranger.rotateByCenterOfRectangle(mSelectedCompound, angle);
         mRotationPivotPoint = Geometry.rotatePoint(mRotationPivotPoint, mSelectedCompound.centerOfRectangle(), angle);

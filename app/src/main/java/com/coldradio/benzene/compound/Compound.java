@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.project.Project;
 
@@ -182,5 +183,10 @@ public class Compound {
         }
 
         centerAtom.singleBond(lastAtom);
+    }
+
+    public void addFunctionalGroupToAtom(IFunctionalGroup funcGroup, Atom atom) {
+        merge(funcGroup.curForm());
+        atom.singleBond(funcGroup.attachAtom());
     }
 }
