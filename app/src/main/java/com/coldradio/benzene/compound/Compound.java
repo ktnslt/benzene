@@ -185,8 +185,15 @@ public class Compound {
         centerAtom.singleBond(lastAtom);
     }
 
-    public void addFunctionalGroupToAtom(IFunctionalGroup funcGroup, Atom atom) {
+    public void addFunctionalGroupToAtom(IFunctionalGroup funcGroup, Atom atom, boolean deleteHOfSelectedAtom) {
         merge(funcGroup.curForm());
-        atom.singleBond(funcGroup.attachAtom());
+        atom.singleBond(funcGroup.appendAtom());
+
+        Atom H = atom.getHydrogen();
+
+        if (deleteHOfSelectedAtom && H != null) {
+            delete(H);
+            CompoundArranger.adjustHydrogenPosition(atom);
+        }
     }
 }

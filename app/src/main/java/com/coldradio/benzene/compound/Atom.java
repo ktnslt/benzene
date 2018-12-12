@@ -13,6 +13,7 @@ public class Atom {
     public enum HydrogenMode {
         LETTERING_H, HIDE_H_BOND, SHOW_H_BOND
     }
+
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is valid only temporary. When merging two compounds into one, the uniqueness will be broken
@@ -147,6 +148,49 @@ public class Atom {
             }
         }
 
+        return null;
+    }
+
+    public int numberOfBoundSkeletonAtoms() {
+        int boundSkeleton = 0;
+
+        for (Bond bond : mBonds) {
+            if (bond.getBoundAtom().getAtomicNumber() != AtomicNumber.H)
+                ++boundSkeleton;
+        }
+
+        return boundSkeleton;
+    }
+
+    public List<Atom> boundSkeletonAtoms() {
+        List<Atom> carbons = new ArrayList<>();
+
+        for (Bond bond : mBonds) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (that_atom.getAtomicNumber() != AtomicNumber.H)
+                carbons.add(that_atom);
+        }
+
+        return carbons;
+    }
+
+    public List<Atom> boundHydrogens() {
+        List<Atom> hydrogens = new ArrayList<>();
+
+        for (Bond bond : mBonds) {
+            if (bond.getBoundAtom().getAtomicNumber() == AtomicNumber.H) {
+                hydrogens.add(bond.getBoundAtom());
+            }
+        }
+        return hydrogens;
+    }
+
+    public Atom getHydrogen() {
+        for (Bond bond : mBonds) {
+            if (bond.getBoundAtom().getAtomicNumber() == AtomicNumber.H)
+                return bond.getBoundAtom();
+        }
         return null;
     }
 

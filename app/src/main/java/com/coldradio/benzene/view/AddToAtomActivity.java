@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
@@ -25,7 +27,8 @@ import com.coldradio.benzene.view.drawer.PaintSet;
 public class AddToAtomActivity extends AppCompatActivity {
     private IFunctionalGroup mFuncGroup;
     private TextView mFuncGroupName;
-    AddToAtomPreview mPreview;
+    private AddToAtomPreview mPreview;
+    private boolean mDeleteHOfSelectedAtom;
 
     private void setFuncGroupNameAndPreview() {
         // assume the mFuncGroup is already assigned
@@ -69,6 +72,14 @@ public class AddToAtomActivity extends AppCompatActivity {
             }
         });
 
+        // setting for checkbox delete H of selected Atom
+        ((CheckBox)findViewById(R.id.a2a_cb_delete_H)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mDeleteHOfSelectedAtom = isChecked;
+            }
+        });
+
         findViewById(R.id.a2a_btn_attach_form_next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +96,7 @@ public class AddToAtomActivity extends AppCompatActivity {
         findViewById(R.id.a2a_btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Project.instance().getElementSelector().getSelectedCompound().addFunctionalGroupToAtom(mFuncGroup, attachAtom);
+                Project.instance().getElementSelector().getSelectedCompound().addFunctionalGroupToAtom(mFuncGroup, attachAtom, mDeleteHOfSelectedAtom);
                 finish();
             }
         });
@@ -212,7 +223,7 @@ class AddToAtomPreview extends Preview {
         if (mFunctionalGroup != null) {
             Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
             PointF selectedAtomPoint = getCenter();
-            PointF attachPointInFuncGroup = mFunctionalGroup.attachAtom().getPoint();
+            PointF attachPointInFuncGroup = mFunctionalGroup.appendAtom().getPoint();
 
             int color = paint.getColor();
             paint.setColor(Color.BLUE);

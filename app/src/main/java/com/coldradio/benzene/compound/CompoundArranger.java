@@ -3,8 +3,11 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
+
+import java.util.List;
 
 public class CompoundArranger {
     private static float atomDistance(Compound compound) {
@@ -71,5 +74,47 @@ public class CompoundArranger {
             atom.setPoint(Geometry.cwRotate(atom.getPoint(), center, angle));
 
         return compound;
+    }
+
+    public static PointF hydrogenPointOfEnd(PointF a_atom, PointF b_atom, int h_num) {
+        PointF zoomed_b_atom = Geometry.zoom(b_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
+
+        return Geometry.cwRotate(zoomed_b_atom, a_atom, MathConstant.RADIAN_90 * h_num);
+    }
+
+    public static PointF hydrogenPointOfBentForm(PointF a_atom, PointF b1_atom, PointF b2_atom, int h_num) {
+        // C---C---C    append to a_atom
+        // b1  a   b2
+        float b1b2Angle = Geometry.cwAngle(b1_atom, b2_atom, a_atom);
+
+        PointF zoomed_b;
+        if (b1b2Angle > MathConstant.RADIAN_180) {
+            zoomed_b = Geometry.zoom(b1_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
+        } else {
+            zoomed_b = Geometry.zoom(b2_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
+        }
+        return Geometry.cwRotate(zoomed_b, a_atom, h_num == 1 ? MathConstant.RADIAN_90 : MathConstant.RADIAN_150);
+    }
+
+    public static void adjustHydrogenPosition(Atom atom) {
+        int boundSkeleton = atom.numberOfBoundSkeletonAtoms();
+        List<Atom> hydrogens = atom.boundHydrogens();
+
+        if (boundSkeleton == 1) {
+            PointF b_atom = atom.getSkeletonAtom().getPoint();
+            int hNum = 1;
+
+            for (Atom h : hydrogens) {
+                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), b_atom, hNum++));
+            }
+        } else if (boundSkeleton == 2) {
+            Atom b1_atom = atom.getSkeletonAtom();
+            Atom b2_atom = atom.getSkeletonAtomExcept(b1_atom);
+            int hNum = 1;
+
+            for (Atom h : hydrogens) {
+                h.setPoint(hydrogenPointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint(), hNum++));
+            }
+        }
     }
 }

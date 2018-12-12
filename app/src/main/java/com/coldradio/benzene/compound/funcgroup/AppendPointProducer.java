@@ -3,7 +3,6 @@ package com.coldradio.benzene.compound.funcgroup;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MathConstant;
@@ -59,7 +58,7 @@ public class AppendPointProducer {
     }
 
     private void fillCandidateWithCenterOfAngle(Atom selectedAtom) {
-        List<Atom> boundSkeleton = CompoundInspector.boundSkeletonAtom(selectedAtom);
+        List<Atom> boundSkeleton = selectedAtom.boundSkeletonAtoms();
 
         reorderBoundSkeleton(boundSkeleton, selectedAtom.getPoint());
 
@@ -73,7 +72,7 @@ public class AppendPointProducer {
     }
 
     public AppendPointProducer(Atom a_atom) {
-        int numberOfNeighbors = CompoundInspector.numberOfBoundSkeletonAtom(a_atom);
+        int numberOfNeighbors = a_atom.numberOfBoundSkeletonAtoms();
 
         // fill candidates position
         if (numberOfNeighbors == 0) {
@@ -92,7 +91,7 @@ public class AppendPointProducer {
             Atom b_atom = a_atom.getSkeletonAtom();
             PointF a_atom_point = a_atom.getPoint(), b_atom_point = b_atom.getPoint();
 
-            if (CompoundInspector.numberOfBoundSkeletonAtom(b_atom) > 1) {
+            if (b_atom.numberOfBoundSkeletonAtoms() > 1) {
                 // this includes chain cases. In case >= 3. c_atom is assigned randomly
                 Atom c_atom = b_atom.getSkeletonAtomExcept(a_atom);
                 PointF c_atom_point = c_atom.getPoint();

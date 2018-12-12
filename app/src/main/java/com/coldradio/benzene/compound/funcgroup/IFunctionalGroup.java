@@ -8,5 +8,5 @@ public interface IFunctionalGroup {
     Compound prevForm();
     Compound curForm();
     String getName();
-    Atom attachAtom();
+    Atom appendAtom();
 }
