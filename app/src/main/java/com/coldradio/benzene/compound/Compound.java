@@ -173,7 +173,7 @@ public class Compound {
         for (int ii = 0; ii < edgeNumber - 2; ++ii) {
             Atom newAtom = new Atom(1, AtomicNumber.C);
 
-            newAtom.setPoint(Geometry.rotatePoint(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
+            newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
             newAtom.singleBond(centerAtom);
             newAtom.getAtomDecoration().setShowElementName(false);
             mAtoms.add(newAtom);

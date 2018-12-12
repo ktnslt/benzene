@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundReactor {
@@ -37,6 +38,26 @@ public class CompoundReactor {
         }
 
         mSynthesisSource = null;
+    }
+
+    public static Compound chainCompound(PointF[] points) {
+        List<Atom> atoms = new ArrayList<>();
+
+        for (int ii = 0; ii < points.length; ++ii) {
+            if (points[ii] != null) {
+                Atom atom = new Atom(ii, AtomicNumber.C);
+                atom.setPoint(points[ii]);
+                atoms.add(atom);
+            }
+        }
+
+        Compound compound = new Compound(atoms);
+
+        for (int ii = 0; ii < points.length - 1; ++ii) {
+            compound.makeBond(ii, ii + 1, Bond.BondType.SINGLE);
+        }
+
+        return compound;
     }
 
     public boolean synthesis(PointF point, List<Compound> compounds) {

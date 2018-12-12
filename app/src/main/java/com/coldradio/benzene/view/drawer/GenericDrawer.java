@@ -36,8 +36,8 @@ public class GenericDrawer {
 
     private static PointF centerForDoubleBond(Atom a1, Atom a2) {
         PointF a1p = a1.getPoint(), a2p = a2.getPoint();
-        Atom before_a1 = a1.getBoundAtomExcept(a2);
-        Atom after_a2 = a2.getBoundAtomExcept(a1);
+        Atom before_a1 = a1.getSkeletonAtomExcept(a2);
+        Atom after_a2 = a2.getSkeletonAtomExcept(a1);
 
         if (before_a1 != null && after_a2 != null && before_a1 == after_a2) {
             // propane case, returns the center of the triangle

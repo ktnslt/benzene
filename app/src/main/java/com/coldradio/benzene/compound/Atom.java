@@ -126,16 +126,27 @@ public class Atom {
         return false;
     }
 
-    public Atom getBoundAtomExcept(Atom atom) {
-        if (mBonds.size() == 2) {
-            for (Bond bond : mBonds) {
-                if (bond.getBoundAtom() != atom) {
-                    return bond.getBoundAtom();
-                }
+    public Atom getSkeletonAtomExcept(Atom atom) {
+        for (Bond bond : mBonds) {
+            Atom boundAtom = bond.getBoundAtom();
+
+            if (boundAtom != atom && boundAtom.getAtomicNumber() != AtomicNumber.H) {
+                return boundAtom;
             }
-        } else {
-            // TODO: this case needs to be addressed.
         }
+
+        return null;
+    }
+
+    public Atom getSkeletonAtom() {
+        for (Bond bond : mBonds) {
+            Atom boundAtom = bond.getBoundAtom();
+
+            if (boundAtom.getAtomicNumber() != AtomicNumber.H) {
+                return boundAtom;
+            }
+        }
+
         return null;
     }
 

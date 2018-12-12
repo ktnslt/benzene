@@ -6,8 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +22,6 @@ import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.view.drawer.PaintSet;
-import com.coldradio.benzene.view.drawer.SelectedElementBackgroundDrawer;
 
 public class AddToBondActivity extends AppCompatActivity {
     private AddToBondPreview mPreview;
@@ -179,6 +176,6 @@ class AddToBondPreview extends Preview {
 
         Atom centerAtom = mSelectedEdge.atomInUpperDirection();
         Atom rotatingAtom = mSelectedEdge.first == centerAtom ? mSelectedEdge.second : mSelectedEdge.first;
-        mAddSite = Geometry.rotatePoint(rotatingAtom.getPoint(), centerAtom.getPoint(), (float)Math.toRadians(60) * (mOppositeSite ? -1 : 1));
+        mAddSite = Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), (float)Math.toRadians(60) * (mOppositeSite ? -1 : 1));
     }
 }

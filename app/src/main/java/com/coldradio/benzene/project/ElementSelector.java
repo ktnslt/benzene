@@ -53,7 +53,7 @@ public class ElementSelector {
         float angle = Geometry.angle(mRotationPivotPoint, point, mSelectedCompound.centerOfRectangle());
 
         CompoundArranger.rotateByCenterOfRectangle(mSelectedCompound, angle);
-        mRotationPivotPoint = Geometry.rotatePoint(mRotationPivotPoint, mSelectedCompound.centerOfRectangle(), angle);
+        mRotationPivotPoint = Geometry.cwRotate(mRotationPivotPoint, mSelectedCompound.centerOfRectangle(), angle);
     }
 
     private boolean isPivotGrasped(PointF point) {

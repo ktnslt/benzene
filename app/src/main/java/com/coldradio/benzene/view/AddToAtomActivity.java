@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.funcgroup.Ethyl_FG;
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
 import com.coldradio.benzene.compound.funcgroup.Methyl_FG;
 import com.coldradio.benzene.project.Project;
@@ -25,6 +26,12 @@ public class AddToAtomActivity extends AppCompatActivity {
     private IFunctionalGroup mFuncGroup;
     private TextView mFuncGroupName;
     AddToAtomPreview mPreview;
+
+    private void setFuncGroupNameAndPreview() {
+        // assume the mFuncGroup is already assigned
+        mFuncGroupName.setText(mFuncGroup.getName());
+        mPreview.setFunctionalGroup(mFuncGroup);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,15 +102,15 @@ public class AddToAtomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mFuncGroup = new Methyl_FG(attachAtom);
-                mFuncGroupName.setText(mFuncGroup.getName());
-                mPreview.setFunctionalGroup(mFuncGroup);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_c2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new Ethyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 

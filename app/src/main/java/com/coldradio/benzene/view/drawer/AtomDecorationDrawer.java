@@ -53,7 +53,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         PointF xy = new PointF(atomXY.x, atomXY.y);
 
         xy.offset(0, -35);
-        xy = Geometry.rotatePoint(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getMarker().ordinal() - 1)));
+        xy = Geometry.cwRotate(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getMarker().ordinal() - 1)));
         xy.offset(0, 15);
 
         TextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
@@ -106,7 +106,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
 
         // TODO: assume this is GENERAL type, could be a bug, but what else.., one possible solution is to pass the PaintType not the paint object
         xy.offset(0, -PaintSet.instance().fontHeight(PaintSet.PaintType.GENERAL));
-        xy = Geometry.rotatePoint(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getChargeAsCircle().ordinal() - 1)));
+        xy = Geometry.cwRotate(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getChargeAsCircle().ordinal() - 1)));
 
         // draw circle
         canvas.drawCircle(xy.x, xy.y, Configuration.CHARGE_CIRCLE_RADIUS, paint);

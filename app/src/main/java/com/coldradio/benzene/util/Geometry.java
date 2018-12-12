@@ -3,7 +3,7 @@ package com.coldradio.benzene.util;
 import android.graphics.PointF;
 
 public class Geometry {
-    public static PointF rotatePoint(PointF current, PointF center, float angle) {
+    public static PointF cwRotate(PointF current, PointF center, float angle) {
         float currentToZeroX = current.x - center.x;
         float currentToZeroY = current.y - center.y;
         float cos_theta = (float) Math.cos(angle), sin_theta = (float) Math.sin(angle);
@@ -18,6 +18,10 @@ public class Geometry {
 
     public static float distanceFromPointToLine(PointF p0, PointF p1, PointF p2) {
         return Math.abs((p2.y - p1.y) * p0.x - (p2.x - p1.x) * p0.y + p2.x * p1.y - p2.y * p1.x) / distanceFromPointToPoint(p1, p2);
+    }
+
+    public static PointF zoom(PointF point, PointF center, float ratio) {
+        return zoom(point.x, point.y, center, ratio);
     }
 
     public static PointF zoom(float x, float y, PointF center, float ratio) {
@@ -66,7 +70,7 @@ public class Geometry {
     }
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
-        return new PointF[]{rotatePoint(p1, p2, (float) Math.toRadians(60)), rotatePoint(p1, p2, (float) Math.toRadians(-60))};
+        return new PointF[]{cwRotate(p1, p2, (float) Math.toRadians(60)), cwRotate(p1, p2, (float) Math.toRadians(-60))};
     }
 
     public static float angle(PointF from, PointF to, PointF center) {
@@ -101,16 +105,16 @@ public class Geometry {
         PointF[] shifted = new PointF[2];
 
         // rotate l2 90 Degrees against l1
-        shifted[0] = rotatePoint(l2, l1, MathConstant.RADIAN_90 * (up ? -1 : 1));
+        shifted[0] = cwRotate(l2, l1, MathConstant.RADIAN_90 * (up ? -1 : 1));
         shifted[0] = zoom(shifted[0].x, shifted[0].y, l1, shiftRatio);
 
-        shifted[1] = rotatePoint(l1, l2, MathConstant.RADIAN_90 * (up ? 1 : -1));
+        shifted[1] = cwRotate(l1, l2, MathConstant.RADIAN_90 * (up ? 1 : -1));
         shifted[1] = zoom(shifted[1].x, shifted[1].y, l2, shiftRatio);
 
         return shifted;
     }
 
     public static PointF cwCenterOfAngle(PointF from, PointF to, PointF c) {
-        return rotatePoint(from, c, cwAngle(from, to, c) / 2);
+        return cwRotate(from, c, cwAngle(from, to, c) / 2);
     }
 }
