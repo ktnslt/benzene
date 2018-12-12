@@ -16,9 +16,7 @@ import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.funcgroup.Ethyl_FG;
-import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
-import com.coldradio.benzene.compound.funcgroup.Methyl_FG;
+import com.coldradio.benzene.compound.funcgroup.*;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
@@ -28,7 +26,7 @@ public class AddToAtomActivity extends AppCompatActivity {
     private IFunctionalGroup mFuncGroup;
     private TextView mFuncGroupName;
     private AddToAtomPreview mPreview;
-    private boolean mDeleteHOfSelectedAtom;
+    private boolean mDeleteHOfSelectedAtom = true;
 
     private void setFuncGroupNameAndPreview() {
         // assume the mFuncGroup is already assigned
@@ -128,70 +126,80 @@ public class AddToAtomActivity extends AppCompatActivity {
         findViewById(R.id.a2a_btn_c3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new Propyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_iso_c3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new IsoPropyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_c4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new Butyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_iso_c4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new IsoButyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_sec_c4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new SecButyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_tert_c4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new TertButyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
         // settings buttons - cyclic
         findViewById(R.id.a2a_btn_cyc_c5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new CycPentyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_conj_c5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new ConjCycPentyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_cyc_c6).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new CycHexyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
 
         findViewById(R.id.a2a_btn_phe).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFuncGroup = new Phenyl_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
         // settings for buttons - oxygen

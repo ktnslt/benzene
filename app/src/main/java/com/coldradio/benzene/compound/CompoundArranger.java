@@ -96,11 +96,27 @@ public class CompoundArranger {
         return Geometry.cwRotate(zoomed_b, a_atom, h_num == 1 ? MathConstant.RADIAN_90 : MathConstant.RADIAN_150);
     }
 
+    public static PointF hydrogenUniquePointOfBentForm(PointF a_atom, PointF b1_atom, PointF b2_atom) {
+        // TODO: instead of receiving point, it would be better to receive Atom, Then this and the above function can be merged
+        // C---C---C    append to a_atom. Since this is unique point
+        // b1  a   b2
+        float b1b2Angle = Geometry.cwAngle(b1_atom, b2_atom, a_atom);
+
+        PointF zoomed_b;
+        if (b1b2Angle > MathConstant.RADIAN_180) {
+            zoomed_b = Geometry.zoom(b1_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
+        } else {
+            zoomed_b = Geometry.zoom(b2_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
+        }
+        return Geometry.cwRotate(zoomed_b, a_atom, MathConstant.RADIAN_120);
+    }
+
     public static void adjustHydrogenPosition(Atom atom) {
         int boundSkeleton = atom.numberOfBoundSkeletonAtoms();
         List<Atom> hydrogens = atom.boundHydrogens();
 
         if (boundSkeleton == 1) {
+            // END of chain case
             PointF b_atom = atom.getSkeletonAtom().getPoint();
             int hNum = 1;
 
@@ -108,12 +124,18 @@ public class CompoundArranger {
                 h.setPoint(hydrogenPointOfEnd(atom.getPoint(), b_atom, hNum++));
             }
         } else if (boundSkeleton == 2) {
+            // Bent form
             Atom b1_atom = atom.getSkeletonAtom();
             Atom b2_atom = atom.getSkeletonAtomExcept(b1_atom);
             int hNum = 1;
+            boolean hasDoubleOrTripleBond = atom.hasBondType(Bond.BondType.DOUBLE) || atom.hasBondType(Bond.BondType.TRIPLE);
 
             for (Atom h : hydrogens) {
-                h.setPoint(hydrogenPointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint(), hNum++));
+                if (hasDoubleOrTripleBond) {
+                    h.setPoint(hydrogenUniquePointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint()));
+                } else {
+                    h.setPoint(hydrogenPointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint(), hNum++));
+                }
             }
         }
     }

@@ -3,6 +3,9 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.util.Pair;
 
+import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.MathConstant;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,5 +85,42 @@ public class CompoundReactor {
             return mSynthesisSource.second.getPoint();
         }
         return null;
+    }
+
+    public static void alkaneToCyclo(Compound compound, Atom[] atoms, PointF lookingPoint) {
+        // lookingPoint resides outside of polygon, and polygon is arranged to look at it
+        int lastAtom = atoms.length - 1;
+
+        atoms[0].singleBond(atoms[lastAtom]);
+
+        // delete H at first and the last
+        compound.delete(atoms[0].getHydrogen());
+        compound.delete(atoms[lastAtom].getHydrogen());
+        // adjust position of C
+        float interiorAngleOfPolygon = Geometry.interiorAngleOfPolygon(atoms.length);
+
+        atoms[1].setPoint(Geometry.cwRotate(lookingPoint, atoms[0].getPoint(), (MathConstant.RADIAN_360 - interiorAngleOfPolygon) / 2));
+        for (int ii = 2; ii < atoms.length; ++ii) {
+            atoms[ii].setPoint(Geometry.cwRotate(atoms[ii - 2].getPoint(), atoms[ii - 1].getPoint(), MathConstant.RADIAN_360 - interiorAngleOfPolygon));
+        }
+
+        // adjust position of H
+        for (int ii = 1; ii < atoms.length; ++ii) {
+            CompoundArranger.adjustHydrogenPosition(atoms[ii]);
+        }
+    }
+
+    public static void alkaneToConjugated(Compound compound, Atom[] atoms, int conjStartIndex) {
+        for (int ii = conjStartIndex; ii < atoms.length; ii += 2) {
+            int nextIndex = (ii + 1) % atoms.length;
+
+            atoms[ii].setBond(atoms[nextIndex], Bond.BondType.DOUBLE);
+
+            compound.delete(atoms[ii].getHydrogen());
+            compound.delete(atoms[nextIndex].getHydrogen());
+
+            CompoundArranger.adjustHydrogenPosition(atoms[ii]);
+            CompoundArranger.adjustHydrogenPosition(atoms[nextIndex]);
+        }
     }
 }

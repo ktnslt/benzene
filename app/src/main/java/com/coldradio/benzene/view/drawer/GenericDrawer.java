@@ -93,7 +93,7 @@ public class GenericDrawer {
 
                         canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
                         drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
-                        drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricPointToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
+                        drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
                         break;
                 }
                 return false;

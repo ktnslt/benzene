@@ -42,11 +42,15 @@ public class Geometry {
         return new PointF((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
     }
 
-    public static PointF symmetricPointToLine(PointF p, PointF l1, PointF l2) {
+    public static PointF symmetricToLine(PointF p, PointF l1, PointF l2) {
         float args[] = lineEquationFrom2Points(l1, l2);
         // https://math.stackexchange.com/questions/1013230/how-to-find-coordinates-of-reflected-point
         return new PointF((p.x * (args[1] * args[1] - args[0] * args[0]) - 2 * args[0] * (args[1] * p.y + args[2])) / (args[1] * args[1] + args[0] * args[0]),
                 (p.y * (args[0] * args[0] - args[1] * args[1]) - 2 * args[1] * (args[0] * p.x + args[2])) / (args[1] * args[1] + args[0] * args[0]));
+    }
+
+    public static PointF symmetricToPoint(PointF p, PointF center) {
+        return new PointF(2 * center.x - p.x, 2 * center.y - p.y);
     }
 
     public static float[] lineEquationFrom2Points(PointF p1, PointF p2) {

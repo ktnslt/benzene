@@ -16,4 +16,24 @@ public class CompoundInspector {
         }
         return c;
     }
+
+    public static int numberOfSkeleton(Compound compound) {
+        int skeleton = 0;
+
+        for (Atom atom : compound.getAtoms()) {
+            if (atom.getAtomicNumber() != AtomicNumber.H)
+                ++skeleton;
+        }
+        return skeleton;
+    }
+
+    public static Atom[] extractSkeleton(Compound compound) {
+        Atom[] atoms = new Atom[numberOfSkeleton(compound)];
+
+        for (Atom atom : compound.getAtoms()) {
+
+        }
+
+        return atoms;
+    }
 }

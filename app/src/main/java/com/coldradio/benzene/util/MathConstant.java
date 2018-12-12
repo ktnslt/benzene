@@ -7,7 +7,9 @@ public class MathConstant {
     public static final float RADIAN_45     = 0.785398f;
     public static final float RADIAN_60     = 1.0472f;
     public static final float RADIAN_90     = 1.5708f;
+    public static final float RADIAN_108     = 1.88496f;
     public static final float RADIAN_120     = 2 * RADIAN_60;
+    public static final float RADIAN_126     = 2.19911f;
     public static final float RADIAN_150     = 2.61799f;
     public static final float RADIAN_180    = PI;
     public static final float RADIAN_240     = 2 * RADIAN_120;

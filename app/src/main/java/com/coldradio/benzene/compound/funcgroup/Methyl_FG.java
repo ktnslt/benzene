@@ -71,7 +71,7 @@ public class Methyl_FG implements IFunctionalGroup {
 
     @Override
     public String getName() {
-        return "Methyl";
+        return "methyl";
     }
 
     @Override

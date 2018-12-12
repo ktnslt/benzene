@@ -102,6 +102,14 @@ public class Atom {
         setBond(atom, Bond.BondType.TRIPLE);
     }
 
+    public boolean hasBondType(Bond.BondType bondType) {
+        for (Bond bond : mBonds) {
+            if (bond.getBondType() == bondType)
+                return true;
+        }
+        return false;
+    }
+
     public void setPoint(PointF point) {
         mPoint.set(point);
     }

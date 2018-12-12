@@ -4,7 +4,6 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
 
 public class Ethyl_FG extends Methyl_FG {
@@ -21,22 +20,13 @@ public class Ethyl_FG extends Methyl_FG {
                 c1.getPoint(),      // aid 0
                 a_atom.getPoint(),  // aid 1
                 (a_atom.getSkeletonAtom() != null) ? a_atom.getSkeletonAtom().getPoint() : null});  // aid 2
-        Methyl_FG second_methyl = new Methyl_FG(tmpCompound.getAtom(0));
-        Atom c2 = second_methyl.appendAtom();
+        Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(0));
 
-        // delete one H in parentCompound, and adjust the positions of remained two H
-        Compound parentCompound = super.getCompound();
-
-        parentCompound.delete(parentCompound.getAtom(3));   // aid 1, 2, 3 are H. delete the last one
-        parentCompound.getAtom(1).setPoint(CompoundArranger.hydrogenPointOfBentForm(c1.getPoint(), c2.getPoint(), a_atom.getPoint(), 1));
-        parentCompound.getAtom(2).setPoint(CompoundArranger.hydrogenPointOfBentForm(c1.getPoint(), c2.getPoint(), a_atom.getPoint(), 2));
-
-        c1.singleBond(second_methyl.appendAtom());
-        parentCompound.merge(second_methyl.getCompound());
+        super.getCompound().addFunctionalGroupToAtom(methyl, c1, true);
     }
 
     @Override
     public String getName() {
-        return "Ethyl";
+        return "ethyl";
     }
 }
