@@ -235,6 +235,12 @@ public class Atom {
 
     public void setAtomicNumber(AtomicNumber ele) {
         mAtomicNumber = ele;
+
+        if (ele == AtomicNumber.C) {
+            mAtomDecoration.setShowElementName(false);
+        } else if (ele != AtomicNumber.H) {
+            mAtomDecoration.setShowElementName(true);
+        }
     }
 
     public Bond.BondType getBondType(Atom atom) {

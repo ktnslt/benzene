@@ -79,6 +79,11 @@ public class Methyl_FG implements IFunctionalGroup {
         return mFuncGroup.getAtom(0);
     }
 
+    @Override
+    public Bond.BondType bondType() {
+        return Bond.BondType.SINGLE;
+    }
+
     public Compound getCompound() {
         return mFuncGroup;
     }

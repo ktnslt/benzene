@@ -371,7 +371,7 @@
                 app:layout_constraintTop_toBottomOf="@id/a2a_btn_coch3"/>
 
             <Button
-                android:id="@+id/a2a_btn_conh"
+                android:id="@+id/a2a_btn_conh2"
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:padding="0dp"
@@ -388,8 +388,8 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="NH2"
-                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh2"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_conh2"/>
 
             <Button
                 android:id="@+id/a2a_btn_nmeh"
@@ -398,7 +398,7 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="NMeH"
-                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh2"
                 app:layout_constraintLeft_toRightOf="@id/a2a_btn_nh2"/>
 
             <Button
@@ -408,7 +408,7 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="NMe2"
-                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh2"
                 app:layout_constraintLeft_toRightOf="@id/a2a_btn_nmeh"/>
 
             <Button
@@ -418,7 +418,7 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="N=N=N"
-                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh2"
                 app:layout_constraintLeft_toRightOf="@id/a2a_btn_nme2"/>
 
             <Button
@@ -428,8 +428,8 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="O-C-N"
-                app:layout_constraintTop_toTopOf="@id/a2a_btn_conh"
-                app:layout_constraintLeft_toRightOf="@id/a2a_btn_nnn"/>
+                app:layout_constraintTop_toBottomOf="@id/a2a_btn_conh2"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
             <Button
                 android:id="@+id/a2a_btn_nco"
@@ -438,8 +438,8 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="N=C=O"
-                app:layout_constraintTop_toBottomOf="@id/a2a_btn_conh"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_ocn"
+                app:layout_constraintLeft_toRightOf="@id/a2a_btn_ocn"/>
 
             <Button
                 android:id="@+id/a2a_btn_no2"
@@ -448,7 +448,7 @@
                 android:padding="0dp"
                 android:gravity="center"
                 android:text="NO2"
-                app:layout_constraintTop_toBottomOf="@id/a2a_btn_conh"
+                app:layout_constraintTop_toTopOf="@id/a2a_btn_ocn"
                 app:layout_constraintLeft_toRightOf="@id/a2a_btn_nco"/>
 
             <TextView

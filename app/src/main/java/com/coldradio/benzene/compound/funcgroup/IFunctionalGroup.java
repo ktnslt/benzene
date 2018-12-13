@@ -1,6 +1,7 @@
 package com.coldradio.benzene.compound.funcgroup;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 
 public interface IFunctionalGroup {
@@ -9,4 +10,5 @@ public interface IFunctionalGroup {
     Compound curForm();
     String getName();
     Atom appendAtom();
+    Bond.BondType bondType();
 }

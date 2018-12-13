@@ -4,6 +4,7 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
 
 public class Ethyl_FG extends Methyl_FG {
@@ -23,6 +24,9 @@ public class Ethyl_FG extends Methyl_FG {
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(0));
 
         super.getCompound().addFunctionalGroupToAtom(methyl, c1, true);
+
+        // adjust the hydrogen position of C1 again. this is related to https://github.com/ktnslt/benzene/issues/45
+        // TODO build the simple temporary compound here, and
     }
 
     @Override

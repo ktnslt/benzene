@@ -206,7 +206,122 @@ public class AddToAtomActivity extends AppCompatActivity {
         findViewById(R.id.a2a_btn_oh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFuncGroup = new OH_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
 
+        findViewById(R.id.a2a_btn_o).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new Ketone_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_cho).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new CHO_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_coo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new COO_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_cooh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new COOH_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_coch3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new COCH3_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        // nitrogen
+        findViewById(R.id.a2a_btn_no2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NO2_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_nco).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NCO_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_nh2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NH2_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_nme2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NMe2_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_nmeh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NMeH_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_nnn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new NNN_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_conh2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new CONH2_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        // sulfur
+        findViewById(R.id.a2a_btn_so2oh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new SO2OH_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
+        findViewById(R.id.a2a_btn_so2me).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new SO2Me_FG(attachAtom);
+                setFuncGroupNameAndPreview();
             }
         });
     }

@@ -123,4 +123,43 @@ public class CompoundReactor {
             CompoundArranger.adjustHydrogenPosition(atoms[nextIndex]);
         }
     }
+
+    public static void deleteAllHydrogen(Compound compound) {
+        List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
+
+        for (Atom h : hydrogens) {
+            compound.delete(h);
+        }
+    }
+
+    public static void deleteAllHydrogen(Compound compound, Atom atom) {
+        List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
+
+        for (Atom h : hydrogens) {
+            compound.delete(h);
+        }
+    }
+
+    public static void deleteHydrogen(Compound compound, Atom atom, int hDeleteNum) {
+        List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
+
+        int deleteNum = 0;
+
+        for (Atom h : hydrogens) {
+            if (deleteNum >= hDeleteNum)
+                break;
+            compound.delete(h);
+            ++deleteNum;
+        }
+    }
+
+    public static void saturateWithHydrogen(Compound compound, Atom atom, int maxHydrogenNum) {
+        int curHydrogenNum = CompoundInspector.numberOfHydrogen(atom);
+
+        for (int ii = curHydrogenNum + 1; ii <= maxHydrogenNum; ++ii) {
+            compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
+        }
+
+        CompoundArranger.adjustHydrogenPosition(atom);
+    }
 }

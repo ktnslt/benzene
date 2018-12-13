@@ -121,4 +121,12 @@ public class Geometry {
     public static PointF cwCenterOfAngle(PointF from, PointF to, PointF c) {
         return cwRotate(from, c, cwAngle(from, to, c) / 2);
     }
+
+    public static PointF pointInLine(PointF l1, PointF l2, float ratioFromL1) {
+        // if ratioFromL1 is 0, l1 is returned, if 1 l2 is returned
+        PointF p = new PointF(l1.x, l1.y);
+
+        p.offset((l2.x - l1.x) * ratioFromL1, (l2.y - l1.y) * ratioFromL1);
+        return p;
+    }
 }

@@ -171,7 +171,7 @@ public class Compound {
         Atom lastAtom = rotatingAtom;
 
         for (int ii = 0; ii < edgeNumber - 2; ++ii) {
-            Atom newAtom = new Atom(1, AtomicNumber.C);
+            Atom newAtom = new Atom(-1, AtomicNumber.C);
 
             newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
             newAtom.singleBond(centerAtom);
@@ -187,7 +187,7 @@ public class Compound {
 
     public void addFunctionalGroupToAtom(IFunctionalGroup funcGroup, Atom atom, boolean deleteHOfSelectedAtom) {
         merge(funcGroup.curForm());
-        atom.singleBond(funcGroup.appendAtom());
+        atom.setBond(funcGroup.appendAtom(), funcGroup.bondType());
 
         Atom H = atom.getHydrogen();
 
@@ -195,5 +195,10 @@ public class Compound {
             delete(H);
             CompoundArranger.adjustHydrogenPosition(atom);
         }
+    }
+
+    public void addAtom(Atom to, Bond.BondType bondType, Atom newAtom) {
+        mAtoms.add(newAtom);
+        to.setBond(newAtom, bondType);
     }
 }
