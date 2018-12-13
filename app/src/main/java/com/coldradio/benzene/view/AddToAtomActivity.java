@@ -19,6 +19,7 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.funcgroup.*;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
@@ -308,6 +309,14 @@ public class AddToAtomActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.a2a_btn_ocn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFuncGroup = new OCN_FG(attachAtom);
+                setFuncGroupNameAndPreview();
+            }
+        });
+
         // sulfur
         findViewById(R.id.a2a_btn_so2oh).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,6 +338,7 @@ public class AddToAtomActivity extends AppCompatActivity {
 
 class AddToAtomPreview extends Preview {
     private IFunctionalGroup mFunctionalGroup;
+    private AtomDecorationDrawer mAtomDecorationDrawer = new AtomDecorationDrawer();
 
     public AddToAtomPreview(Context context) {
         super(context);
@@ -345,13 +355,14 @@ class AddToAtomPreview extends Preview {
 
         if (mFunctionalGroup != null) {
             Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
-            PointF selectedAtomPoint = getCenter();
-            PointF attachPointInFuncGroup = mFunctionalGroup.appendAtom().getPoint();
+            PointF a_atom_point = getCenter();
+            PointF c1_point = mFunctionalGroup.appendAtom().getPoint();
 
             int color = paint.getColor();
             paint.setColor(Color.BLUE);
-            canvas.drawLine(selectedAtomPoint.x, selectedAtomPoint.y, attachPointInFuncGroup.x, attachPointInFuncGroup.y, paint);
+            GenericDrawer.drawBondSingleOrDoubleMiddle(a_atom_point, c1_point, mFunctionalGroup.bondType(), canvas, paint);
             GenericDrawer.draw(mFunctionalGroup.curForm(), canvas, paint);
+            mAtomDecorationDrawer.draw(mFunctionalGroup.curForm(), canvas, paint);
             paint.setColor(color);
         }
     }

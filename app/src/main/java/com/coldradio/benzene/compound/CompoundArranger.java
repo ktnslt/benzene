@@ -93,7 +93,7 @@ public class CompoundArranger {
         } else {
             zoomed_b = Geometry.zoom(b2_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
         }
-        return Geometry.cwRotate(zoomed_b, a_atom, h_num == 1 ? MathConstant.RADIAN_110 : MathConstant.RADIAN_130);
+        return Geometry.cwRotate(zoomed_b, a_atom, h_num == 1 ? MathConstant.RADIAN_90 : MathConstant.RADIAN_150);
     }
 
     public static PointF hydrogenUniquePointOfBentForm(PointF a_atom, PointF b1_atom, PointF b2_atom) {

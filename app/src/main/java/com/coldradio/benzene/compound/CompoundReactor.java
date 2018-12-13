@@ -153,10 +153,10 @@ public class CompoundReactor {
         }
     }
 
-    public static void saturateWithHydrogen(Compound compound, Atom atom, int maxHydrogenNum) {
-        int curHydrogenNum = CompoundInspector.numberOfHydrogen(atom);
+    public static void saturateWithHydrogen(Compound compound, Atom atom, int maxBounds) {
+        int curBounds = atom.getBonds().size();
 
-        for (int ii = curHydrogenNum + 1; ii <= maxHydrogenNum; ++ii) {
+        for (int ii = curBounds + 1; ii <= maxBounds; ++ii) {
             compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
         }
 

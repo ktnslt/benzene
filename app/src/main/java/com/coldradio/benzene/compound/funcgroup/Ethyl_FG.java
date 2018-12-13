@@ -4,8 +4,10 @@ import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.CompoundArranger;
+import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.compound.CompoundReactor;
+
+import java.util.List;
 
 public class Ethyl_FG extends Methyl_FG {
     public Ethyl_FG(Atom a_atom) {
@@ -25,8 +27,16 @@ public class Ethyl_FG extends Methyl_FG {
 
         super.getCompound().addFunctionalGroupToAtom(methyl, c1, true);
 
+        Atom c2 = methyl.appendAtom();
         // adjust the hydrogen position of C1 again. this is related to https://github.com/ktnslt/benzene/issues/45
-        // TODO build the simple temporary compound here, and
+        tmpCompound = CompoundReactor.chainCompound(new PointF[]{a_atom.getPoint(), c1.getPoint(), c2.getPoint()});
+        CompoundReactor.saturateWithHydrogen(tmpCompound, tmpCompound.getAtom(1), 4);
+        // now copy the position of H to Ethyl
+        List<Atom> tmpH = CompoundInspector.allHydrogens(tmpCompound.getAtom(1));
+        List<Atom> c1H = CompoundInspector.allHydrogens(c1);
+
+        c1H.get(0).setPoint(tmpH.get(0).getPoint());
+        c1H.get(1).setPoint(tmpH.get(1).getPoint());
     }
 
     @Override

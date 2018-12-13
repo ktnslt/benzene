@@ -60,6 +60,21 @@ public class GenericDrawer {
         }
     }
 
+    public static void drawBondSingleOrDoubleMiddle(PointF p1, PointF p2, Bond.BondType bondType, Canvas canvas, Paint paint) {
+        switch (bondType) {
+            case SINGLE:
+                canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                break;
+            case DOUBLE_MIDDLE:
+                PointF[] shifted = Geometry.lineOrthogonalShift(p1, p2, 0.05f, true);
+                canvas.drawLine(shifted[0].x, shifted[0].y, shifted[1].x, shifted[1].y, paint);
+
+                shifted = Geometry.lineOrthogonalShift(p1, p2, 0.05f, false);
+                canvas.drawLine(shifted[0].x, shifted[0].y, shifted[1].x, shifted[1].y, paint);
+                break;
+        }
+    }
+
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         // draw edges
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
