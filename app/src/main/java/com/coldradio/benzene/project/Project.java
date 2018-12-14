@@ -174,11 +174,17 @@ public class Project {
         }
     }
 
-    public void cycleHydrogenMode() {
-        switch (mElementSelector.selection()) {
-            case ATOM:
-                mElementSelector.getSelectedAtom().cycleHydrogenMode();
-                break;
+    public void toggleShowHydrogen() {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            CompoundArranger.toggleShowHydrogen(mElementSelector.getSelectedAtom());
+        }
+    }
+
+    public void toggleLettering() {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            Atom selectedAtom = mElementSelector.getSelectedAtom();
+
+            selectedAtom.lettering(! selectedAtom.isLettering());
         }
     }
 

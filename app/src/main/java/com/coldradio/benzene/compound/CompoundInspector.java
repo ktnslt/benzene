@@ -58,6 +58,17 @@ public class CompoundInspector {
         return hydrogens;
     }
 
+    public static boolean showAnyHydrogen(Atom atom) {
+        for (Bond bond : atom.getBonds()) {
+            Atom h = bond.getBoundAtom();
+
+            if (h.getAtomicNumber() == AtomicNumber.H && h.getAtomDecoration().getShowElementName()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int numberOfHydrogen(Atom atom) {
         int hNum = 0;
 

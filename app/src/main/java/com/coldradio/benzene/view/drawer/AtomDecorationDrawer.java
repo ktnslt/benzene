@@ -10,6 +10,7 @@ import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
@@ -34,8 +35,8 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
 
         if (atom.getAtomicNumber() == AtomicNumber.TEXT) {
             text = atom.getArbitraryName();
-        } else if (atom.getHydrogenMode() == Atom.HydrogenMode.LETTERING_H) {
-            int hNumber = atom.bondNumber(AtomicNumber.H);
+        } else if (atom.isLettering()) {
+            int hNumber = CompoundInspector.numberOfHydrogen(atom);
             boolean hydrogenInRight = hydrogenPositionInRight(atom);
 
             if (hNumber == 1) {
@@ -154,7 +155,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
                 Paint paint = (Paint) args[1];
                 AtomDecoration atomDecoration = atom.getAtomDecoration();
 
-                if (atom.getAtomDecoration().getShowElementName()) {
+                if (atom.getAtomDecoration().getShowElementName() || atom.isLettering()) {
                     TextDrawer.draw(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
                 }
                 if (atomDecoration.getMarker() != AtomDecoration.Marker.NONE) {

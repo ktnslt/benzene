@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.Helper;
 import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -137,6 +138,23 @@ public class CompoundArranger {
                     h.setPoint(hydrogenPointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint(), hNum++));
                 }
             }
+        }
+    }
+
+    public static void toggleShowHydrogen(Atom atom) {
+        showAllHydrogen(atom, ! CompoundInspector.showAnyHydrogen(atom));
+    }
+
+    public static void showAllHydrogen(Atom atom, boolean show) {
+        if (atom.isLettering() && show) {
+            Helper.instance().notification("Cannot show H. Turn off lettering");
+            return;
+        }
+        for (Bond bond : atom.getBonds()) {
+            Atom h = bond.getBoundAtom();
+
+            if (h.getAtomicNumber() == AtomicNumber.H)
+                h.getAtomDecoration().setShowElementName(show);
         }
     }
 }

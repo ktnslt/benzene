@@ -15,7 +15,7 @@ public class SO2OH_FG extends SO2Me_FG {
 
         CompoundReactor.deleteHydrogen(super.getCompound(), c_of_s, 2);
         c_of_s.setAtomicNumber(AtomicNumber.O);
-        c_of_s.setHydrogenMode(Atom.HydrogenMode.LETTERING_H);
+        c_of_s.lettering(true);
     }
 
     @Override

@@ -2,24 +2,18 @@ package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
 
-import com.coldradio.benzene.util.Helper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class Atom {
-    public enum HydrogenMode {
-        LETTERING_H, HIDE_H_BOND, SHOW_H_BOND
-    }
-
     private PointF mPoint = new PointF();
     private List<Bond> mBonds = new ArrayList<>();
     private int mAID;   // AID is valid only temporary. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
     private String mArbitraryName;
-    private HydrogenMode mHydrogenMode = HydrogenMode.LETTERING_H;
+    private boolean mLettering;
     private AtomDecoration mAtomDecoration = new AtomDecoration();
 
     private Bond findBond(Atom atom) {
@@ -29,16 +23,6 @@ public class Atom {
             }
         }
         return null;
-    }
-
-    private void showAllHydrogenElementName(boolean show) {
-        for (Bond bond : mBonds) {
-            Atom that_atom = bond.getBoundAtom();
-
-            if (that_atom.getAtomicNumber() == AtomicNumber.H) {
-                that_atom.getAtomDecoration().setShowElementName(show);
-            }
-        }
     }
 
     public Atom(int aid, AtomicNumber atomicNumber) {
@@ -51,7 +35,7 @@ public class Atom {
 
         copied.setPoint(mPoint);
         copied.mArbitraryName = mArbitraryName;
-        copied.mHydrogenMode = mHydrogenMode;
+        copied.mLettering = mLettering;
         copied.mAtomDecoration = mAtomDecoration.copy();
 
         return copied;
@@ -210,17 +194,6 @@ public class Atom {
         return mBonds.size();
     }
 
-    public int bondNumber(AtomicNumber atomicNumber) {
-        int cnt = 0;
-
-        for (Bond bond : mBonds) {
-            if (bond.getBoundAtom().getAtomicNumber() == atomicNumber)
-                ++cnt;
-        }
-
-        return cnt;
-    }
-
     public void cycleBond(Atom atom) {
         Bond bond = findBond(atom);
 
@@ -252,35 +225,27 @@ public class Atom {
         return Bond.BondType.NONE;
     }
 
-    public void cycleHydrogenMode() {
-        setHydrogenMode(HydrogenMode.values()[(mHydrogenMode.ordinal() + 1) % HydrogenMode.values().length]);
-    }
+    public void lettering(boolean on) {
+        mLettering = on;
 
-    public void setHydrogenMode(HydrogenMode hydrogenMode) {
-        mHydrogenMode = hydrogenMode;
-        if (mHydrogenMode == HydrogenMode.LETTERING_H) {
-            mAtomDecoration.setShowElementName(true);
-            showAllHydrogenElementName(false);
-        } else if (mHydrogenMode == HydrogenMode.SHOW_H_BOND) {
-            showAllHydrogenElementName(true);
-            mAtomDecoration.setShowElementName(mAtomicNumber != AtomicNumber.C);
+        if (mAtomicNumber == AtomicNumber.C) {
+            CompoundArranger.showAllHydrogen(this, false);
         } else {
-            showAllHydrogenElementName(false);
-            mAtomDecoration.setShowElementName(mAtomicNumber != AtomicNumber.C);
+            CompoundArranger.showAllHydrogen(this, ! on);
         }
     }
 
-    public HydrogenMode getHydrogenMode() {
-        return mHydrogenMode;
+    public boolean isLettering() {
+        return mLettering;
     }
 
     public boolean isVisible() {
         // returns whether the Atom is visible on the screen. Only H may be invisible
         // though AtomDecoration.ShowElementName returns false, the atom can be visible such as C
+        // invisible atom cannot be selected by click
         if (getAtomicNumber() == AtomicNumber.H && bondNumber() == 1) {
-            Atom boundAtom = getBonds().get(0).getBoundAtom();
-
-            return boundAtom.getHydrogenMode() == Atom.HydrogenMode.SHOW_H_BOND;
+            // TODO. when the parent is lettering, this atom may not be seen even for C
+            return mAtomDecoration.getShowElementName();
         }
         return true;
     }

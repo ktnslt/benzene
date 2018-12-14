@@ -17,7 +17,7 @@ public class NH2_FG extends NMeH_FG {
         c2.setAtomicNumber(AtomicNumber.H);
         c2.setPoint(Geometry.pointInLine(n.getPoint(), c2.getPoint(), Configuration.H_BOND_LENGTH_RATIO));
 
-        n.setHydrogenMode(Atom.HydrogenMode.LETTERING_H);
+        n.lettering(true);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class Methyl_FG implements IFunctionalGroup {
 
         RuleSet.instance().apply(mFuncGroup);
         // since this is methane, the default HydrogenMode is LETTERING_H. So change it to HIDE_H_BOND
-        c1.setHydrogenMode(Atom.HydrogenMode.HIDE_H_BOND);
+        CompoundArranger.showAllHydrogen(c1, false);
     }
 
     @Override

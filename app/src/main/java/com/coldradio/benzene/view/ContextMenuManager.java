@@ -28,7 +28,8 @@ public class ContextMenuManager {
 
     private ContextMenuManager hideAll() {
         showItem(mBottomToolbar, R.id.action_change_atom, false);
-        showItem(mBottomToolbar, R.id.action_cycle_hmode, false);
+        showItem(mBottomToolbar, R.id.action_show_h, false);
+        showItem(mBottomToolbar, R.id.action_lettering, false);
         showItem(mBottomToolbar, R.id.action_atom_deco, false);
         showItem(mBottomToolbar, R.id.action_bond, false);
         showItem(mBottomToolbar, R.id.action_synthesize, false);
@@ -67,7 +68,8 @@ public class ContextMenuManager {
             case ATOM:
                 hideAll().
                         show(R.id.action_change_atom).
-                        show(R.id.action_cycle_hmode).
+                        show(R.id.action_show_h).
+                        show(R.id.action_lettering).
                         show(R.id.action_atom_deco).
                         show(R.id.action_synthesize).
                         show(R.id.action_trashcan).

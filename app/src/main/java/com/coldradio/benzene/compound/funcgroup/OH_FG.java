@@ -18,7 +18,7 @@ public class OH_FG extends Ethyl_FG {
         c2.setPoint(Geometry.pointInLine(c1.getPoint(), c2.getPoint(), Configuration.H_BOND_LENGTH_RATIO));
 
         c1.setAtomicNumber(AtomicNumber.O);
-        c1.setHydrogenMode(Atom.HydrogenMode.LETTERING_H);
+        c1.lettering(true);
     }
 
     @Override

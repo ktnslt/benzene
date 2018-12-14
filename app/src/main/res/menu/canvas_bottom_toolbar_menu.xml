@@ -11,10 +11,18 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_cycle_hmode"
+        android:id="@+id/action_lettering"
+        android:orderInCategory="15"
+        android:title="Lettering"
+        android:icon="@drawable/ic_menu_lettering"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_show_h"
         android:orderInCategory="20"
-        android:title="Mark"
-        android:icon="@drawable/ic_menu_cycle_hmode"
+        android:title="Show H"
+        android:icon="@drawable/ic_menu_show_h"
         android:visible="false"
         app:showAsAction="always" />
 
