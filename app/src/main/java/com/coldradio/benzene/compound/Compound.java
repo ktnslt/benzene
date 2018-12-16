@@ -55,7 +55,7 @@ public class Compound {
             Atom from_atom = mAtoms.get(from_aid - 1);
 
             for (Bond bond : from_atom.getBonds()) {
-                that_compound.makeBond(from_aid, bond.getBoundAtom().getAID(), bond.getBondType());
+                that_compound.makeBond(from_aid, bond.getBoundAtom().getAID(), bond.getBondType(), bond.getBondAnnotation());
             }
         }
 
@@ -123,10 +123,23 @@ public class Compound {
     }
 
     public void makeBond(int aid1, int aid2, Bond.BondType bondType) {
+        makeBond(aid1, aid2, bondType, Bond.BondAnnotation.NONE);
+    }
+
+    public void makeBond(int aid1, int aid2, Bond.BondType bondType, Bond.BondAnnotation bondAnnotation) {
         Atom a1 = getAtom(aid1), a2 = getAtom(aid2);
 
         if (a1 != null & a2 != null) {
             a1.setBond(a2, bondType);
+            a1.setBondAnnotation(a2, bondAnnotation);
+        }
+    }
+
+    public void setBondAnnotation(int aidFrom, int aidTo, Bond.BondAnnotation bondAnnotation) {
+        Atom a1 = getAtom(aidFrom), a2 = getAtom(aidTo);
+
+        if (a1 != null) {
+            a1.setBondAnnotation(a2, bondAnnotation);
         }
     }
 

@@ -48,7 +48,7 @@ class PC_Compound_JSON {
                 return prop.value.sval;
             }
         }
-        return null;
+        return "";
     }
 
     public String otherNames() {
@@ -69,6 +69,10 @@ class PC_Compound_JSON {
         names.delete(names.length() - 2, names.length());
 
         return names.toString();
+    }
+
+    public style_JSON getStyle() {
+        return coords.get(0).conformers.get(0).style;
     }
 }
 
@@ -99,6 +103,22 @@ class coords_JSON {
 class conformer_JSON {
     public float[] x;
     public float[] y;
+    public style_JSON style;
+}
+
+class style_JSON {
+    public int[] annotation;
+    public int[] aid1;
+    public int[] aid2;
+
+    Bond.BondAnnotation bondAnnotation(int pubChemAnnotation) {
+        switch (pubChemAnnotation) {
+            case 3: return Bond.BondAnnotation.WAVY;
+            case 5: return Bond.BondAnnotation.WEDGE_UP;
+            case 6: return Bond.BondAnnotation.WEDGE_DOWN;
+            default: return Bond.BondAnnotation.NONE;
+        }
+    }
 }
 
 class props_JSON {

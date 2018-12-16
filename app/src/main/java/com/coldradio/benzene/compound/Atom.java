@@ -74,6 +74,23 @@ public class Atom {
         }
     }
 
+    public void setBondAnnotation(Atom atom, Bond.BondAnnotation bondAnnotation) {
+        Bond bond = findBond(atom);
+
+        if (bond != null && bond.getBondType() == Bond.BondType.SINGLE) {
+            bond.setBondAnnotation(bondAnnotation);
+        }
+    }
+
+    public Bond.BondAnnotation getBondAnnotation(Atom atom) {
+        Bond bond = findBond(atom);
+
+        if (bond != null && bond.getBondType() == Bond.BondType.SINGLE) {
+            return bond.getBondAnnotation();
+        }
+        return Bond.BondAnnotation.NONE;
+    }
+
     public void singleBond(Atom atom) {
         setBond(atom, Bond.BondType.SINGLE);
     }
@@ -141,41 +158,6 @@ public class Atom {
         }
 
         return null;
-    }
-
-    public int numberOfBoundSkeletonAtoms() {
-        int boundSkeleton = 0;
-
-        for (Bond bond : mBonds) {
-            if (bond.getBoundAtom().getAtomicNumber() != AtomicNumber.H)
-                ++boundSkeleton;
-        }
-
-        return boundSkeleton;
-    }
-
-    public List<Atom> boundSkeletonAtoms() {
-        List<Atom> carbons = new ArrayList<>();
-
-        for (Bond bond : mBonds) {
-            Atom that_atom = bond.getBoundAtom();
-
-            if (that_atom.getAtomicNumber() != AtomicNumber.H)
-                carbons.add(that_atom);
-        }
-
-        return carbons;
-    }
-
-    public List<Atom> boundHydrogens() {
-        List<Atom> hydrogens = new ArrayList<>();
-
-        for (Bond bond : mBonds) {
-            if (bond.getBoundAtom().getAtomicNumber() == AtomicNumber.H) {
-                hydrogens.add(bond.getBoundAtom());
-            }
-        }
-        return hydrogens;
     }
 
     public Atom getHydrogen() {
@@ -248,6 +230,10 @@ public class Atom {
             return mAtomDecoration.getShowElementName();
         }
         return true;
+    }
+
+    public boolean isNameShown() {
+        return isLettering() || mAtomDecoration.getShowElementName();
     }
 
     public void preSerialization() {

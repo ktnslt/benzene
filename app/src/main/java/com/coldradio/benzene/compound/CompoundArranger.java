@@ -113,8 +113,8 @@ public class CompoundArranger {
     }
 
     public static void adjustHydrogenPosition(Atom atom) {
-        int boundSkeleton = atom.numberOfBoundSkeletonAtoms();
-        List<Atom> hydrogens = atom.boundHydrogens();
+        int boundSkeleton = CompoundInspector.numberOfBoundSkeletonAtoms(atom);
+        List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         if (boundSkeleton == 1) {
             // END of chain case

@@ -40,6 +40,15 @@ public class CompoundLibrary {
             compound.makeBond(compound_json.bonds.aid1[ii], compound_json.bonds.aid2[ii], compound_json.bondType(ii));
         }
 
+        // set annotation
+        // annotation cannot be set at the same time with bonds. e.g.) for annotation 1-->2 Wedge_up, makeBond(2, 1) is called not for the makeBond(1, 2)
+        style_JSON style = compound_json.getStyle();
+
+        if (style != null) {
+            for (int ii = 0; ii < style.annotation.length; ++ii)
+                compound.setBondAnnotation(style.aid1[ii], style.aid2[ii], style.bondAnnotation(style.annotation[ii]));
+        }
+
         // setup coordinates
         coords_JSON coord = compound_json.coords.get(0);
 

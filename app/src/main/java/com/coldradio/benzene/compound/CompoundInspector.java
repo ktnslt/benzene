@@ -34,6 +34,30 @@ public class CompoundInspector {
         return skeletons.toArray(new Atom[skeletons.size()]);
     }
 
+    public static int numberOfBoundSkeletonAtoms(Atom atom) {
+        int boundSkeleton = 0;
+
+        for (Bond bond : atom.getBonds()) {
+            if (bond.getBoundAtom().getAtomicNumber() != AtomicNumber.H)
+                ++boundSkeleton;
+        }
+
+        return boundSkeleton;
+    }
+
+    public static List<Atom> boundSkeletonAtoms(Atom atom) {
+        List<Atom> carbons = new ArrayList<>();
+
+        for (Bond bond : atom.getBonds()) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (that_atom.getAtomicNumber() != AtomicNumber.H)
+                carbons.add(that_atom);
+        }
+
+        return carbons;
+    }
+
     public static List<Atom> allHydrogens(Compound compound) {
         List<Atom> hydrogens = new ArrayList<>();
 

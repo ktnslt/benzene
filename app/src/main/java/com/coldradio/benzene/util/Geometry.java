@@ -118,6 +118,15 @@ public class Geometry {
         return shifted;
     }
 
+    public static PointF orthogonalPointToLine(PointF l1, PointF l2, float shiftRatio, boolean up) {
+        // return orthogonal point to line (l1, l2). the returned point goes through l2
+        PointF shifted = cwRotate(l1, l2, MathConstant.RADIAN_90 * (up ? -1 : 1));
+
+        shifted = zoom(shifted.x, shifted.y, l2, shiftRatio);
+
+        return shifted;
+    }
+
     public static PointF cwCenterOfAngle(PointF from, PointF to, PointF c) {
         return cwRotate(from, c, cwAngle(from, to, c) / 2);
     }

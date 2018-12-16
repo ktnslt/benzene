@@ -4,10 +4,14 @@ public class Bond {
     public enum BondType {
         NONE, SINGLE, DOUBLE, DOUBLE_OTHER_SIDE, DOUBLE_MIDDLE, TRIPLE
     }
+    public enum BondAnnotation {
+        NONE, WEDGE_UP, WEDGE_DOWN, WAVY
+    }
 
     private transient Atom mAtom;
     private int mAIDForAtom;    // this is hack for resolving the circular reference caused by the mAtom during serialization.
     private BondType mBondType;
+    private BondAnnotation mBondAnnotation;
 
     public Bond(Atom bondTo, BondType bondType) {
         mAtom = bondTo;
@@ -42,5 +46,13 @@ public class Bond {
 
     public void postDeserialization(Compound compound) {
         mAtom = compound.getAtom(mAIDForAtom);
+    }
+
+    public BondAnnotation getBondAnnotation() {
+        return mBondAnnotation;
+    }
+
+    public void setBondAnnotation(BondAnnotation bondAnnotation) {
+        mBondAnnotation = bondAnnotation;
     }
 }

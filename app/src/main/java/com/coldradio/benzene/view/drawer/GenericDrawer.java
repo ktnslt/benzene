@@ -2,9 +2,12 @@ package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.util.Geometry;
@@ -12,14 +15,52 @@ import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
 public class GenericDrawer {
-    private static void drawDoubleBond(float x1, float y1, float x2, float y2, PointF center, Canvas canvas, Paint paint) {
+    private static void drawDoubleBond(PointF p1, PointF p2, PointF center, Canvas canvas, Paint paint) {
         if (center != null) {
-            float distanceCenterToBond = Geometry.distanceFromPointToLine(center, new PointF(x1, y1), new PointF(x2, y2));
-            float zoomOutRation = distanceCenterToBond < Configuration.BOND_LENGTH / 2 ? 0.55f : 0.8f;
+            float distanceCenterToBond = Geometry.distanceFromPointToLine(center, p1, p2);
+            float zoomOutRatio = distanceCenterToBond < Configuration.BOND_LENGTH / 2 ? 0.55f : 0.8f;
 
-            PointF p1 = Geometry.zoom(x1, y1, center, zoomOutRation);
-            PointF p2 = Geometry.zoom(x2, y2, center, zoomOutRation);
+            PointF zoomed_p1 = Geometry.zoom(p1.x, p1.y, center, zoomOutRatio);
+            PointF zoomed_p2 = Geometry.zoom(p2.x, p2.y, center, zoomOutRatio);
 
+            canvas.drawLine(zoomed_p1.x, zoomed_p1.y, zoomed_p2.x, zoomed_p2.y, paint);
+        }
+    }
+
+    private static Path wedgeTriangle(PointF p1, PointF p2) {
+        Path path = new Path();
+        PointF tri1 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, true);
+        PointF tri2 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, false);
+
+        path.moveTo(p1.x, p1.y);
+        path.lineTo(tri1.x, tri1.y);
+        path.lineTo(tri2.x, tri2.y);
+        path.close();
+
+        return path;
+    }
+
+    private static void drawSingleBond(PointF p1, PointF p2, Bond.BondAnnotation bondAnnotation, Canvas canvas, Paint paint) {
+        if (bondAnnotation == Bond.BondAnnotation.WEDGE_UP) {
+            canvas.drawPath(wedgeTriangle(p1, p2), paint);
+        } else if (bondAnnotation == Bond.BondAnnotation.WEDGE_DOWN) {
+            PointF tri1 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, true);
+            PointF tri2 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, false);
+
+            for (int ii = 1; ii <= 10; ++ii) {
+                PointF l1 = Geometry.pointInLine(p1, tri1, 0.1f * ii);
+                PointF l2 = Geometry.pointInLine(p1, tri2, 0.1f * ii);
+
+                canvas.drawLine(l1.x, l1.y, l2.x, l2.y, paint);
+            }
+        } else if (bondAnnotation == Bond.BondAnnotation.WAVY) {
+            for (int ii = 1; ii <= 10; ++ii) {
+                PointF l1 = Geometry.pointInLine(p1, p2, 0.1f * (ii-1));
+                PointF l2 = Geometry.pointInLine(p1, p2, 0.1f * ii);
+
+                canvas.drawArc(new RectF(l1.x, l2.y, l2.x, l1.y), 0, 180, true, paint);
+            }
+        } else {
             canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
         }
     }
@@ -28,7 +69,13 @@ public class GenericDrawer {
         int bias = 0;
 
         for (Bond bond : atom.getBonds()) {
-            bias += (Geometry.sameSideOfLine(bond.getBoundAtom().getPoint(), center, l1, l2) ? 1 : -1);
+            Atom boundAtom = bond.getBoundAtom();
+            PointF boundAtomPoint = boundAtom.getPoint();
+
+            // here address compare for boundAtomPoint is intentionally used instead of equals()
+            if (boundAtom.getAtomicNumber() != AtomicNumber.H && boundAtomPoint != l1 && boundAtomPoint != l2) {
+                bias += (Geometry.sameSideOfLine(boundAtomPoint, center, l1, l2) ? 1 : -1);
+            }
         }
 
         return bias;
@@ -89,12 +136,23 @@ public class GenericDrawer {
 
                 switch (a1.getBondType(a2)) {
                     case SINGLE:
-                        canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
+                        Bond.BondAnnotation bondAnnotation = a1.getBondAnnotation(a2);
+
+                        if (bondAnnotation != Bond.BondAnnotation.NONE) {
+                            // p2 needs to be cut towards to p1 the Element Name (e.g., O) blocks the wedge
+                            PointF adjusted_p2 = a2.isNameShown() ? Geometry.pointInLine(p1, p2, 0.8f) : p2;
+
+                            drawSingleBond(p1, adjusted_p2, bondAnnotation, canvas, paint);
+                        } else {
+                            PointF adjusted_p1 = a1.isNameShown() ? Geometry.pointInLine(p2, p1, 0.8f) : p1;
+
+                            drawSingleBond(p2, adjusted_p1, a2.getBondAnnotation(a1), canvas, paint);
+                        }
                         break;
                     case DOUBLE:
                     case DOUBLE_OTHER_SIDE:
                         canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-                        drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
+                        drawDoubleBond(p1, p2, centerForDoubleBond(a1, a2), canvas, paint);
                         break;
                     case DOUBLE_MIDDLE:
                         PointF[] shifted = Geometry.lineOrthogonalShift(p1, p2, 0.05f, true);
@@ -107,8 +165,8 @@ public class GenericDrawer {
                         PointF center = centerForDoubleBond(a1, a2);
 
                         canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
-                        drawDoubleBond(p1.x, p1.y, p2.x, p2.y, centerForDoubleBond(a1, a2), canvas, paint);
-                        drawDoubleBond(p1.x, p1.y, p2.x, p2.y, Geometry.symmetricToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
+                        drawDoubleBond(p1, p2, center, canvas, paint);
+                        drawDoubleBond(p1, p2, Geometry.symmetricToLine(center, a1.getPoint(), a2.getPoint()), canvas, paint);
                         break;
                 }
                 return false;
