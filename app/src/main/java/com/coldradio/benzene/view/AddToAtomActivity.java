@@ -18,7 +18,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.funcgroup.*;
 import com.coldradio.benzene.project.Project;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
@@ -45,7 +45,7 @@ public class AddToAtomActivity extends AppCompatActivity {
 
         if (attachAtom == null) {
             finish();
-            Helper.instance().notification("No Atom Selected");
+            Notifier.instance().notification("No Atom Selected");
             return;
         }
 
@@ -66,7 +66,7 @@ public class AddToAtomActivity extends AppCompatActivity {
                     mFuncGroup.prevForm();
                     mPreview.invalidate();
                 } else {
-                    Helper.instance().notification("Select Functional Group First");
+                    Notifier.instance().notification("Select Functional Group First");
                 }
             }
         });
@@ -86,7 +86,7 @@ public class AddToAtomActivity extends AppCompatActivity {
                     mFuncGroup.nextForm();
                     mPreview.invalidate();
                 } else {
-                    Helper.instance().notification("Select Functional Group First");
+                    Notifier.instance().notification("Select Functional Group First");
                 }
             }
         });

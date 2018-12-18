@@ -3,7 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.util.Geometry;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -147,7 +147,7 @@ public class CompoundArranger {
 
     public static void showAllHydrogen(Atom atom, boolean show) {
         if (atom.isLettering() && show) {
-            Helper.instance().notification("Cannot show H. Turn off lettering");
+            Notifier.instance().notification("Cannot show H. Turn off lettering");
             return;
         }
         for (Bond bond : atom.getBonds()) {

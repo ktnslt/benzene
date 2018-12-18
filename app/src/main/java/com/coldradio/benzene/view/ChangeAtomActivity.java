@@ -14,7 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 
 public class ChangeAtomActivity extends AppCompatActivity {
     private void setTextViewOnClickListener(TableLayout tableLayout) {
@@ -92,7 +92,7 @@ public class ChangeAtomActivity extends AppCompatActivity {
                     setResult(RESULT_OK, data);
                     finish();
                 } else {
-                    Helper.instance().notification("None Selected");
+                    Notifier.instance().notification("None Selected");
                 }
             }
         });

@@ -2,7 +2,6 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -17,9 +16,8 @@ import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.SearchFilter;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
-import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
@@ -125,6 +123,6 @@ class CompoundPreview extends View implements View.OnClickListener {
         CompoundArranger.alignCenter(compound, ScreenInfo.instance().centerPoint());
         Project.instance().addCompoundAsSelected(compound);
 
-        Helper.instance().notification(mCompoundIndex.preferredIUPACName + " is added");
+        Notifier.instance().notification(mCompoundIndex.preferredIUPACName + " is added");
     }
 }

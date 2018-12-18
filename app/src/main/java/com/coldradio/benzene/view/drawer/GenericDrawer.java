@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomicNumber;
@@ -27,11 +26,11 @@ public class GenericDrawer {
         }
     }
 
-    private static Path wedgeTriangle(PointF p1, PointF p2) {
-        Path path = new Path();
+    private static Path wedgeTrianglePath(PointF p1, PointF p2, Path path) {
         PointF tri1 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, true);
         PointF tri2 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, false);
 
+        path.reset();
         path.moveTo(p1.x, p1.y);
         path.lineTo(tri1.x, tri1.y);
         path.lineTo(tri2.x, tri2.y);
@@ -40,9 +39,10 @@ public class GenericDrawer {
         return path;
     }
 
+    private static Path path = new Path();
     private static void drawSingleBond(PointF p1, PointF p2, Bond.BondAnnotation bondAnnotation, Canvas canvas, Paint paint) {
         if (bondAnnotation == Bond.BondAnnotation.WEDGE_UP) {
-            canvas.drawPath(wedgeTriangle(p1, p2), paint);
+            canvas.drawPath(wedgeTrianglePath(p1, p2, path), paint);
         } else if (bondAnnotation == Bond.BondAnnotation.WEDGE_DOWN) {
             PointF tri1 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, true);
             PointF tri2 = Geometry.orthogonalPointToLine(p1, p2, Configuration.WEDGE_WIDTH_TO_BOND_LENGTH, false);
@@ -54,12 +54,19 @@ public class GenericDrawer {
                 canvas.drawLine(l1.x, l1.y, l2.x, l2.y, paint);
             }
         } else if (bondAnnotation == Bond.BondAnnotation.WAVY) {
-            for (int ii = 1; ii <= 10; ++ii) {
-                PointF l1 = Geometry.pointInLine(p1, p2, 0.1f * (ii-1));
-                PointF l2 = Geometry.pointInLine(p1, p2, 0.1f * ii);
+            Paint.Style originalStyle = paint.getStyle();
 
-                canvas.drawArc(new RectF(l1.x, l2.y, l2.x, l1.y), 0, 180, true, paint);
+            paint.setStyle(Paint.Style.STROKE);
+            for (int ii = 1; ii <= 5; ++ii) {
+                PointF l1 = Geometry.pointInLine(p1, p2, 0.2f * (ii - 1));
+                PointF l2 = Geometry.pointInLine(p1, p2, 0.2f * ii);
+
+                if (ii % 2 == 0)
+                    DrawingLib.drawCwArc(l1, l2, Geometry.centerOfLine(l1, l2), canvas, paint);
+                else
+                    DrawingLib.drawCwArc(l2, l1, Geometry.centerOfLine(l1, l2), canvas, paint);
             }
+            paint.setStyle(originalStyle);
         } else {
             canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);
         }

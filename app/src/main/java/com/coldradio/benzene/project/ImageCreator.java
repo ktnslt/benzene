@@ -7,7 +7,7 @@ import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +36,7 @@ public class ImageCreator {
             Bitmap bitmap = createBitmap(view, region);
 
             if (bitmap == null) {
-                Helper.instance().notification("Preview can NOT be saved");
+                Notifier.instance().notification("Preview can NOT be saved");
                 return;
             }
             file.createNewFile();

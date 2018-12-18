@@ -10,9 +10,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 
@@ -72,7 +71,7 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_copy) {
             Project.instance().copySelectedCompound();
-            Helper.instance().notification("Compound Copied");
+            Notifier.instance().notification("Compound Copied");
         } else if (id == R.id.action_paste) {
             Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
         } else if (id == R.id.action_redo) {

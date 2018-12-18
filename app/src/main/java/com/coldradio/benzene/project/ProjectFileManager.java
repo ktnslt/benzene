@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -68,12 +68,12 @@ public class ProjectFileManager {
             }
             ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
         } catch (IOException ioe) {
-            Helper.instance().notification("Saving Errors");
+            Notifier.instance().notification("Saving Errors");
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
-                    Helper.instance().notification("Saved");
+                    Notifier.instance().notification("Saved");
                 } catch (Exception e) {/* ignores this */}
             }
         }
@@ -92,13 +92,13 @@ public class ProjectFileManager {
                 ProjectFile projectFile = getProjectFile(fileName);
 
                 project.createFromFile(new ArrayList<Compound>(), projectFile);
-                Helper.instance().notification("No Compound loaded from " + projectFile.getName());
+                Notifier.instance().notification("No Compound loaded from " + projectFile.getName());
             } else {
                 project.createFromFile(readCompounds, getProjectFile(fileName));
             }
             project.postDeserialization();
         } catch (FileNotFoundException fnfe) {
-            Helper.instance().notification("File Not Found.");
+            Notifier.instance().notification("File Not Found.");
         } finally {
             if (reader != null) {
                 try {

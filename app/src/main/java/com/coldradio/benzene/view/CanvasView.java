@@ -97,9 +97,8 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                     mMoveSelectedElement = false;
                     break;
             }
+            mGestureDetector.onTouchEvent(event);
         }
-
-        mGestureDetector.onTouchEvent(event);
 
         return true;
     }

@@ -16,7 +16,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.project.Project;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 
 public class AtomDecoActivity extends AppCompatActivity {
     private Atom mSelectedAtom;
@@ -36,7 +36,7 @@ public class AtomDecoActivity extends AppCompatActivity {
 
         if (mSelectedAtom == null) {
             finish();
-            Helper.instance().notification("No Selected Atom");
+            Notifier.instance().notification("No Selected Atom");
             return;
         }
         mSelectedAtomDecoration = mSelectedAtom.getAtomDecoration();

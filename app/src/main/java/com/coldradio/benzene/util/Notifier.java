@@ -3,11 +3,11 @@ package com.coldradio.benzene.util;
 import android.content.Context;
 import android.widget.Toast;
 
-public class Helper {
+public class Notifier {
     private Context mContext;
-    private static Helper smInstance = new Helper();
+    private static Notifier smInstance = new Notifier();
 
-    public static Helper instance() {
+    public static Notifier instance() {
         return smInstance;
     }
 

@@ -20,7 +20,7 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
-import com.coldradio.benzene.util.Helper;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AddToBondActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class AddToBondActivity extends AppCompatActivity {
 
         if (edge == null) {
             finish();
-            Helper.instance().notification("No Selected Edge");
+            Notifier.instance().notification("No Selected Edge");
             return;
         }
 
