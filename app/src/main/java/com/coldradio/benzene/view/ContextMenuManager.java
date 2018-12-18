@@ -40,6 +40,8 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_add, false);
         showItem(mBottomToolbar, R.id.action_func_group, false);
         showItem(mBottomToolbar, R.id.action_add_cyclic_to_bond, false);
+        showItem(mBottomToolbar, R.id.action_wedge_up, false);
+        showItem(mBottomToolbar, R.id.action_wedge_down, false);
         return this;
     }
 
@@ -79,7 +81,9 @@ public class ContextMenuManager {
                 hideAll().
                         show(R.id.action_bond).
                         show(R.id.action_trashcan).
-                        show(R.id.action_add_cyclic_to_bond);
+                        show(R.id.action_add_cyclic_to_bond).
+                        show(R.id.action_wedge_up).
+                        show(R.id.action_wedge_down);
                 break;
             case COMPOUND:
                 hideAll().

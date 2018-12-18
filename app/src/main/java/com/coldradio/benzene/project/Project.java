@@ -4,10 +4,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.Edge;
+import com.coldradio.benzene.util.Notifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -184,7 +187,7 @@ public class Project {
         if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
             Atom selectedAtom = mElementSelector.getSelectedAtom();
 
-            selectedAtom.lettering(! selectedAtom.isLettering());
+            selectedAtom.lettering(!selectedAtom.isLettering());
         }
     }
 
@@ -242,6 +245,18 @@ public class Project {
 
         for (Compound compound : mCompoundList) {
             compound.offset(newLeft - region.left, newTop - region.top);
+        }
+    }
+
+    public void bondAnnotation(boolean wedgeUp) {
+        if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
+            Edge edge = mElementSelector.getSelectedEdge();
+
+            if (edge.first.getBondType(edge.second) == Bond.BondType.SINGLE) {
+                mElementSelector.getSelectedEdge().cycleBondAnnotation(wedgeUp);
+            } else {
+                Notifier.instance().notification("Shall be single bond");
+            }
         }
     }
 }

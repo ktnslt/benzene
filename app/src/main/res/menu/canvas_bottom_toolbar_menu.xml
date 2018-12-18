@@ -43,6 +43,22 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_wedge_up"
+        android:orderInCategory="44"
+        android:title="WedgeUp"
+        android:icon="@drawable/ic_menu_wedge_up"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_wedge_down"
+        android:orderInCategory="45"
+        android:title="WedgeDown"
+        android:icon="@drawable/ic_menu_wedge_down"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_synthesize"
         android:orderInCategory="50"
         android:title="Synthesize"

@@ -32,4 +32,38 @@ public class Edge {
     public Atom atomInUpperDirection() {
         return (first.getPoint().x <= second.getPoint().x) ? first : second;
     }
+
+    public void cycleBondAnnotation(boolean wedgeUp) {
+        Bond.BondAnnotation firstBA = first.getBondAnnotation(second);
+        Bond.BondAnnotation secondBA = second.getBondAnnotation(first);
+
+        if (wedgeUp) {
+            // rotation order: NONE -> edge.first WEDGE_UP -> edge.second WEDGE_UP -> WAVY -> NONE
+            if (firstBA == Bond.BondAnnotation.NONE && secondBA == Bond.BondAnnotation.NONE) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.WEDGE_UP);
+            } else if (firstBA == Bond.BondAnnotation.WEDGE_UP) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
+                second.setBondAnnotation(first, Bond.BondAnnotation.WEDGE_UP);
+            } else if (secondBA == Bond.BondAnnotation.WEDGE_UP) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.WAVY);
+                second.setBondAnnotation(first, Bond.BondAnnotation.WAVY);
+            } else {
+                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
+                second.setBondAnnotation(first, Bond.BondAnnotation.NONE);
+            }
+        } else {
+            if (firstBA == Bond.BondAnnotation.NONE && secondBA == Bond.BondAnnotation.NONE) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.WEDGE_DOWN);
+            } else if (firstBA == Bond.BondAnnotation.WEDGE_DOWN) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
+                second.setBondAnnotation(first, Bond.BondAnnotation.WEDGE_DOWN);
+            } else if (secondBA == Bond.BondAnnotation.WEDGE_DOWN) {
+                first.setBondAnnotation(second, Bond.BondAnnotation.WAVY);
+                second.setBondAnnotation(first, Bond.BondAnnotation.WAVY);
+            } else {
+                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
+                second.setBondAnnotation(first, Bond.BondAnnotation.NONE);
+            }
+        }
+    }
 }

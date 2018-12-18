@@ -98,6 +98,10 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().toggleShowHydrogen();
         } else if (id == R.id.action_lettering) {
             Project.instance().toggleLettering();
+        } else if (id == R.id.action_wedge_up) {
+            Project.instance().bondAnnotation(true);
+        } else if (id == R.id.action_wedge_down) {
+            Project.instance().bondAnnotation(false);
         } else {
             ret = false;
         }

@@ -11,7 +11,7 @@ public class Bond {
     private transient Atom mAtom;
     private int mAIDForAtom;    // this is hack for resolving the circular reference caused by the mAtom during serialization.
     private BondType mBondType;
-    private BondAnnotation mBondAnnotation;
+    private BondAnnotation mBondAnnotation = BondAnnotation.NONE;
 
     public Bond(Atom bondTo, BondType bondType) {
         mAtom = bondTo;
