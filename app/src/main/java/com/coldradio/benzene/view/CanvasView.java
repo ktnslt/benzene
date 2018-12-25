@@ -1,6 +1,6 @@
 package com.coldradio.benzene.view;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.support.v4.view.GestureDetectorCompat;
@@ -9,6 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.coldradio.benzene.R;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
@@ -24,24 +25,28 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private boolean mMoveSelectedElement;
     private PointF mActualClickedPosition = new PointF();
     private boolean mScrolledAfterSelected;
+    private SelectedElementAccessoryDrawer mSelectedElementAccessoryDrawer;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
     }
 
-    public CanvasView(Context context, Toolbar topToolbar, Toolbar bottomToolbar) {
-        super(context);
+    public CanvasView(Activity activity) {
+        super(activity);
 
-        // here getWidth() and getHeight() returns 0
+        // cautious - here getWidth() and getHeight() returns 0
+        // set SelectedElementAccessoryDrawer
+        mSelectedElementAccessoryDrawer = new SelectedElementAccessoryDrawer(getResources().getDrawable(R.drawable.ic_menu_flip_bond));
 
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        mContextMenuManager = new ContextMenuManager(topToolbar, bottomToolbar);
+        mContextMenuManager = new ContextMenuManager((Toolbar)activity.findViewById(R.id.canvas_top_toolbar),
+                (Toolbar)activity.findViewById(R.id.canvas_bottom_toolbar));
 
         // register drawer
         mDrawerManager.addPreCompoundDrawer(new SelectedRegionDrawer());
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
-        mDrawerManager.addPostCompoundDrawer(new SelectedElementAccessoryDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
+        mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
 
         // When View is created, the default x, y are 0, hence reset Screen's x and y
         ScreenInfo.instance().setScreenXY((int) getX(), (int) getY());
@@ -49,6 +54,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
 
     public void updateContextMenu() {
         mContextMenuManager.update();
+    }
+
+    public void showFlipBondGuideLine(boolean show) {
+        mSelectedElementAccessoryDrawer.showFlipBondGuideLine(show);
     }
 
     public void toCenter() {
@@ -84,8 +93,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
             switch (maskedAction) {
                 case MotionEvent.ACTION_UP:
                     if (!mScrolledAfterSelected) {
-                        Project.instance().select(mActualClickedPosition);
-                        updateContextMenu();
+                        if (! mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
+                            Project.instance().select(mActualClickedPosition);
+                            updateContextMenu();
+                        }
                         invalidate();
                     }
                     mScrolledAfterSelected = false;

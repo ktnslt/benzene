@@ -31,7 +31,7 @@ public class CanvasActivity extends AppCompatActivity {
         // add CanvasView to the canvas_main layout
         ViewGroup canvas_layout = findViewById(R.id.canvas_main);
         if (canvas_layout != null) {
-            mCanvasView = new CanvasView(this, topToolbar, (Toolbar)findViewById(R.id.canvas_bottom_toolbar));
+            mCanvasView = new CanvasView(this);
             canvas_layout.addView(mCanvasView);
         }
     }
@@ -65,6 +65,9 @@ public class CanvasActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         boolean ret = true;
+
+        // FliBondGuideLine will be turned on if the menu is selected
+        mCanvasView.showFlipBondGuideLine(false);
 
         if (id == R.id.action_cut) {
             Project.instance().copySelectedCompound();
@@ -102,6 +105,8 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().bondAnnotation(true);
         } else if (id == R.id.action_wedge_down) {
             Project.instance().bondAnnotation(false);
+        } else if (id == R.id.action_flip_bond) {
+            mCanvasView.showFlipBondGuideLine(true);
         } else {
             ret = false;
         }

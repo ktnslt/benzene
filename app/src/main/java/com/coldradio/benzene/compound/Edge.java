@@ -8,6 +8,16 @@ public class Edge {
     public final Atom first;
     public final Atom second;
 
+    private void wedge(Atom atom, Bond.BondAnnotation bondAnnotation) {
+        if (atom == first) {
+            atom.setBondAnnotation(second, bondAnnotation);
+            second.setBondAnnotation(first, Bond.BondAnnotation.NONE);
+        } else {
+            atom.setBondAnnotation(first, bondAnnotation);
+            first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
+        }
+    }
+
     public Edge(Atom a1, Atom a2) {
         first = a1;
         second = a2;
@@ -36,34 +46,17 @@ public class Edge {
     public void cycleBondAnnotation(boolean wedgeUp) {
         Bond.BondAnnotation firstBA = first.getBondAnnotation(second);
         Bond.BondAnnotation secondBA = second.getBondAnnotation(first);
+        Bond.BondAnnotation upDown = wedgeUp ? Bond.BondAnnotation.WEDGE_UP : Bond.BondAnnotation.WEDGE_DOWN;
 
-        if (wedgeUp) {
-            // rotation order: NONE -> edge.first WEDGE_UP -> edge.second WEDGE_UP -> WAVY -> NONE
-            if (firstBA == Bond.BondAnnotation.NONE && secondBA == Bond.BondAnnotation.NONE) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.WEDGE_UP);
-            } else if (firstBA == Bond.BondAnnotation.WEDGE_UP) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
-                second.setBondAnnotation(first, Bond.BondAnnotation.WEDGE_UP);
-            } else if (secondBA == Bond.BondAnnotation.WEDGE_UP) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.WAVY);
-                second.setBondAnnotation(first, Bond.BondAnnotation.WAVY);
-            } else {
-                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
-                second.setBondAnnotation(first, Bond.BondAnnotation.NONE);
-            }
+        // rotation order: NONE -> edge.first WEDGE_UP -> edge.second WEDGE_UP -> WAVY -> NONE
+        if (firstBA == Bond.BondAnnotation.NONE && secondBA == Bond.BondAnnotation.NONE) {
+            wedge(first, upDown);
+        } else if (firstBA == upDown) {
+            wedge(second, upDown);
+        } else if (secondBA == upDown) {
+            wedge(first, Bond.BondAnnotation.WAVY);
         } else {
-            if (firstBA == Bond.BondAnnotation.NONE && secondBA == Bond.BondAnnotation.NONE) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.WEDGE_DOWN);
-            } else if (firstBA == Bond.BondAnnotation.WEDGE_DOWN) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
-                second.setBondAnnotation(first, Bond.BondAnnotation.WEDGE_DOWN);
-            } else if (secondBA == Bond.BondAnnotation.WEDGE_DOWN) {
-                first.setBondAnnotation(second, Bond.BondAnnotation.WAVY);
-                second.setBondAnnotation(first, Bond.BondAnnotation.WAVY);
-            } else {
-                first.setBondAnnotation(second, Bond.BondAnnotation.NONE);
-                second.setBondAnnotation(first, Bond.BondAnnotation.NONE);
-            }
+            wedge(first, Bond.BondAnnotation.NONE);
         }
     }
 }

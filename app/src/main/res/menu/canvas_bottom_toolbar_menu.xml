@@ -27,6 +27,14 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_saturate_h"
+        android:orderInCategory="25"
+        android:title="Saturate H"
+        android:icon="@drawable/ic_menu_saturate_hydrogen"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_atom_deco"
         android:orderInCategory="30"
         android:title="Mark"
@@ -55,6 +63,14 @@
         android:orderInCategory="45"
         android:title="WedgeDown"
         android:icon="@drawable/ic_menu_wedge_down"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_flip_bond"
+        android:orderInCategory="47"
+        android:title="FlipBond"
+        android:icon="@drawable/ic_menu_flip_bond"
         android:visible="false"
         app:showAsAction="always" />
 

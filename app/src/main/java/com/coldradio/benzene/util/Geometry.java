@@ -131,11 +131,15 @@ public class Geometry {
         return cwRotate(from, c, cwAngle(from, to, c) / 2);
     }
 
-    public static PointF pointInLine(PointF l1, PointF l2, float ratioFromL1) {
+    public static PointF pointInLine(PointF l1, PointF l2, float ratioFromL1, PointF result) {
         // if ratioFromL1 is 0, l1 is returned, if 1 l2 is returned
-        PointF p = new PointF(l1.x, l1.y);
+        result.set(l1.x, l1.y);
 
-        p.offset((l2.x - l1.x) * ratioFromL1, (l2.y - l1.y) * ratioFromL1);
-        return p;
+        result.offset((l2.x - l1.x) * ratioFromL1, (l2.y - l1.y) * ratioFromL1);
+        return result;
+    }
+
+    public static PointF pointInLine(PointF l1, PointF l2, float ratioFromL1) {
+        return pointInLine(l1, l2, ratioFromL1, new PointF());
     }
 }

@@ -10,7 +10,9 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.compound.Edge;
+import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -258,5 +260,22 @@ public class Project {
                 Notifier.instance().notification("Shall be single bond");
             }
         }
+    }
+
+    public void flipBond(Atom fromAtom, final Atom edgeAtom) {
+        final PointF l1 = fromAtom.getPoint(), l2 = edgeAtom.getPoint();
+
+        // fromAtom and edgeAtom shall have a bond. All atoms linked to fromAtom will be flipped here
+        TreeTraveler.travelIfTrue(new TreeTraveler.IAtomVisitor() {
+            @Override
+            public boolean visit(Atom atom, Object... args) {
+                if (atom != edgeAtom) {
+                    atom.setPoint(Geometry.symmetricToLine(atom.getPoint(), l1, l2));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }, fromAtom);
     }
 }

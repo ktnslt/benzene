@@ -42,6 +42,8 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_add_cyclic_to_bond, false);
         showItem(mBottomToolbar, R.id.action_wedge_up, false);
         showItem(mBottomToolbar, R.id.action_wedge_down, false);
+        showItem(mBottomToolbar, R.id.action_flip_bond, false);
+        showItem(mBottomToolbar, R.id.action_saturate_h, false);
         return this;
     }
 
@@ -75,7 +77,8 @@ public class ContextMenuManager {
                         show(R.id.action_atom_deco).
                         show(R.id.action_synthesize).
                         show(R.id.action_trashcan).
-                        show(R.id.action_func_group);
+                        show(R.id.action_func_group).
+                        show(R.id.action_saturate_h);
                 break;
             case EDGE:
                 hideAll().
@@ -83,7 +86,8 @@ public class ContextMenuManager {
                         show(R.id.action_trashcan).
                         show(R.id.action_add_cyclic_to_bond).
                         show(R.id.action_wedge_up).
-                        show(R.id.action_wedge_down);
+                        show(R.id.action_wedge_down).
+                        show(R.id.action_flip_bond);
                 break;
             case COMPOUND:
                 hideAll().

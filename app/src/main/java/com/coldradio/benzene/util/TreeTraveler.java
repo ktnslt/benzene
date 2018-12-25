@@ -62,6 +62,21 @@ public class TreeTraveler {
         return null;
     }
 
+    private static void travelIfTrueRecursive(Atom atom, IAtomVisitor atomVisitor, HashSet<Atom> visitedAtom, Object[] args) {
+        for (Bond bond : atom.getBonds()) {
+            Atom next = bond.getBoundAtom();
+
+            if (!visitedAtom.contains(next)) {
+                // add shall be done before the recursive call
+                visitedAtom.add(next);
+
+                if (atomVisitor.visit(next, args)) {
+                    travelIfTrueRecursive(next, atomVisitor, visitedAtom, args);
+                }
+            }
+        }
+    }
+
     public static Edge returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
         if (compound.size() >= 2) {
             HashSet<String> visitedEdge = new HashSet<>();
@@ -82,18 +97,19 @@ public class TreeTraveler {
     }
 
     public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Atom atom, Object... args) {
+        // this does NOT test the atom itself
         HashSet<Atom> visitedAtom = new HashSet<>();
 
         visitedAtom.add(atom);
         return doAtomRecursive(atom, atomVisitor, visitedAtom, args);
     }
 
-    public static boolean isCyclicBond(final Atom a1, Atom a2) {
-        return null != returnFirstAtom(new IAtomVisitor() {
-            @Override
-            public boolean visit(Atom atom, Object... args) {
-                return atom == a1;
-            }
-        }, a2);
+    public static void travelIfTrue(IAtomVisitor atomVisitor, Atom atom, Object... args) {
+        // this does NOT do for the atom itself
+        // if atomVisitor() returns false, it will not traverse down into the bound atoms.
+        HashSet<Atom> visitedAtom = new HashSet<>();
+
+        visitedAtom.add(atom);
+        travelIfTrueRecursive(atom, atomVisitor, visitedAtom, args);
     }
 }
