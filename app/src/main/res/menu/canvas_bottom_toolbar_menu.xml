@@ -37,7 +37,7 @@
     <item
         android:id="@+id/action_atom_deco"
         android:orderInCategory="30"
-        android:title="Mark"
+        android:title="Deco"
         android:icon="@drawable/ic_menu_atom_deco"
         android:visible="false"
         app:showAsAction="always" />
@@ -69,7 +69,7 @@
     <item
         android:id="@+id/action_flip_bond"
         android:orderInCategory="47"
-        android:title="FlipBond"
+        android:title="Flip"
         android:icon="@drawable/ic_menu_flip_bond"
         android:visible="false"
         app:showAsAction="always" />
@@ -79,14 +79,6 @@
         android:orderInCategory="50"
         android:title="Synthesize"
         android:icon="@drawable/ic_menu_synthesis"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_trashcan"
-        android:orderInCategory="70"
-        android:title="Delete"
-        android:icon="@drawable/ic_menu_trashcan"
         android:visible="false"
         app:showAsAction="always" />
 

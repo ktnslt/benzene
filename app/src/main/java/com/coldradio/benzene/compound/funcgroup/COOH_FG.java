@@ -17,6 +17,8 @@ public class COOH_FG extends COO_FG {
 
         o_minus.getAtomDecoration().setCharge(0);
         super.getCompound().addAtom(o_minus, Bond.BondType.SINGLE, h);
+        CompoundArranger.adjustHydrogenPosition(o_minus);
+
         o_minus.lettering(true);
         CompoundArranger.adjustHydrogenPosition(c1);
     }

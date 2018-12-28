@@ -102,6 +102,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
     private static void drawChargeAsCircle(Atom atom, Canvas canvas, Paint paint) {
         PointF atomXY = atom.getPoint();
         PointF xy = new PointF(atomXY.x, atomXY.y);
+        Paint.Style origPaintStyle = paint.getStyle();
 
         paint.setStyle(Paint.Style.STROKE);
 
@@ -118,6 +119,8 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         if (atom.getAtomDecoration().getCharge() == 1) {
             canvas.drawLine(xy.x, xy.y - positiveRadius, xy.x, xy.y + positiveRadius, paint);
         }
+
+        paint.setStyle(origPaintStyle);
     }
 
     private static void drawChargeAsNumber(Atom atom, Canvas canvas, Paint paint) {

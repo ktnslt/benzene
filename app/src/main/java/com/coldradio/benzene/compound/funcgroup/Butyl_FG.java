@@ -16,7 +16,7 @@ public class Butyl_FG extends Propyl_FG {
         Compound tmpCompound = CompoundReactor.chainCompound(new PointF[]{c[0].getPoint(), c[1].getPoint(), c[2].getPoint()});
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(2));
 
-        super.getCompound().addFunctionalGroupToAtom(methyl, c[2], true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c[2], methyl, true);
     }
 
     @Override

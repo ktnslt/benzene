@@ -16,7 +16,7 @@ public class Hexyl_FG extends Pentyl_FG {
         Compound tmpCompound = CompoundReactor.chainCompound(new PointF[]{c[2].getPoint(), c[3].getPoint(), c[4].getPoint()});
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(2));   // append to the last
 
-        super.getCompound().addFunctionalGroupToAtom(methyl, c[4], true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c[4], methyl, true);
     }
 
     @Override

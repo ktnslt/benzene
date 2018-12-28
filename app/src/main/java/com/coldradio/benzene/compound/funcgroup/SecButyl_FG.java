@@ -17,7 +17,7 @@ public class SecButyl_FG extends IsoPropyl_FG {
         Compound tmpCompound = CompoundReactor.chainCompound(new PointF[]{c2.getPoint(), c1.getPoint(), c2_dot.getPoint()});
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(2));   // append to the last C
 
-        super.getCompound().addFunctionalGroupToAtom(methyl, c2_dot, true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c2_dot, methyl, true);
     }
 
     @Override

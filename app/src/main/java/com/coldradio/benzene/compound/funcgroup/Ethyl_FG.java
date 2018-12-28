@@ -25,7 +25,7 @@ public class Ethyl_FG extends Methyl_FG {
                 (a_atom.getSkeletonAtom() != null) ? a_atom.getSkeletonAtom().getPoint() : null});  // aid 2
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(0));
 
-        super.getCompound().addFunctionalGroupToAtom(methyl, c1, true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c1, methyl, true);
 
         Atom c2 = methyl.appendAtom();
         // adjust the hydrogen position of C1 again. this is related to https://github.com/ktnslt/benzene/issues/45

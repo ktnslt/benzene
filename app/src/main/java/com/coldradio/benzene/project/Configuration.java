@@ -7,7 +7,7 @@ public class Configuration {
     public static float H_BOND_LENGTH_RATIO = 0.6f;
     public static int SELECT_RANGE = 30;
     public static int INITIAL_REGION_SIZE = 200;
-    public static int ROTATION_PIVOT_SIZE = 20;
+    public static int ROTATION_PIVOT_SIZE = 40;
     public static int FONT_SIZE = 50;
     public static char ATOM_MARKER = '*';
     public static float SUBSCRIPT_SIZE_RATIO = 0.7f;

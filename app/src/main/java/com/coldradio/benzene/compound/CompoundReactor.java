@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.util.Pair;
 
+import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MathConstant;
 
@@ -161,5 +162,38 @@ public class CompoundReactor {
         }
 
         CompoundArranger.adjustHydrogenPosition(atom);
+    }
+
+    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite) {
+        float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber) * (oppositeSite ? -1 : 1);
+        Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation
+        Atom rotatingAtom = (centerAtom == edge.first) ? edge.second : edge.first;
+        Atom lastAtom = rotatingAtom;
+
+        for (int ii = 0; ii < edgeNumber - 2; ++ii) {
+            Atom newAtom = new Atom(-1, AtomicNumber.C);
+
+            newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
+            newAtom.singleBond(centerAtom);
+            newAtom.getAtomDecoration().setShowElementName(false);
+            compound.getAtoms().add(newAtom);
+
+            rotatingAtom = centerAtom;
+            centerAtom = newAtom;
+        }
+
+        centerAtom.singleBond(lastAtom);
+    }
+
+    public static void addFunctionalGroupToAtom(Compound compound, Atom atom, IFunctionalGroup funcGroup, boolean deleteHOfSelectedAtom) {
+        compound.merge(funcGroup.curForm());
+        atom.setBond(funcGroup.appendAtom(), funcGroup.bondType());
+
+        Atom H = atom.getHydrogen();
+
+        if (deleteHOfSelectedAtom && H != null) {
+            compound.delete(H);
+            CompoundArranger.adjustHydrogenPosition(atom);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.coldradio.benzene.compound.funcgroup;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.CompoundArranger;
+import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.util.Geometry;
 
 public class TertButyl_FG extends IsoPropyl_FG {
@@ -15,7 +16,7 @@ public class TertButyl_FG extends IsoPropyl_FG {
 
         // set the position of C, but H are NOT arranged here
         c_in_methyl.setPoint(Geometry.symmetricToPoint(a_atom.getPoint(), c1.getPoint()));
-        super.getCompound().addFunctionalGroupToAtom(methyl, c1, true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c1, methyl, true);
         // after FuncGroup is completed, adjust the positions of H
         CompoundArranger.adjustHydrogenPosition(c_in_methyl);
     }

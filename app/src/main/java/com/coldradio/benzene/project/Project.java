@@ -43,7 +43,7 @@ public class Project {
 
     public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite) {
         if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
-            mElementSelector.getSelectedCompound().addCyclicToBond(edgeNumber, oppositeSite, mElementSelector.getSelectedEdge());
+            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, oppositeSite);
         }
     }
 

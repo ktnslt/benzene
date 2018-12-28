@@ -17,7 +17,7 @@ public class Propyl_FG extends Ethyl_FG {
         Methyl_FG methyl = new Methyl_FG(tmpCompound.getAtom(2));   // append to the last C
 
         // delete one H in parentCompound, and adjust the positions of remained two H
-        super.getCompound().addFunctionalGroupToAtom(methyl, c2, true);
+        CompoundReactor.addFunctionalGroupToAtom(super.getCompound(), c2, methyl, true);
     }
 
     @Override
