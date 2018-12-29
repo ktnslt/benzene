@@ -101,6 +101,10 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().bondAnnotation(false);
         } else if (id == R.id.action_flip_bond) {
             mCanvasView.showFlipBondGuideLine(true);
+        } else if (id == android.R.id.home) {
+            // Toolbar back Button
+            ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
+            ret = false; // to call super.onOptionsItemSelected(item);
         } else {
             ret = false;
         }
@@ -136,6 +140,12 @@ public class CanvasActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        ProjectFileManager.instance().save(Project.instance(), mCanvasView);
+        ProjectFileManager.instance().save(Project.instance());
+    }
+
+    @Override
+    public void onBackPressed() {
+        ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
+        super.onBackPressed();
     }
 }

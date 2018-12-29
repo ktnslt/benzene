@@ -14,6 +14,7 @@ public class BasicRule implements ICompoundRule {
 
         if (carbon != null) {
             carbon.getAtomDecoration().lettering(true);
+            CompoundArranger.showAllHydrogen(carbon, false);
             return compound;
         }
         // All Carbons shall not show element name, and hide H bond

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.util.Notifier;
 
-public class ChangeAtomActivity extends AppCompatActivity {
+public class SelectAtomActivity extends AppCompatActivity {
     private void setTextViewOnClickListener(TableLayout tableLayout) {
         if (tableLayout == null) {
             return;
