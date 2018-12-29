@@ -176,7 +176,7 @@ public class CompoundReactor {
             newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
             newAtom.singleBond(centerAtom);
             newAtom.getAtomDecoration().setShowElementName(false);
-            compound.getAtoms().add(newAtom);
+            compound.addAtom(newAtom);
 
             rotatingAtom = centerAtom;
             centerAtom = newAtom;

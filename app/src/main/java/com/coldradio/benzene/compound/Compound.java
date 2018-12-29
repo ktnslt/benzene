@@ -45,7 +45,7 @@ public class Compound {
             that_compound.mAtoms.add(this_atom.copy());
         }
         that_compound.resetAID();
-        that_compound.mCenterOfRectangle = this.mCenterOfRectangle;
+        that_compound.mCenterOfRectangle = null;    // this will recalculated when needed
 
         // now copy bonds
         resetAID(); // at this point, AIDs of that_compound and this_compound are aligned
@@ -178,5 +178,11 @@ public class Compound {
     public void addAtom(Atom to, Bond.BondType bondType, Atom newAtom) {
         mAtoms.add(newAtom);
         to.setBond(newAtom, bondType);
+        mCenterOfRectangle = null;
+    }
+
+    public void addAtom(Atom atom) {
+        mAtoms.add(atom);
+        mCenterOfRectangle = null;
     }
 }
