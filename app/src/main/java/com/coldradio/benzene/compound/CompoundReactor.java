@@ -164,14 +164,23 @@ public class CompoundReactor {
         CompoundArranger.adjustHydrogenPosition(atom);
     }
 
-    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite) {
+    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber) * (oppositeSite ? -1 : 1);
         Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation
         Atom rotatingAtom = (centerAtom == edge.first) ? edge.second : edge.first;
         Atom lastAtom = rotatingAtom;
 
+        if (deleteHydrogenBeforeAdd) {
+            deleteHydrogen(compound, edge.first, 1);
+            deleteHydrogen(compound, edge.second, 1);
+        }
+
+        List<Atom> newAtomList = new ArrayList<>();
+
         for (int ii = 0; ii < edgeNumber - 2; ++ii) {
             Atom newAtom = new Atom(-1, AtomicNumber.C);
+
+            newAtomList.add(newAtom);
 
             newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
             newAtom.singleBond(centerAtom);
@@ -183,6 +192,14 @@ public class CompoundReactor {
         }
 
         centerAtom.singleBond(lastAtom);
+
+        if (saturateWithHydrogen) {
+            // this shall be called after all bonds are made
+            for (Atom newAtom : newAtomList) {
+                saturateWithHydrogen(compound, newAtom, 4);
+                CompoundArranger.showAllHydrogen(newAtom, false);
+            }
+        }
     }
 
     public static void addFunctionalGroupToAtom(Compound compound, Atom atom, IFunctionalGroup funcGroup, boolean deleteHOfSelectedAtom) {

@@ -27,6 +27,8 @@ public class AddToBondActivity extends AppCompatActivity {
     private AddToBondPreview mPreview;
     private EditText mEdgeNumber;
     private boolean mOppositeSite;
+    private boolean mDeleteHydrogenBeforeAdd = true;
+    private boolean mSaturateWithHydrogen = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +58,18 @@ public class AddToBondActivity extends AppCompatActivity {
                 mOppositeSite = isChecked;
                 mPreview.setOppositeSite(mOppositeSite);
                 mPreview.invalidate();
+            }
+        });
+        ((CheckBox)findViewById(R.id.a2b_cb_delete_h_before_add)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mDeleteHydrogenBeforeAdd = isChecked;
+            }
+        });
+        ((CheckBox)findViewById(R.id.a2b_cb_saturate_h)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSaturateWithHydrogen = isChecked;
             }
         });
 
@@ -114,6 +128,8 @@ public class AddToBondActivity extends AppCompatActivity {
                 if (edgeNumber >= 3) {
                     data.putExtra("EdgeNumber", edgeNumber);
                     data.putExtra("OppositeSite", mOppositeSite);
+                    data.putExtra("DeleteHydrogenBeforeAdd", mDeleteHydrogenBeforeAdd);
+                    data.putExtra("SaturateWithHydrogen", mSaturateWithHydrogen);
                     setResult(RESULT_OK, data);
                     finish();
                 }

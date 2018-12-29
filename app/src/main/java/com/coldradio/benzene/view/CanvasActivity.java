@@ -131,7 +131,10 @@ public class CanvasActivity extends AppCompatActivity {
 
         if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
-                Project.instance().addCyclicToSelectedBond(data.getIntExtra("EdgeNumber", 6), data.getBooleanExtra("OppositeSite", false));
+                Project.instance().addCyclicToSelectedBond(data.getIntExtra("EdgeNumber", 6),
+                        data.getBooleanExtra("OppositeSite", false),
+                        data.getBooleanExtra("DeleteHydrogenBeforeAdd", true),
+                        data.getBooleanExtra("SaturateWithHydrogen", true));
                 mCanvasView.invalidate();
             }
         }

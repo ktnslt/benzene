@@ -59,6 +59,24 @@
         app:layout_constraintStart_toEndOf="@id/a2b_view"
         app:layout_constraintTop_toTopOf="@id/a2b_view"/>
 
+    <CheckBox
+        android:id="@+id/a2b_cb_delete_h_before_add"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Del H before add"
+        android:checked="true"
+        app:layout_constraintStart_toStartOf="@id/a2b_cb_opposite_site"
+        app:layout_constraintTop_toBottomOf="@id/a2b_cb_opposite_site"/>
+
+    <CheckBox
+        android:id="@+id/a2b_cb_saturate_h"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Saturate With H"
+        android:checked="true"
+        app:layout_constraintStart_toStartOf="@id/a2b_cb_opposite_site"
+        app:layout_constraintTop_toBottomOf="@id/a2b_cb_delete_h_before_add"/>
+
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"

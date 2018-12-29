@@ -41,9 +41,9 @@ public class Project {
         mElementSelector.selectCompound(compound);
     }
 
-    public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite) {
+    public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
-            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, oppositeSite);
+            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, oppositeSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
         }
     }
 

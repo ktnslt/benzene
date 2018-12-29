@@ -82,7 +82,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:checked="true"
-        android:text="Del H of selected"
+        android:text="Del H before add"
         app:layout_constraintStart_toEndOf="@id/a2a_view"
         app:layout_constraintTop_toBottomOf="@id/a2a_tv_func_group_name"/>
 
