@@ -35,7 +35,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
 
         if (atom.getAtomicNumber() == AtomicNumber.TEXT) {
             text = atom.getArbitraryName();
-        } else if (atom.isLettering()) {
+        } else if (atom.getAtomDecoration().isLettering()) {
             int hNumber = CompoundInspector.numberOfHydrogen(atom);
             boolean hydrogenInRight = hydrogenPositionInRight(atom);
 
@@ -158,7 +158,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
                 Paint paint = (Paint) args[1];
                 AtomDecoration atomDecoration = atom.getAtomDecoration();
 
-                if (atom.getAtomDecoration().getShowElementName() || atom.isLettering()) {
+                if (atom.getAtomDecoration().getShowElementName() || atom.getAtomDecoration().isLettering()) {
                     TextDrawer.draw(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
                 }
                 if (atomDecoration.getMarker() != AtomDecoration.Marker.NONE) {

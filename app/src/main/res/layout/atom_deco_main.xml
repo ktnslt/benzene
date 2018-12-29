@@ -178,6 +178,39 @@
         app:layout_constraintStart_toEndOf="@id/atom_deco_btn_right_0"
         app:layout_constraintTop_toTopOf="@id/atom_deco_btn_up_0"/>
 
+    <CheckBox
+        android:id="@+id/atom_deco_cb_lettering"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Lettering (e.g., CH3)"
+        app:layout_constraintStart_toStartOf="@id/atom_deco_cb_show_element"
+        app:layout_constraintTop_toBottomOf="@id/atom_deco_cb_show_element"/>
+
+    <CheckBox
+        android:id="@+id/atom_deco_cb_show_h"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Show H bonds"
+        app:layout_constraintStart_toStartOf="@id/atom_deco_cb_show_element"
+        app:layout_constraintTop_toBottomOf="@id/atom_deco_cb_lettering"/>
+
+    <CheckBox
+        android:id="@+id/atom_deco_cb_change_atom"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Change to"
+        app:layout_constraintStart_toStartOf="@id/atom_deco_cb_show_element"
+        app:layout_constraintTop_toBottomOf="@id/atom_deco_cb_show_h"/>
+
+    <Button
+        android:id="@+id/atom_deco_btn_select_element"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:padding="0dp"
+        android:text="Ele"
+        app:layout_constraintTop_toTopOf="@+id/atom_deco_cb_change_atom"
+        app:layout_constraintLeft_toRightOf="@+id/atom_deco_cb_change_atom"/>
+
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.coldradio.benzene.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,17 +16,23 @@ import android.widget.SeekBar;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
+import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.CompoundArranger;
+import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Notifier;
 
 public class AtomDecoActivity extends AppCompatActivity {
     private Atom mSelectedAtom;
     private AtomDecoration mSelectedAtomDecoration;
-    private AtomDecoration mCopiedOriginalAtomDecoration;
     private Preview mAtomDecoView;
-
     private EditText mChargeET;
     private SeekBar mChargeAsCircleSeekBox;
+    // saved originals
+    private AtomDecoration mOriginalAtomDecoration;
+    private boolean mOrigShowHydrogenBond;
+    private AtomicNumber mOrigAtomicNumber;
+    private String mOrigArbitraryName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,12 +128,41 @@ public class AtomDecoActivity extends AppCompatActivity {
             }
         });
 
-        // setting for show element
+        // setting for checkboxs
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mSelectedAtomDecoration.setShowElementName(isChecked);
                 mAtomDecoView.invalidate();
+            }
+        });
+        ((CheckBox)findViewById(R.id.atom_deco_cb_lettering)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSelectedAtom.getAtomDecoration().lettering(isChecked);
+                mAtomDecoView.invalidate();
+            }
+        });
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_h)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CompoundArranger.showAllHydrogen(mSelectedAtom, isChecked);
+                mAtomDecoView.invalidate();
+            }
+        });
+        ((CheckBox)findViewById(R.id.atom_deco_cb_change_atom)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                findViewById(R.id.atom_deco_btn_select_element).setEnabled(isChecked);
+                mAtomDecoView.invalidate();
+            }
+        });
+
+        // setting for Select Element
+        findViewById(R.id.atom_deco_btn_select_element).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
             }
         });
 
@@ -141,7 +177,12 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSelectedAtom.setAtomDecoration(mCopiedOriginalAtomDecoration);
+                mSelectedAtom.setAtomDecoration(mOriginalAtomDecoration);
+                mSelectedAtom.setAtomicNumber(mOrigAtomicNumber);
+                if (mOrigAtomicNumber == AtomicNumber.TEXT) {
+                    mSelectedAtom.setArbitraryName(mOrigArbitraryName);
+                }
+                CompoundArranger.showAllHydrogen(mSelectedAtom, mOrigShowHydrogenBond);
                 finish();
             }
         });
@@ -244,7 +285,17 @@ public class AtomDecoActivity extends AppCompatActivity {
     }
 
     private void readAndSaveAtomDecoration() {
+        // save the originals
+        mOriginalAtomDecoration = mSelectedAtomDecoration.copy();
+        mOrigShowHydrogenBond = CompoundInspector.showAnyHydrogen(mSelectedAtom);
+        mOrigAtomicNumber = mSelectedAtom.getAtomicNumber();
+        mOrigArbitraryName = mSelectedAtom.getArbitraryName();
+
+        // set the default values
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElementName());
+        ((CheckBox)findViewById(R.id.atom_deco_cb_lettering)).setChecked(mSelectedAtomDecoration.isLettering());
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_h)).setChecked(mOrigShowHydrogenBond);
+        findViewById(R.id.atom_deco_btn_select_element).setEnabled(false);
 
         ((EditText)findViewById(R.id.atom_deco_et_charge)).setText(String.valueOf(mSelectedAtomDecoration.getCharge()));
 
@@ -253,7 +304,21 @@ public class AtomDecoActivity extends AppCompatActivity {
         mChargeAsCircleSeekBox.setEnabled(mSelectedAtomDecoration.getCharge() == 1 || mSelectedAtomDecoration.getCharge() == -1);
 
         ((SeekBar)findViewById(R.id.atom_deco_sb_starmark)).setProgress(mSelectedAtomDecoration.getMarker().ordinal());
+    }
 
-        mCopiedOriginalAtomDecoration = mSelectedAtomDecoration.copy();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
+            if (resultCode == RESULT_OK) {
+                String atomName = data.getStringExtra("AtomName");
+
+                if (atomName != null && atomName.length() >= 1) {
+                    Project.instance().changeSelectedAtom(atomName);
+                    mAtomDecoView.invalidate();
+                }
+            }
+        }
     }
 }

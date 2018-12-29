@@ -146,10 +146,6 @@ public class CompoundArranger {
     }
 
     public static void showAllHydrogen(Atom atom, boolean show) {
-        if (atom.isLettering() && show) {
-            Notifier.instance().notification("Cannot show H. Turn off lettering");
-            return;
-        }
         for (Bond bond : atom.getBonds()) {
             Atom h = bond.getBoundAtom();
 

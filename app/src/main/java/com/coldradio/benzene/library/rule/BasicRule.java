@@ -13,7 +13,7 @@ public class BasicRule implements ICompoundRule {
         Atom carbon = CompoundInspector.returnCarbonIfC1Hn(compound);
 
         if (carbon != null) {
-            carbon.lettering(true);
+            carbon.getAtomDecoration().lettering(true);
             return compound;
         }
         // All Carbons shall not show element name, and hide H bond
@@ -22,10 +22,10 @@ public class BasicRule implements ICompoundRule {
 
             if (an == AtomicNumber.C) {
                 atom.getAtomDecoration().setShowElementName(false);
-                CompoundArranger.showAllHydrogen(atom, false);
             } else if (an != AtomicNumber.H && CompoundInspector.numberOfHydrogen(atom) > 0) {
-                atom.lettering(true);
+                atom.getAtomDecoration().lettering(true);
             }
+            CompoundArranger.showAllHydrogen(atom, false);
         }
         return compound;
     }

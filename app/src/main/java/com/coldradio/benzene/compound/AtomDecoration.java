@@ -18,6 +18,7 @@ public class AtomDecoration {
     private int mCharge = 0;
     private Marker mChargeAsCircle = Marker.NONE;
     private Marker mStarMarker = Marker.NONE;
+    private boolean mLettering;
 
     public AtomDecoration() {
         for (int ii = 0; ii < mUnsharedElectron.length; ++ii) {
@@ -65,6 +66,14 @@ public class AtomDecoration {
         mShowElementName = show;
     }
 
+    public void lettering(boolean on) {
+        mLettering = on;
+    }
+
+    public boolean isLettering() {
+        return mLettering;
+    }
+
     public AtomDecoration copy() {
         AtomDecoration copied = new AtomDecoration();
 
@@ -75,6 +84,7 @@ public class AtomDecoration {
         copied.mCharge = mCharge;
         copied.mChargeAsCircle = mChargeAsCircle;
         copied.mStarMarker = mStarMarker;
+        copied.mLettering = mLettering;
 
         return copied;
     }

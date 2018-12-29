@@ -89,18 +89,12 @@ public class CanvasActivity extends AppCompatActivity {
             startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_ATOM"), ActivityRequestCode.ADD_TO_ATOM_REQ.ordinal());
         } else if (id == R.id.action_add_cyclic_to_bond) {
             startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
-        } else if (id == R.id.action_change_atom) {
-            startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
         } else if (id == R.id.action_bond) {
             Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
 
         } else if (id == R.id.action_atom_deco) {
             startActivityForResult(new Intent("com.coldradio.benzene.ATOM_DECO"), ActivityRequestCode.ATOM_DECO_REQ.ordinal());
-        } else if (id == R.id.action_show_h) {
-            Project.instance().toggleShowHydrogen();
-        } else if (id == R.id.action_lettering) {
-            Project.instance().toggleLettering();
         } else if (id == R.id.action_wedge_up) {
             Project.instance().bondAnnotation(true);
         } else if (id == R.id.action_wedge_down) {
@@ -131,16 +125,7 @@ public class CanvasActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
-            if (resultCode == RESULT_OK) {
-                String atomName = data.getStringExtra("AtomName");
-
-                if (atomName != null && atomName.length() >= 1) {
-                    Project.instance().changeSelectedAtom(atomName);
-                    mCanvasView.invalidate();
-                }
-            }
-        } else if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
+        if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
                 Project.instance().addCyclicToSelectedBond(data.getIntExtra("EdgeNumber", 6), data.getBooleanExtra("OppositeSite", false));
                 mCanvasView.invalidate();

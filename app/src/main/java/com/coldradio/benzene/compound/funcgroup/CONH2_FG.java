@@ -17,7 +17,7 @@ public class CONH2_FG extends COOH_FG {
         super.getCompound().addAtom(o_with_h, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
         CompoundArranger.adjustHydrogenPosition(o_with_h);
 
-        o_with_h.lettering(true);
+        o_with_h.getAtomDecoration().lettering(true);
     }
 
     @Override

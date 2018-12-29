@@ -13,7 +13,6 @@ public class Atom {
     private int mAID;   // AID is valid only temporary. When merging two compounds into one, the uniqueness will be broken
     private AtomicNumber mAtomicNumber;
     private String mArbitraryName;
-    private boolean mLettering;
     private AtomDecoration mAtomDecoration = new AtomDecoration();
 
     private Bond findBond(Atom atom) {
@@ -35,7 +34,6 @@ public class Atom {
 
         copied.setPoint(mPoint);
         copied.mArbitraryName = mArbitraryName;
-        copied.mLettering = mLettering;
         copied.mAtomDecoration = mAtomDecoration.copy();
 
         return copied;
@@ -207,20 +205,6 @@ public class Atom {
         return Bond.BondType.NONE;
     }
 
-    public void lettering(boolean on) {
-        mLettering = on;
-
-        if (mAtomicNumber == AtomicNumber.C) {
-            CompoundArranger.showAllHydrogen(this, false);
-        } else {
-            CompoundArranger.showAllHydrogen(this, ! on);
-        }
-    }
-
-    public boolean isLettering() {
-        return mLettering;
-    }
-
     public boolean isVisible() {
         // returns whether the Atom is visible on the screen. Only H may be invisible
         // though AtomDecoration.ShowElementName returns false, the atom can be visible such as C
@@ -233,7 +217,7 @@ public class Atom {
     }
 
     public boolean isNameShown() {
-        return isLettering() || mAtomDecoration.getShowElementName();
+        return mAtomDecoration.isLettering() || mAtomDecoration.getShowElementName();
     }
 
     public void preSerialization() {

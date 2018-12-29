@@ -179,20 +179,6 @@ public class Project {
         }
     }
 
-    public void toggleShowHydrogen() {
-        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
-            CompoundArranger.toggleShowHydrogen(mElementSelector.getSelectedAtom());
-        }
-    }
-
-    public void toggleLettering() {
-        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
-            Atom selectedAtom = mElementSelector.getSelectedAtom();
-
-            selectedAtom.lettering(!selectedAtom.isLettering());
-        }
-    }
-
     public void preSerialization() {
         for (Compound compound : mCompoundList) {
             compound.preSerialization();
