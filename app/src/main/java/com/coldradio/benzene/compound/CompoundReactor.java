@@ -155,13 +155,26 @@ public class CompoundReactor {
     }
 
     public static void saturateWithHydrogen(Compound compound, Atom atom, int maxBounds) {
-        int curBounds = atom.getBonds().size();
+        int curBounds = CompoundInspector.numberOfBonds(atom);
 
         for (int ii = curBounds + 1; ii <= maxBounds; ++ii) {
             compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
         }
 
         CompoundArranger.adjustHydrogenPosition(atom);
+    }
+
+    public static void saturateWithHydrogen(Compound compound, AtomicNumber an, int maxBounds) {
+        List<Atom> targetAtom = new ArrayList<>();
+
+        for (Atom atom : compound.getAtoms()) {
+            if (atom.getAtomicNumber() == an)
+                targetAtom.add(atom);
+        }
+        // separated list is needed since saturateWithHydrogen() modifies the iterating list, that leads to undefined behavior
+        for (Atom atom : targetAtom) {
+            saturateWithHydrogen(compound, atom, maxBounds);
+        }
     }
 
     public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {

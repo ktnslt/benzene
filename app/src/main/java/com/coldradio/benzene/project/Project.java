@@ -270,4 +270,17 @@ public class Project {
             CompoundArranger.showAllHydrogen(atom, show);
         }
     }
+
+    public void saturateSelectedWithHydrogen(AtomicNumber an, int maxH) {
+        Compound compound = mElementSelector.getSelectedCompound();
+
+        if (mElementSelector.selection() == ElementSelector.Selection.COMPOUND) {
+            CompoundReactor.saturateWithHydrogen(compound, an, maxH);
+        } else if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            Atom atom = mElementSelector.getSelectedAtom();
+
+            if (atom.getAtomicNumber() == an)
+                CompoundReactor.saturateWithHydrogen(compound, atom, maxH);
+        }
+    }
 }

@@ -116,8 +116,8 @@ public class CompoundArranger {
         int boundSkeleton = CompoundInspector.numberOfBoundSkeletonAtoms(atom);
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
-        if (boundSkeleton == 1) {
-            // END of chain case
+        if (boundSkeleton == 1 || boundSkeleton == 3) {
+            // END of chain case or flat triangle
             PointF b_atom = atom.getSkeletonAtom().getPoint();
             int hNum = 1;
 

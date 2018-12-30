@@ -113,6 +113,23 @@ public class CompoundInspector {
         return hNum;
     }
 
+    public static int numberOfBonds(Atom atom) {
+        int numBonds = 0;
+
+        for (Bond bond : atom.getBonds()) {
+            Bond.BondType bondType = bond.getBondType();
+
+            if (bondType == Bond.BondType.SINGLE) {
+                numBonds++;
+            } else if (bondType == Bond.BondType.DOUBLE || bondType == Bond.BondType.DOUBLE_MIDDLE || bondType == Bond.BondType.DOUBLE_OTHER_SIDE) {
+                numBonds += 2;
+            } else if (bondType == Bond.BondType.TRIPLE) {
+                numBonds += 3;
+            }
+        }
+        return numBonds;
+    }
+
     public static Atom findBoundAtom(Atom atom, AtomCondition ac) {
         for (Bond bond : atom.getBonds()) {
             Atom boundAtom = bond.getBoundAtom();

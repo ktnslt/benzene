@@ -96,6 +96,8 @@ public class CanvasActivity extends AppCompatActivity {
 
         } else if (id == R.id.action_atom_deco) {
             startActivityForResult(new Intent("com.coldradio.benzene.ATOM_DECO"), ActivityRequestCode.ATOM_DECO_REQ.ordinal());
+        } else if (id == R.id.action_saturate_h) {
+            startActivity(new Intent("com.coldradio.benzene.SATURATE_H"));
         } else if (id == R.id.action_wedge_up) {
             Project.instance().bondAnnotation(true);
         } else if (id == R.id.action_wedge_down) {
