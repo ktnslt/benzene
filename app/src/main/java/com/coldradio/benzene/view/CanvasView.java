@@ -87,7 +87,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
-        } else {
+        } else if (! mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
             switch (maskedAction) {
@@ -108,7 +108,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                     mMoveSelectedElement = false;
                     break;
             }
-            mGestureDetector.onTouchEvent(event);
         }
 
         return true;

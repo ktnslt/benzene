@@ -78,7 +78,9 @@ public class ProjectFileManager {
     }
 
     public void savePreviewOnly(Project project, View view) {
-        ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+        if (project.getProjectFile().hasSavedFile()) {
+            ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+        }
     }
 
     public void load(String fileName, Project project) {

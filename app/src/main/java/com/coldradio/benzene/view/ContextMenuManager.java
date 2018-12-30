@@ -30,7 +30,7 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_atom_deco, false);
         showItem(mBottomToolbar, R.id.action_bond, false);
         showItem(mBottomToolbar, R.id.action_synthesize, false);
-        showItem(mBottomToolbar, R.id.action_trashcan, false);
+        showItem(mBottomToolbar, R.id.action_delete_selected, false);
         showItem(mBottomToolbar, R.id.action_select_by_rect, false);
         showItem(mBottomToolbar, R.id.action_select_by_finger, false);
         showItem(mBottomToolbar, R.id.action_coloring, false);
@@ -41,6 +41,7 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_wedge_down, false);
         showItem(mBottomToolbar, R.id.action_flip_bond, false);
         showItem(mBottomToolbar, R.id.action_saturate_h, false);
+        showItem(mBottomToolbar, R.id.action_show_h, false);
         return this;
     }
 
@@ -70,23 +71,25 @@ public class ContextMenuManager {
                 hideAll().
                         show(R.id.action_atom_deco).
                         show(R.id.action_synthesize).
-                        show(R.id.action_trashcan).
                         show(R.id.action_func_group).
-                        show(R.id.action_saturate_h);
+                        show(R.id.action_saturate_h).
+                        show(R.id.action_delete_selected);
                 break;
             case EDGE:
                 hideAll().
                         show(R.id.action_bond).
-                        show(R.id.action_trashcan).
                         show(R.id.action_add_cyclic_to_bond).
                         show(R.id.action_wedge_up).
                         show(R.id.action_wedge_down).
-                        show(R.id.action_flip_bond);
+                        show(R.id.action_flip_bond).
+                        show(R.id.action_delete_selected);
                 break;
             case COMPOUND:
                 hideAll().
-                        show(R.id.action_trashcan).
-                        show(R.id.action_coloring);
+                        show(R.id.action_coloring).
+                        show(R.id.action_delete_selected).
+                        show(R.id.action_saturate_h).
+                        show(R.id.action_show_h);
                 break;
             case NONE:
                 hideAll().

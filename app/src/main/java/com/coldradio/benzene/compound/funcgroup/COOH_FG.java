@@ -6,6 +6,7 @@ import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
+import com.coldradio.benzene.library.rule.RuleSet;
 
 public class COOH_FG extends COO_FG {
     public COOH_FG(Atom a_atom) {
@@ -19,8 +20,8 @@ public class COOH_FG extends COO_FG {
         super.getCompound().addAtom(o_minus, Bond.BondType.SINGLE, h);
         CompoundArranger.adjustHydrogenPosition(o_minus);
 
-        o_minus.getAtomDecoration().lettering(true);
         CompoundArranger.adjustHydrogenPosition(c1);
+        RuleSet.instance().apply(getCompound());
     }
 
     @Override

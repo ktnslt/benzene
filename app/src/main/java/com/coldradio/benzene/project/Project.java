@@ -264,4 +264,10 @@ public class Project {
             }
         }, fromAtom);
     }
+
+    public void showHydrogenForSelectedElement(boolean show) {
+        for (Atom atom : mElementSelector.getSelectedAsList()) {
+            CompoundArranger.showAllHydrogen(atom, show);
+        }
+    }
 }

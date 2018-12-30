@@ -68,28 +68,35 @@
     <item
         android:id="@+id/action_select_by_finger"
         android:orderInCategory="90"
-        android:title="Delete"
+        android:title="Finger Select"
         android:icon="@drawable/ic_menu_select_by_finger"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_show_h"
+        android:orderInCategory="93"
+        android:title="Show H"
+        android:icon="@drawable/ic_menu_show_h"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_coloring"
         android:orderInCategory="95"
-        android:title="Coloring"
+        android:title="Atom Coloring"
         android:icon="@drawable/ic_menu_coloring"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_add"
         android:orderInCategory="99"
-        android:title="Add"
+        android:title="Add Compound"
         android:icon="@drawable/ic_menu_add"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_func_group"
         android:orderInCategory="110"
-        android:title="Add"
+        android:title="Functional Group"
         android:icon="@drawable/ic_menu_func_group"
         android:visible="false"
         app:showAsAction="always" />
@@ -97,8 +104,16 @@
     <item
         android:id="@+id/action_add_cyclic_to_bond"
         android:orderInCategory="120"
-        android:title="Add"
+        android:title="Add Cyclo"
         android:icon="@drawable/ic_menu_add_cyclic_to_bond"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_delete_selected"
+        android:orderInCategory="130"
+        android:title="Delete"
+        android:icon="@drawable/ic_menu_trashcan"
         android:visible="false"
         app:showAsAction="always" />
 </menu>

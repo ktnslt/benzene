@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
@@ -81,7 +82,7 @@ public class CanvasActivity extends AppCompatActivity {
 
         } else if (id == R.id.action_undo) {
 
-        } else if (id == R.id.action_trashcan) {
+        } else if (id == R.id.action_delete_selected) {
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
@@ -101,6 +102,8 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().bondAnnotation(false);
         } else if (id == R.id.action_flip_bond) {
             mCanvasView.showFlipBondGuideLine(true);
+        } else if (id == R.id.action_show_h) {
+            Project.instance().showHydrogenForSelectedElement(! CompoundInspector.showAnyHydrogen(Project.instance().getElementSelector().getSelectedAsList()));
         } else if (id == android.R.id.home) {
             // Toolbar back Button
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);

@@ -128,6 +128,14 @@ public class ElementSelector {
         return mSelectedAtom;
     }
 
+    public List<Atom> getSelectedAsList() {
+        // TODO partially implemented at this time
+        if (mSelection == Selection.COMPOUND) {
+            return mSelectedCompound.getAtoms();
+        }
+        return null;
+    }
+
     public boolean moveSelectedElement(PointF distance) {
         // TODO: shall move both the Atom and Edge or anything selected
         if (mSelection == Selection.COMPOUND) {

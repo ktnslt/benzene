@@ -93,6 +93,14 @@ public class CompoundInspector {
         return false;
     }
 
+    public static boolean showAnyHydrogen(List<Atom> atomList) {
+        for (Atom atom : atomList) {
+            if (numberOfHydrogen(atom) > 0 && showAnyHydrogen(atom))
+                return true;
+        }
+        return false;
+    }
+
     public static int numberOfHydrogen(Atom atom) {
         int hNum = 0;
 
