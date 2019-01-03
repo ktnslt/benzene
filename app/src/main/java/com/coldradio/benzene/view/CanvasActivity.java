@@ -18,6 +18,7 @@ import com.coldradio.benzene.project.Project;
 
 public class CanvasActivity extends AppCompatActivity {
     private CanvasView mCanvasView;
+    private long mDeleteItemClickTime_ms;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +84,14 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_undo) {
 
         } else if (id == R.id.action_delete_selected) {
-            Project.instance().deleteSelectedElement();
+            long curTime_ms = System.currentTimeMillis();
+
+            if ((curTime_ms - mDeleteItemClickTime_ms) < 1500) {
+                Project.instance().deleteSelectedElement();
+            } else {
+                Notifier.instance().notification("One More to delete");
+            }
+            mDeleteItemClickTime_ms = curTime_ms;
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_func_group) {
