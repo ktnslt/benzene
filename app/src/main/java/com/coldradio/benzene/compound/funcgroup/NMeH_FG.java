@@ -16,6 +16,7 @@ public class NMeH_FG extends NMe2_FG {
         CompoundReactor.deleteAllHydrogen(super.getCompound(), c2);
         c2.setAtomicNumber(AtomicNumber.H);
         c2.setPoint(Geometry.pointInLine(c1.getPoint(), c2.getPoint(), Configuration.H_BOND_LENGTH_RATIO));
+        c1.getAtomDecoration().lettering(true);
     }
 
     @Override

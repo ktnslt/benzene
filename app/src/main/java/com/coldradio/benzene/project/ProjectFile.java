@@ -23,4 +23,8 @@ public class ProjectFile {
     public boolean hasSavedFile() {
         return mHasSavedFile;
     }
+
+    public void saved() {
+        mHasSavedFile = true;
+    }
 }

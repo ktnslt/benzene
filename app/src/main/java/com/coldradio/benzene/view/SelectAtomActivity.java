@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -32,9 +31,7 @@ public class SelectAtomActivity extends AppCompatActivity {
                     textView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            TextView selectedAtomTv = findViewById(R.id.selectedAtom);
-
-                            selectedAtomTv.setText(textView.getText());
+                            ((TextView)findViewById(R.id.selectedAtom)).setText(textView.getText());
                         }
                     });
                 }
@@ -70,25 +67,20 @@ public class SelectAtomActivity extends AppCompatActivity {
         });
 
         // attack listener to buttons
-        Button cancelBtn = findViewById(R.id.cancelBtn);
-
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.cancelBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        Button okBtn = findViewById(R.id.okBtn);
-
-        okBtn.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.okBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
                 TextView atomName = findViewById(R.id.selectedAtom);
 
                 if (atomName != null && atomName.getText().length() > 0) {
-                    data.putExtra("AtomName", atomName.getText());
+                    data.putExtra("AtomName", atomName.getText().toString());
                     setResult(RESULT_OK, data);
                     finish();
                 } else {

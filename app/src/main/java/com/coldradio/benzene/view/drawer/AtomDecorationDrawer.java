@@ -57,7 +57,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         xy = Geometry.cwRotate(xy, atomXY, (float) Math.toRadians(45 * (atom.getAtomDecoration().getMarker().ordinal() - 1)));
         xy.offset(0, 15);
 
-        TextDrawer.draw(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
+        DrawingLib.drawText(Character.toString(Configuration.ATOM_MARKER), xy, false, 0, canvas, paint);
     }
 
     private static void drawUnsharedElectron(Atom atom, Canvas canvas, Paint paint) {
@@ -128,13 +128,13 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         PointF xy = atom.getPoint();
 
         if (charge == 1) {
-            TextDrawer.drawSuperscript("+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript("+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
         } else if (charge == -1) {
-            TextDrawer.drawSuperscript("-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript("-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
         } else if (charge > 1) {
-            TextDrawer.drawSuperscript(String.valueOf(charge) + "+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript(String.valueOf(charge) + "+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
         } else if (charge < -1) {
-            TextDrawer.drawSuperscript(String.valueOf(-charge) + "-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript(String.valueOf(-charge) + "-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
         }
     }
 
@@ -158,8 +158,9 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
                 Paint paint = (Paint) args[1];
                 AtomDecoration atomDecoration = atom.getAtomDecoration();
 
-                if (atom.getAtomDecoration().getShowElementName() || atom.getAtomDecoration().isLettering()) {
-                    TextDrawer.draw(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
+                if (atomDecoration.getShowElementName() || atomDecoration.isLettering()
+                        || atom.getAtomicNumber() == AtomicNumber.TEXT) {
+                    DrawingLib.drawText(atomToString(atom), atom.getPoint(), true, Color.WHITE, canvas, paint);
                 }
                 if (atomDecoration.getMarker() != AtomDecoration.Marker.NONE) {
                     drawMarker(atom, canvas, paint);

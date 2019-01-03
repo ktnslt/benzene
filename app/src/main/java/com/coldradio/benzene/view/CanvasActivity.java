@@ -148,11 +148,12 @@ public class CanvasActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        ProjectFileManager.instance().save(Project.instance());
+        ProjectFileManager.instance().saveWithoutPreview(Project.instance());
     }
 
     @Override
     public void onBackPressed() {
+        // here Project file is not saved. Hence only preview is saved. the project file will be saved in onPause() that will be called later after this method
         ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
         super.onBackPressed();
     }

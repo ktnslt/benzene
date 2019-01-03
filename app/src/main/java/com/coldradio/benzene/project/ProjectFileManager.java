@@ -47,7 +47,7 @@ public class ProjectFileManager {
         mProjectFileRootDir = context.getFilesDir().getPath() + "/";
     }
 
-    public void save(Project project) {
+    public void saveWithoutPreview(Project project) {
         Writer writer = null;
 
         try {
@@ -66,6 +66,7 @@ public class ProjectFileManager {
             if (getProjectFile(projectFile.getName()) == null) {
                 mSavedProjects.add(projectFile);
             }
+            projectFile.saved();
         } catch (IOException ioe) {
             Notifier.instance().notification("Saving Errors");
         } finally {
@@ -78,9 +79,7 @@ public class ProjectFileManager {
     }
 
     public void savePreviewOnly(Project project, View view) {
-        if (project.getProjectFile().hasSavedFile()) {
-            ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
-        }
+        ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
     }
 
     public void load(String fileName, Project project) {

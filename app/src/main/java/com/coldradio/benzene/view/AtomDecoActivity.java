@@ -162,7 +162,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_select_element).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.CHANGE_ATOM_REQ.ordinal());
+                startActivityForResult(new Intent("com.coldradio.benzene.CHANGE_ATOM"), ActivityRequestCode.SELECT_ELEMENT_REQ.ordinal());
             }
         });
 
@@ -310,7 +310,7 @@ public class AtomDecoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ActivityRequestCode.CHANGE_ATOM_REQ.ordinal()) {
+        if (requestCode == ActivityRequestCode.SELECT_ELEMENT_REQ.ordinal()) {
             if (resultCode == RESULT_OK) {
                 String atomName = data.getStringExtra("AtomName");
 

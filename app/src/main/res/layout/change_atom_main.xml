@@ -27,7 +27,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="C"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="25sp"
@@ -987,29 +986,54 @@
                         android:background="#909090"/>
 
                     <TextView
+                        android:id="@+id/R1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:text="R1"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
 
                     <TextView
+                        android:id="@+id/R2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:text="R2"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
 
                     <TextView
+                        android:id="@+id/R3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:text="R3"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
 
                     <TextView
+                        android:id="@+id/R4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:text="R4"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
 
                     <TextView
+                        android:id="@+id/R5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:text="R5"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
 
                     <TextView
                         android:layout_width="wrap_content"
