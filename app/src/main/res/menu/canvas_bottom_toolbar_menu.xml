@@ -76,6 +76,7 @@
         android:id="@+id/action_show_h"
         android:orderInCategory="93"
         android:title="Show H"
+        android:visible="false"
         android:icon="@drawable/ic_menu_show_h"
         app:showAsAction="always" />
 

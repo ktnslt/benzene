@@ -72,10 +72,10 @@ public class Project {
     public boolean deleteSelectedElement() {
         switch (mElementSelector.selection()) {
             case ATOM:
-                mElementSelector.getSelectedCompound().delete(mElementSelector.getSelectedAtom());
+                mElementSelector.getSelectedCompound().deleteAndCutBonds(mElementSelector.getSelectedAtom());
                 break;
             case EDGE:
-                mElementSelector.getSelectedCompound().delete(mElementSelector.getSelectedEdge());
+                mElementSelector.getSelectedCompound().deleteBond(mElementSelector.getSelectedEdge());
                 break;
             case COMPOUND:
                 removeCompound(mElementSelector.getSelectedCompound());

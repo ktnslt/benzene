@@ -95,8 +95,8 @@ public class CompoundReactor {
         atoms[0].singleBond(atoms[lastAtom]);
 
         // delete H at first and the last
-        compound.delete(atoms[0].getHydrogen());
-        compound.delete(atoms[lastAtom].getHydrogen());
+        compound.deleteAndCutBonds(atoms[0].getHydrogen());
+        compound.deleteAndCutBonds(atoms[lastAtom].getHydrogen());
         // adjust position of C
         float interiorAngleOfPolygon = Geometry.interiorAngleOfPolygon(atoms.length);
 
@@ -117,8 +117,8 @@ public class CompoundReactor {
 
             atoms[ii].setBond(atoms[nextIndex], Bond.BondType.DOUBLE);
 
-            compound.delete(atoms[ii].getHydrogen());
-            compound.delete(atoms[nextIndex].getHydrogen());
+            compound.deleteAndCutBonds(atoms[ii].getHydrogen());
+            compound.deleteAndCutBonds(atoms[nextIndex].getHydrogen());
 
             CompoundArranger.adjustHydrogenPosition(atoms[ii]);
             CompoundArranger.adjustHydrogenPosition(atoms[nextIndex]);
@@ -129,7 +129,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
 
         for (Atom h : hydrogens) {
-            compound.delete(h);
+            compound.deleteAndCutBonds(h);
         }
     }
 
@@ -137,7 +137,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         for (Atom h : hydrogens) {
-            compound.delete(h);
+            compound.deleteAndCutBonds(h);
         }
     }
 
@@ -149,7 +149,7 @@ public class CompoundReactor {
         for (Atom h : hydrogens) {
             if (deleteNum >= hDeleteNum)
                 break;
-            compound.delete(h);
+            compound.deleteAndCutBonds(h);
             ++deleteNum;
         }
     }
@@ -157,11 +157,17 @@ public class CompoundReactor {
     public static void saturateWithHydrogen(Compound compound, Atom atom, int maxBounds) {
         int curBounds = CompoundInspector.numberOfBonds(atom);
 
-        for (int ii = curBounds + 1; ii <= maxBounds; ++ii) {
-            compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
+        if (curBounds > maxBounds) {
+            deleteHydrogen(compound, atom, curBounds - maxBounds);
+        } else {
+            for (int ii = curBounds + 1; ii <= maxBounds; ++ii) {
+                compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
+            }
         }
 
-        CompoundArranger.adjustHydrogenPosition(atom);
+        if (curBounds != maxBounds) {
+            CompoundArranger.adjustHydrogenPosition(atom);
+        }
     }
 
     public static void saturateWithHydrogen(Compound compound, AtomicNumber an, int maxBounds) {
@@ -222,7 +228,7 @@ public class CompoundReactor {
         Atom H = atom.getHydrogen();
 
         if (deleteHOfSelectedAtom && H != null) {
-            compound.delete(H);
+            compound.deleteAndCutBonds(H);
             CompoundArranger.adjustHydrogenPosition(atom);
         }
     }

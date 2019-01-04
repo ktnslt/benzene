@@ -1,9 +1,28 @@
 package com.coldradio.benzene.compound;
 
+import com.coldradio.benzene.util.TreeTraveler;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundInspector {
+    private static Compound splitOne(Compound compound) {
+        final Compound splitCompound = new Compound();
+
+        TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
+            @Override
+            public boolean visit(Atom atom, Object... args) {
+                splitCompound.addAtom(atom);
+                return false;
+            }
+        }, compound.getAtoms().get(0));
+
+        // compound's atom cannot be deleted above since it iterates through it
+        compound.justRemoveAtoms(splitCompound);
+
+        return splitCompound;
+    }
+
     public static Atom returnCarbonIfC1Hn(Compound compound) {
         int carbon = 0;
         Atom c = null;
@@ -138,5 +157,15 @@ public class CompoundInspector {
                 return boundAtom;
         }
         return null;
+    }
+
+    public static List<Compound> split(Compound compound) {
+        List<Compound> splitCompounds = new ArrayList<>();
+
+        while (compound.size() > 0) {
+            splitCompounds.add(splitOne(compound));
+        }
+
+        return splitCompounds;
     }
 }

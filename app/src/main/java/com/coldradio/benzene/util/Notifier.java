@@ -6,6 +6,7 @@ import android.widget.Toast;
 public class Notifier {
     private Context mContext;
     private static Notifier smInstance = new Notifier();
+    Toast mToastMessage;
 
     public static Notifier instance() {
         return smInstance;
@@ -17,7 +18,14 @@ public class Notifier {
 
     public void notification(String msg) {
         if (mContext != null) {
-            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            mToastMessage = Toast.makeText(mContext, msg, Toast.LENGTH_SHORT);
+            mToastMessage.show();
+        }
+    }
+
+    public void cancel() {
+        if (mToastMessage != null) {
+            mToastMessage.cancel();
         }
     }
 }

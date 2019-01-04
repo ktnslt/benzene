@@ -97,7 +97,10 @@ public class TreeTraveler {
     }
 
     public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Atom atom, Object... args) {
-        // this does NOT test the atom itself
+        if (atomVisitor.visit(atom, args)) {
+            return atom;
+        }
+
         HashSet<Atom> visitedAtom = new HashSet<>();
 
         visitedAtom.add(atom);

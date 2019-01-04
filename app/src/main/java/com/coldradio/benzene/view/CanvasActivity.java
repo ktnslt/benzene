@@ -87,9 +87,10 @@ public class CanvasActivity extends AppCompatActivity {
             long curTime_ms = System.currentTimeMillis();
 
             if ((curTime_ms - mDeleteItemClickTime_ms) < 1500) {
+                Notifier.instance().cancel();
                 Project.instance().deleteSelectedElement();
             } else {
-                Notifier.instance().notification("One More to delete");
+                Notifier.instance().notification("Click again to delete");
             }
             mDeleteItemClickTime_ms = curTime_ms;
         } else if (id == R.id.action_add) {
