@@ -38,4 +38,11 @@ public class RuleSet {
         }
         return compound;
     }
+
+    public List<Compound> apply(List<Compound> compounds) {
+        for (Compound c : compounds)
+            apply(c);
+
+        return compounds;
+    }
 }

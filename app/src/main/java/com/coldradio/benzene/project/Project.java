@@ -41,6 +41,10 @@ public class Project {
         mElementSelector.selectCompound(compound);
     }
 
+    public void addCompounds(List<Compound> compounds) {
+        mCompoundList.addAll(compounds);
+    }
+
     public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
             CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, oppositeSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
@@ -59,23 +63,20 @@ public class Project {
         return mElementSelector.tryToSelect(point, Collections.unmodifiableList(mCompoundList));
     }
 
-    public boolean removeCompound(Compound compound) {
-        for (Iterator<Compound> it = mCompoundList.iterator(); it.hasNext(); ) {
-            if (compound == it.next()) {
-                it.remove();
-                return true;
-            }
+    public void removeCompound(Compound compound) {
+        if (mElementSelector.getSelectedCompound() == compound) {
+            mElementSelector.reset();
         }
-        return false;
+        mCompoundList.remove(compound);
     }
 
     public boolean deleteSelectedElement() {
         switch (mElementSelector.selection()) {
             case ATOM:
-                mElementSelector.getSelectedCompound().deleteAndCutBonds(mElementSelector.getSelectedAtom());
+                CompoundReactor.deleteAndCutBonds(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom());
                 break;
             case EDGE:
-                mElementSelector.getSelectedCompound().deleteBond(mElementSelector.getSelectedEdge());
+                CompoundReactor.deleteBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge());
                 break;
             case COMPOUND:
                 removeCompound(mElementSelector.getSelectedCompound());

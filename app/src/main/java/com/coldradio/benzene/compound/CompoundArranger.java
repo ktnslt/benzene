@@ -116,15 +116,7 @@ public class CompoundArranger {
         int boundSkeleton = CompoundInspector.numberOfBoundSkeletonAtoms(atom);
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
-        if (boundSkeleton == 1 || boundSkeleton == 3) {
-            // END of chain case or flat triangle
-            PointF b_atom = atom.getSkeletonAtom().getPoint();
-            int hNum = 1;
-
-            for (Atom h : hydrogens) {
-                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), b_atom, hNum++));
-            }
-        } else if (boundSkeleton == 2) {
+        if (boundSkeleton == 2) {
             // Bent form
             Atom b1_atom = atom.getSkeletonAtom();
             Atom b2_atom = atom.getSkeletonAtomExcept(b1_atom);
@@ -137,6 +129,22 @@ public class CompoundArranger {
                 } else {
                     h.setPoint(hydrogenPointOfBentForm(atom.getPoint(), b1_atom.getPoint(), b2_atom.getPoint(), hNum++));
                 }
+            }
+        } else if (boundSkeleton == 0) {
+            // CH4
+            int hNum = 1;
+            PointF initPoint = new PointF(atom.getPoint().x, atom.getPoint().y + Configuration.BOND_LENGTH);
+
+            for (Atom h : hydrogens) {
+                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), initPoint, hNum++));
+            }
+        } else {
+            // END of chain case, flat triangle, etc.
+            PointF b_atom = atom.getSkeletonAtom().getPoint();
+            int hNum = 1;
+
+            for (Atom h : hydrogens) {
+                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), b_atom, hNum++));
             }
         }
     }

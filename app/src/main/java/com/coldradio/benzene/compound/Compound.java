@@ -141,34 +141,8 @@ public class Compound {
         }
     }
 
-    public void deleteBond(Edge edge) {
-        edge.first.cutBond(edge.second);
-    }
-
-    public void deleteAndCutBonds(Atom atom) {
-        int origBondNumber = atom.bondNumber();
-
-        CompoundReactor.deleteAllHydrogen(this, atom);
-        // cut all bonds - iterating bonds doesn't work due to the concurrent modification
-        //        for (Bond bond : atom.getBonds())
-        //            atom.cutBond(bond.getBoundAtom());
-        for (Atom other : mAtoms) {
-            if (other != atom) {
-                other.cutBond(atom);
-            }
-        }
-        // delete atom
+    public void removeAtom(Atom atom) {
         mAtoms.remove(atom);
-        // when deleting a atom, the compound may be split into multiple compound
-        if (origBondNumber > 1) {
-            CompoundInspector.split(this);
-        }
-    }
-
-    public void justRemoveAtoms(Compound compound) {
-        for (Atom atom : compound.getAtoms()) {
-            mAtoms.remove(atom);
-        }
     }
 
     public void preSerialization() {

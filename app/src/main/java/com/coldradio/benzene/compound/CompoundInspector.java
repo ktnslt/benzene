@@ -18,7 +18,9 @@ public class CompoundInspector {
         }, compound.getAtoms().get(0));
 
         // compound's atom cannot be deleted above since it iterates through it
-        compound.justRemoveAtoms(splitCompound);
+        for (Atom atom : splitCompound.getAtoms()) {
+            compound.removeAtom(atom);
+        }
 
         return splitCompound;
     }

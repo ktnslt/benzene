@@ -4,6 +4,8 @@ import android.graphics.PointF;
 import android.util.Pair;
 
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
+import com.coldradio.benzene.library.rule.RuleSet;
+import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MathConstant;
 
@@ -42,6 +44,11 @@ public class CompoundReactor {
         }
 
         mSynthesisSource = null;
+    }
+
+    private static void splitAndUpdateProject(Compound compound) {
+        Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound)));
+        Project.instance().removeCompound(compound);
     }
 
     public static Compound chainCompound(PointF[] points) {
@@ -95,8 +102,8 @@ public class CompoundReactor {
         atoms[0].singleBond(atoms[lastAtom]);
 
         // delete H at first and the last
-        compound.deleteAndCutBonds(atoms[0].getHydrogen());
-        compound.deleteAndCutBonds(atoms[lastAtom].getHydrogen());
+        CompoundReactor.deleteAndCutBonds(compound, atoms[0].getHydrogen());
+        CompoundReactor.deleteAndCutBonds(compound, atoms[lastAtom].getHydrogen());
         // adjust position of C
         float interiorAngleOfPolygon = Geometry.interiorAngleOfPolygon(atoms.length);
 
@@ -117,8 +124,8 @@ public class CompoundReactor {
 
             atoms[ii].setBond(atoms[nextIndex], Bond.BondType.DOUBLE);
 
-            compound.deleteAndCutBonds(atoms[ii].getHydrogen());
-            compound.deleteAndCutBonds(atoms[nextIndex].getHydrogen());
+            CompoundReactor.deleteAndCutBonds(compound, atoms[ii].getHydrogen());
+            CompoundReactor.deleteAndCutBonds(compound, atoms[nextIndex].getHydrogen());
 
             CompoundArranger.adjustHydrogenPosition(atoms[ii]);
             CompoundArranger.adjustHydrogenPosition(atoms[nextIndex]);
@@ -129,7 +136,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
 
         for (Atom h : hydrogens) {
-            compound.deleteAndCutBonds(h);
+            CompoundReactor.deleteAndCutBonds(compound, h);
         }
     }
 
@@ -137,7 +144,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         for (Atom h : hydrogens) {
-            compound.deleteAndCutBonds(h);
+            CompoundReactor.deleteAndCutBonds(compound, h);
         }
     }
 
@@ -149,7 +156,7 @@ public class CompoundReactor {
         for (Atom h : hydrogens) {
             if (deleteNum >= hDeleteNum)
                 break;
-            compound.deleteAndCutBonds(h);
+            CompoundReactor.deleteAndCutBonds(compound, h);
             ++deleteNum;
         }
     }
@@ -161,7 +168,10 @@ public class CompoundReactor {
             deleteHydrogen(compound, atom, curBounds - maxBounds);
         } else {
             for (int ii = curBounds + 1; ii <= maxBounds; ++ii) {
-                compound.addAtom(atom, Bond.BondType.SINGLE, new Atom(-1, AtomicNumber.H));
+                Atom H = new Atom(-1, AtomicNumber.H);
+
+                H.getAtomDecoration().setShowElementName(false);
+                compound.addAtom(atom, Bond.BondType.SINGLE, H);
             }
         }
 
@@ -228,8 +238,33 @@ public class CompoundReactor {
         Atom H = atom.getHydrogen();
 
         if (deleteHOfSelectedAtom && H != null) {
-            compound.deleteAndCutBonds(H);
+            deleteAndCutBonds(compound, H);
             CompoundArranger.adjustHydrogenPosition(atom);
+        }
+    }
+
+    public static void deleteBond(Compound compound, Edge edge) {
+        edge.first.cutBond(edge.second);
+        splitAndUpdateProject(compound);
+    }
+
+    public static void deleteAndCutBonds(Compound compound, Atom atom) {
+        int origBondNumber = atom.bondNumber();
+
+        CompoundReactor.deleteAllHydrogen(compound, atom);
+        // cut all bonds - iterating bonds doesn't work due to the concurrent modification
+        //        for (Bond bond : atom.getBonds())
+        //            atom.cutBond(bond.getBoundAtom());
+        for (Atom other : compound.getAtoms()) {
+            if (other != atom) {
+                other.cutBond(atom);
+            }
+        }
+        // delete atom
+        compound.removeAtom(atom);
+        // when deleting a atom, the compound may be split into multiple compound
+        if (origBondNumber > 1) {
+            splitAndUpdateProject(compound);
         }
     }
 }
