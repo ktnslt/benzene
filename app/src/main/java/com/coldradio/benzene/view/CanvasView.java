@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
@@ -40,14 +41,14 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mSelectedElementAccessoryDrawer = new SelectedElementAccessoryDrawer(getResources().getDrawable(R.drawable.ic_menu_flip_bond));
 
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        mContextMenuManager = new ContextMenuManager((Toolbar)activity.findViewById(R.id.canvas_top_toolbar),
-                (Toolbar)activity.findViewById(R.id.canvas_bottom_toolbar));
+        mContextMenuManager = new ContextMenuManager((Toolbar) activity.findViewById(R.id.canvas_top_toolbar),
+                (Toolbar) activity.findViewById(R.id.canvas_bottom_toolbar));
 
         // register drawer
-        mDrawerManager.addPreCompoundDrawer(new SelectedRegionDrawer());
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
+        mDrawerManager.addPostCompoundDrawer(new SelectedRegionDrawer());
 
         // When View is created, the default x, y are 0, hence reset Screen's x and y
         ScreenInfo.instance().setScreenXY((int) getX(), (int) getY());
@@ -92,7 +93,9 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
-        } else if (! mGestureDetector.onTouchEvent(event)) {
+        } else if (Project.instance().getElementSelector().onTouchEvent(mActualClickedPosition, event.getAction())) {
+            invalidate();
+        } else if (!mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
             switch (maskedAction) {
@@ -102,7 +105,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                             if (Project.instance().synthesize(mActualClickedPosition))
                                 invalidate();
                         } else {
-                            if (! mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
+                            if (!mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
                                 Project.instance().select(mActualClickedPosition);
                                 updateContextMenu();
                                 invalidate(); // invalidate also for the de-select case
@@ -146,8 +149,8 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         pmScrollDistance.set(-distanceX, -distanceY);
         mScrolledAfterSelected = true;
 
-        if (mMoveSelectedElement && Project.instance().hasSelectedElement()) {
-            Project.instance().moveSelectedElement(pmScrollDistance);
+        if (mMoveSelectedElement && Project.instance().getElementSelector().selection() != ElementSelector.Selection.NONE) {
+            Project.instance().getElementSelector().moveSelectedElement(pmScrollDistance);
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);
@@ -174,7 +177,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (!Project.instance().getElementSelector().isAnySelected(mActualClickedPosition)) {
+        if (!Project.instance().getElementSelector().canSelectAny(mActualClickedPosition)) {
             toCenter();
         }
 

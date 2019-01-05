@@ -1,36 +1,29 @@
 package com.coldradio.benzene.project;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.ScreenInfo;
 
 public class RectSelector implements IRegionSelector {
     enum MarkerIndex {
-        LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM, WHOLE_RECT, NONE_TOUCHED_DOWN
+        LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM, NONE
     }
 
     private PointF[] mMarkers = new PointF[4];
-    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private MarkerIndex mSelectedMarkerIndex = MarkerIndex.NONE_TOUCHED_DOWN;
-    private PointF mPrevPoint = new PointF();
+    private MarkerIndex mSelectedMarkerIndex = MarkerIndex.NONE;
 
-    private void drawVertexMarker(Canvas canvas) {
-        int CIRCLE_RADIUS = 20;
+    private void reorderMarkerPoint() {
 
-        for (int ii = 0; ii < mMarkers.length; ++ii) {
-            canvas.drawCircle(mMarkers[ii].x, mMarkers[ii].y, CIRCLE_RADIUS, mPaint);
-        }
     }
 
-    private RectF selectedRegionAsRect() {
-        int lt_ii = MarkerIndex.LEFT_TOP.ordinal(), rb_ii = MarkerIndex.RIGHT_BOTTOM.ordinal();
-
-        return new RectF(mMarkers[lt_ii].x, mMarkers[lt_ii].y, mMarkers[rb_ii].x, mMarkers[rb_ii].y);
+    private void drawVertexMarker(Canvas canvas, Paint paint) {
+        for (int ii = 0; ii < mMarkers.length; ++ii) {
+            canvas.drawCircle(mMarkers[ii].x, mMarkers[ii].y, Configuration.SELECT_RANGE, paint);
+        }
     }
 
     private MarkerIndex selectMarker(PointF point) {
@@ -40,77 +33,83 @@ public class RectSelector implements IRegionSelector {
             }
         }
 
-        return MarkerIndex.NONE_TOUCHED_DOWN;
+        return MarkerIndex.NONE;
     }
 
-    public RectSelector(PointF point) {
-        mPaint.setColor(Color.argb(80, 0, 100, 255));
-        mPaint.setStyle(Paint.Style.FILL);
-
+    public RectSelector() {
         for (int ii = 0; ii < mMarkers.length; ++ii) {
             mMarkers[ii] = new PointF();
         }
 
-        mMarkers[MarkerIndex.LEFT_TOP.ordinal()].set(point);
-        mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].set(point.x + Configuration.INITIAL_REGION_SIZE, point.y);
-        mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].set(point.x, point.y + Configuration.INITIAL_REGION_SIZE);
-        mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].set(point.x + Configuration.INITIAL_REGION_SIZE, point.y + Configuration.INITIAL_REGION_SIZE);
+        PointF center = ScreenInfo.instance().centerPoint();
+        int shift = Configuration.INITIAL_REGION_SIZE;
+
+        mMarkers[MarkerIndex.LEFT_TOP.ordinal()].set(center.x - shift, center.y - shift);
+        mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].set(center.x + shift, center.y - shift);
+        mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].set(center.x - shift, center.y + shift);
+        mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].set(center.x + shift, center.y + shift);
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, Paint paint) {
+        Paint.Style origStyle = paint.getStyle();
+
+        paint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x, mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y,
-                mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x, mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y, mPaint);
-        drawVertexMarker(canvas);
+                mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x, mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y, paint);
+        paint.setStyle(origStyle);
+
+        drawVertexMarker(canvas, paint);
     }
 
     @Override
     public boolean onTouchEvent(PointF point, int touchAction) {
-        if (touchAction == MotionEvent.ACTION_DOWN) {
-            mSelectedMarkerIndex = selectMarker(point);
-
-            if (mSelectedMarkerIndex == MarkerIndex.NONE_TOUCHED_DOWN && selectedRegionAsRect().contains(point.x, point.y)) {
-                mSelectedMarkerIndex = MarkerIndex.WHOLE_RECT;
-            }
-            mPrevPoint.set(point);
+        if (touchAction == MotionEvent.ACTION_DOWN
+                && (mSelectedMarkerIndex = selectMarker(point)) != MarkerIndex.NONE) {
+            // empty body. just set mSelectedMarkerIndex
         } else if (touchAction == MotionEvent.ACTION_UP) {
-            mSelectedMarkerIndex = MarkerIndex.NONE_TOUCHED_DOWN;
-        } else if (touchAction == MotionEvent.ACTION_MOVE && mSelectedMarkerIndex == MarkerIndex.WHOLE_RECT) {
-            for (PointF marker : mMarkers) {
-                marker.offset(point.x - mPrevPoint.x, point.y - mPrevPoint.y);
-            }
-            mPrevPoint.set(point);
-        } else if (touchAction == MotionEvent.ACTION_MOVE && mSelectedMarkerIndex != MarkerIndex.NONE_TOUCHED_DOWN) {
-            int markerIndex = mSelectedMarkerIndex.ordinal();
+            mSelectedMarkerIndex = MarkerIndex.NONE;
+        } else if (touchAction == MotionEvent.ACTION_MOVE && mSelectedMarkerIndex != MarkerIndex.NONE) {
+            int ind = mSelectedMarkerIndex.ordinal();
 
-            mMarkers[markerIndex].set(point);
+            mMarkers[ind].set(point);
             switch (mSelectedMarkerIndex) {
                 case LEFT_TOP:
-                    mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].y = mMarkers[markerIndex].y;
-                    mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].x = mMarkers[markerIndex].x;
+                    mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].y = mMarkers[ind].y;
+                    mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].x = mMarkers[ind].x;
                     break;
                 case RIGHT_TOP:
-                    mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y = mMarkers[markerIndex].y;
-                    mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x = mMarkers[markerIndex].x;
+                    mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y = mMarkers[ind].y;
+                    mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x = mMarkers[ind].x;
                     break;
                 case LEFT_BOTTOM:
-                    mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y = mMarkers[markerIndex].y;
-                    mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x = mMarkers[markerIndex].x;
+                    mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y = mMarkers[ind].y;
+                    mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x = mMarkers[ind].x;
                     break;
                 case RIGHT_BOTTOM:
-                    mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].y = mMarkers[markerIndex].y;
-                    mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].x = mMarkers[markerIndex].x;
+                    mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].y = mMarkers[ind].y;
+                    mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].x = mMarkers[ind].x;
                     break;
             }
         } else {
             return false;
         }
 
+        reorderMarkerPoint();
         return true;
     }
 
     @Override
     public boolean contains(PointF point) {
-        return selectedRegionAsRect().contains(point.x, point.y);
+        return mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x < point.x && mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y < point.y
+                && point.x < mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x && point.y < mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y;
+    }
+
+    @Override
+    public boolean move(float dx, float dy) {
+        for (int ii = 0; ii < mMarkers.length; ++ii) {
+            mMarkers[ii].offset(dx, dy);
+        }
+        return true;
     }
 }

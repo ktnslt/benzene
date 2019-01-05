@@ -17,13 +17,11 @@ import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
-    private IRegionSelector mRegionSelector;    // TODO move to ElementSelector
     private ElementSelector mElementSelector = new ElementSelector();
     private Compound mCopiedCompound;
     private ProjectFile mProjectFile;
@@ -69,7 +67,7 @@ public class Project {
     public boolean deleteSelectedElement() {
         switch (mElementSelector.selection()) {
             case ATOM:
-                CompoundReactor.deleteAndCutBonds(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom());
+                CompoundReactor.deleteAtom(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom());
                 break;
             case EDGE:
                 CompoundReactor.deleteBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge());
@@ -77,7 +75,10 @@ public class Project {
             case COMPOUND:
                 removeCompound(mElementSelector.getSelectedCompound());
                 break;
-            case NONE:
+            case PARTIAL:
+                CompoundReactor.deleteAtoms(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAsList());
+                break;
+            default:
                 return false;
         }
         mElementSelector.reset();
@@ -107,22 +108,6 @@ public class Project {
         return false;
     }
 
-    public boolean regionSelect(PointF point, int touchAction) {
-        if (touchAction < 0) {
-            // long pressed, initiate region selection
-            mRegionSelector = new RectSelector(point);
-            return true;
-        } else if (mRegionSelector != null) {
-            return mRegionSelector.onTouchEvent(point, touchAction);
-        }
-
-        return false;
-    }
-
-    public boolean isSelectingRegion() {
-        return mRegionSelector != null;
-    }
-
     public PointF centerOfAllCompounds() {
         if (mCompoundList.size() > 0) {
             RectF allRegion = mCompoundList.get(0).rectRegion();
@@ -139,20 +124,8 @@ public class Project {
         }
     }
 
-    public boolean moveSelectedElement(PointF distance) {
-        return mElementSelector.moveSelectedElement(distance);
-    }
-
-    public boolean hasSelectedElement() {
-        return mElementSelector.hasSelectedElement();
-    }
-
     public boolean rotateSelectedCompound(PointF point, int action) {
         return mElementSelector.rotateSelectedCompound(point, action);
-    }
-
-    public IRegionSelector getRegionSelector() {
-        return mRegionSelector;
     }
 
     public void copySelectedCompound() {
@@ -203,10 +176,8 @@ public class Project {
     }
 
     public void createFromFile(List<Compound> compounds, ProjectFile projectFile) {
-        mCompoundList.clear();
+        createNew(projectFile);
         mCompoundList = compounds;
-        mElementSelector.reset();
-        mProjectFile = projectFile;
     }
 
     public ProjectFile getProjectFile() {

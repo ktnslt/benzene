@@ -37,7 +37,7 @@ public class PaintSet {
         mPaints[ii].setStrokeWidth(Configuration.BOND_THICKNESS * 7);
         mPaints[ii].setStrokeCap(Paint.Cap.ROUND);
         mPaints[ii].setStyle(Paint.Style.STROKE);
-        mPaints[ii].setColor(Color.rgb(140, 180, 250));
+        mPaints[ii].setARGB(180, 140, 180, 250);
         mPaints[ii].getTextBounds("O", 0, 1, mTextBounds[ii]);
 
         // GUIDE_LINE

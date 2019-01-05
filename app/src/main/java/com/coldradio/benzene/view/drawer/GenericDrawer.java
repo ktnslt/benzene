@@ -131,14 +131,23 @@ public class GenericDrawer {
 
     public static boolean draw(Compound compound, Canvas canvas, Paint paint) {
         // draw edges
+        return draw(compound, null, canvas, paint);
+    }
+
+    public static boolean draw(Compound compound, TreeTraveler.IEdgeVisitor condition, Canvas canvas, Paint paint) {
+        // draw edges
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
+                TreeTraveler.IEdgeVisitor condition = (TreeTraveler.IEdgeVisitor) args[0];
+
                 if (! a1.isVisible() || ! a2.isVisible())
                     return false;
+                if (condition != null && ! condition.visit(a1, a2))
+                    return false;
 
-                Canvas canvas = (Canvas) args[0];
-                Paint paint = (Paint) args[1];
+                Canvas canvas = (Canvas) args[1];
+                Paint paint = (Paint) args[2];
                 PointF p1 = a1.getPoint(), p2 = a2.getPoint();
 
                 switch (a1.getBondType(a2)) {
@@ -178,7 +187,7 @@ public class GenericDrawer {
                 }
                 return false;
             }
-        }, compound, canvas, paint);
+        }, compound, condition, canvas, paint);
 
         return true;
     }

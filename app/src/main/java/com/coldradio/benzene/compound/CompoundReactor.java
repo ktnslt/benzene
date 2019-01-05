@@ -18,6 +18,20 @@ public class CompoundReactor {
         Project.instance().removeCompound(compound);
     }
 
+    private static void deleteAtomWithoutSplitting(Compound compound, Atom atom) {
+        CompoundReactor.deleteAllHydrogen(compound, atom);
+        // cut all bonds - iterating bonds doesn't work due to the concurrent modification
+        //        for (Bond bond : atom.getBonds())
+        //            atom.cutBond(bond.getBoundAtom());
+        for (Atom other : compound.getAtoms()) {
+            if (other != atom) {
+                other.cutBond(atom);
+            }
+        }
+        // delete atom
+        compound.removeAtom(atom);
+    }
+
     public static Compound chainCompound(PointF[] points) {
         List<Atom> atoms = new ArrayList<>();
 
@@ -57,8 +71,8 @@ public class CompoundReactor {
         atoms[0].singleBond(atoms[lastAtom]);
 
         // delete H at first and the last
-        CompoundReactor.deleteAndCutBonds(compound, atoms[0].getHydrogen());
-        CompoundReactor.deleteAndCutBonds(compound, atoms[lastAtom].getHydrogen());
+        CompoundReactor.deleteAtom(compound, atoms[0].getHydrogen());
+        CompoundReactor.deleteAtom(compound, atoms[lastAtom].getHydrogen());
         // adjust position of C
         float interiorAngleOfPolygon = Geometry.interiorAngleOfPolygon(atoms.length);
 
@@ -79,8 +93,8 @@ public class CompoundReactor {
 
             atoms[ii].setBond(atoms[nextIndex], Bond.BondType.DOUBLE);
 
-            CompoundReactor.deleteAndCutBonds(compound, atoms[ii].getHydrogen());
-            CompoundReactor.deleteAndCutBonds(compound, atoms[nextIndex].getHydrogen());
+            CompoundReactor.deleteAtom(compound, atoms[ii].getHydrogen());
+            CompoundReactor.deleteAtom(compound, atoms[nextIndex].getHydrogen());
 
             CompoundArranger.adjustHydrogenPosition(atoms[ii]);
             CompoundArranger.adjustHydrogenPosition(atoms[nextIndex]);
@@ -91,7 +105,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
 
         for (Atom h : hydrogens) {
-            CompoundReactor.deleteAndCutBonds(compound, h);
+            CompoundReactor.deleteAtom(compound, h);
         }
     }
 
@@ -99,7 +113,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         for (Atom h : hydrogens) {
-            CompoundReactor.deleteAndCutBonds(compound, h);
+            CompoundReactor.deleteAtom(compound, h);
         }
     }
 
@@ -111,7 +125,7 @@ public class CompoundReactor {
         for (Atom h : hydrogens) {
             if (deleteNum >= hDeleteNum)
                 break;
-            CompoundReactor.deleteAndCutBonds(compound, h);
+            CompoundReactor.deleteAtom(compound, h);
             ++deleteNum;
         }
     }
@@ -193,7 +207,7 @@ public class CompoundReactor {
         Atom H = atom.getHydrogen();
 
         if (deleteHOfSelectedAtom && H != null) {
-            deleteAndCutBonds(compound, H);
+            deleteAtom(compound, H);
             CompoundArranger.adjustHydrogenPosition(atom);
         }
     }
@@ -203,23 +217,21 @@ public class CompoundReactor {
         splitAndUpdateProject(compound);
     }
 
-    public static void deleteAndCutBonds(Compound compound, Atom atom) {
+    public static void deleteAtom(Compound compound, Atom atom) {
         int origBondNumber = atom.bondNumber();
 
-        CompoundReactor.deleteAllHydrogen(compound, atom);
-        // cut all bonds - iterating bonds doesn't work due to the concurrent modification
-        //        for (Bond bond : atom.getBonds())
-        //            atom.cutBond(bond.getBoundAtom());
-        for (Atom other : compound.getAtoms()) {
-            if (other != atom) {
-                other.cutBond(atom);
-            }
-        }
-        // delete atom
-        compound.removeAtom(atom);
+        deleteAtomWithoutSplitting(compound, atom);
         // when deleting a atom, the compound may be split into multiple compound
         if (origBondNumber > 1) {
             splitAndUpdateProject(compound);
         }
+    }
+
+    public static void deleteAtoms(Compound compound, List<Atom> atoms) {
+        for (Atom atom : atoms) {
+            // deleteAtom(compound, atom); this is not working since compound will be deleted at the first iteration
+            deleteAtomWithoutSplitting(compound, atom);
+        }
+        splitAndUpdateProject(compound);
     }
 }

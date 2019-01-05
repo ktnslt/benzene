@@ -10,7 +10,7 @@ public class NMe2_FG extends IsoPropyl_FG {
 
         Atom c1 = super.appendAtom();
 
-        CompoundReactor.deleteAndCutBonds(super.getCompound(), c1.getHydrogen());
+        CompoundReactor.deleteAtom(super.getCompound(), c1.getHydrogen());
 
         c1.setAtomicNumber(AtomicNumber.N);
     }

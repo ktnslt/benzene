@@ -91,6 +91,12 @@ public class ContextMenuManager {
                         show(R.id.action_saturate_h).
                         show(R.id.action_show_h);
                 break;
+            case PARTIAL:
+                hideAll().
+                        show(R.id.action_delete_selected).
+                        show(R.id.action_saturate_h).
+                        show(R.id.action_show_h);
+                break;
             case NONE:
                 hideAll().
                         show(R.id.action_select_by_rect).

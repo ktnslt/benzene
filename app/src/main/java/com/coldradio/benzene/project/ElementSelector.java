@@ -12,11 +12,12 @@ import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MutablePair;
 import com.coldradio.benzene.util.TreeTraveler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElementSelector {
     public enum Selection {
-        NONE, ATOM, EDGE, COMPOUND
+        NONE, ATOM, EDGE, COMPOUND, PARTIAL
     }
 
     private Selection mSelection = Selection.NONE;
@@ -25,6 +26,8 @@ public class ElementSelector {
     private Compound mSelectedCompound;     // the selected compound or the compound that the selected Atom belongs to
     private PointF mRotationPivotPoint = new PointF();
     private boolean mIsRotating = false;
+    private IRegionSelector mRegionSelector;
+    private List<Atom> mSelectedAtomList = new ArrayList<>();
 
     private static Pair<Object, Float> selectEdge(PointF point, Compound compound) {
         MutablePair<Object, Float> selectedEdge = MutablePair.create(null, (float) Configuration.SELECT_RANGE);
@@ -75,6 +78,25 @@ public class ElementSelector {
         return Geometry.distanceFromPointToPoint(mRotationPivotPoint, point) < Configuration.ROTATION_PIVOT_SIZE;
     }
 
+    private void updateSelectedAtoms() {
+        mSelectedAtomList.clear();
+
+        if (selection() == Selection.PARTIAL) {
+            for (Compound compound : Project.instance().getCompounds()) {
+                for (Atom atom : compound.getAtoms()) {
+                    if (atom.isVisible() && mRegionSelector.contains(atom.getPoint())) {
+                        mSelectedAtomList.add(atom);
+                    }
+                }
+            }
+        } else if (selection() == Selection.ATOM) {
+            mSelectedAtomList.add(mSelectedAtom);
+        } else if (selection() == Selection.EDGE) {
+            mSelectedAtomList.add(mSelectedEdge.first);
+            mSelectedAtomList.add(mSelectedEdge.second);
+        }
+    }
+
     public static Pair<Object, Compound> getSelectedElement(PointF point) {
         Pair<Object, Float> selectedElement = Pair.create(null, (float) Configuration.SELECT_RANGE);
         Compound selectedCompound = null;
@@ -117,7 +139,6 @@ public class ElementSelector {
                 mSelection = Selection.ATOM;
                 mSelectedCompound = selected.second;
             }
-            return true;
         } else if (selected != null && selected.first instanceof Edge) {
             Edge selectedEdge = (Edge) selected.first;
             if (mSelection == Selection.EDGE && selectedEdge.equals(mSelectedEdge)) {
@@ -128,13 +149,16 @@ public class ElementSelector {
                 mSelection = Selection.EDGE;
                 mSelectedCompound = selected.second;
             }
-            return true;
+        } else {
+            reset();
+            return false;
         }
-        reset();
-        return false;
+
+        updateSelectedAtoms();
+        return true;
     }
 
-    public boolean isAnySelected(PointF point) {
+    public boolean canSelectAny(PointF point) {
         return getSelectedElement(point) != null;
     }
 
@@ -159,8 +183,9 @@ public class ElementSelector {
         // TODO partially implemented at this time
         if (mSelection == Selection.COMPOUND) {
             return mSelectedCompound.getAtoms();
+        } else {
+            return mSelectedAtomList;
         }
-        return null;
     }
 
     public boolean moveSelectedElement(PointF distance) {
@@ -194,11 +219,40 @@ public class ElementSelector {
         return mSelection;
     }
 
-    public boolean hasSelectedElement() {
-        return mSelection != Selection.NONE;
+    public boolean isSelected(Atom atom) {
+        return mSelectedAtomList.contains(atom);
     }
 
     public void reset() {
         mSelection = Selection.NONE;
+        mRegionSelector = null;
+        mSelectedAtomList.clear();
+    }
+
+    public boolean onTouchEvent(PointF point, int touchAction) {
+        boolean ret = false;
+
+        if (mRegionSelector != null) {
+            ret = mRegionSelector.onTouchEvent(point, touchAction);
+
+            if (ret)
+                updateSelectedAtoms();
+        }
+
+        return ret;
+    }
+
+    public void setRegionSelector(IRegionSelector regionSelector) {
+        mRegionSelector = regionSelector;
+        if (mRegionSelector != null) {
+            mSelection = Selection.PARTIAL;
+            updateSelectedAtoms();
+        } else {
+            reset();
+        }
+    }
+
+    public IRegionSelector getRegionSelector() {
+        return mRegionSelector;
     }
 }

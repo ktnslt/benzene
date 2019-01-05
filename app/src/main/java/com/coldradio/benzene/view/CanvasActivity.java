@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.ElementSelector;
+import com.coldradio.benzene.project.IRegionSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.project.RectSelector;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
@@ -125,6 +127,10 @@ public class CanvasActivity extends AppCompatActivity {
             // Toolbar back Button
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
             ret = false; // to call super.onOptionsItemSelected(item);
+        } else if (id == R.id.action_select_by_rect) {
+            Project.instance().getElementSelector().setRegionSelector(new RectSelector());
+        } else if (id == R.id.action_select_by_finger) {
+
         } else {
             ret = false;
         }
@@ -168,8 +174,17 @@ public class CanvasActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // here Project file is not saved. Hence only preview is saved. the project file will be saved in onPause() that will be called later after this method
-        ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
-        super.onBackPressed();
+        if (Project.instance().getElementSelector().getRegionSelector() != null) {
+            Project.instance().getElementSelector().setRegionSelector(null);
+            mCanvasView.updateContextMenu();
+            mCanvasView.invalidate();
+        } else {
+            // prepare the preview save
+            Project.instance().getElementSelector().reset();
+            mCanvasView.invalidate();
+            // here Project file is not saved yet. Only preview will be saved. The project file will be saved in onPause() that will be called later after this method
+            ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
+            super.onBackPressed();
+        }
     }
 }
