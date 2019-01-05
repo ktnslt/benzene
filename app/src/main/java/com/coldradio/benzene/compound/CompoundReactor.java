@@ -1,51 +1,18 @@
 package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
-import android.util.Pair;
 
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
 import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MathConstant;
+import com.coldradio.benzene.util.Notifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundReactor {
-    private Pair<Compound, Atom> mSynthesisSource = null;
-
-    private Pair<Compound, Atom> selectSource(PointF point, List<Compound> compounds) {
-        return null;
-//        Compound selectedCompound = null;
-//        Atom selectedAtom = null;
-//
-//        for (Compound compound : compounds) {
-//            selectedAtom = compound.selectAtom(point);
-//            if (selectedAtom != null) {
-//                selectedCompound = compound;
-//                break;
-//            }
-//        }
-//
-//        if(selectedAtom != null) {
-//            return new Pair<>(selectedCompound, selectedAtom);
-//        } else {
-//            return null;
-//        }
-    }
-
-    private void synthesis(Pair<Compound, Atom> source, Pair<Compound, Atom> destination) {
-        if (source.first != destination.first) {
-            destination.first.merge(source.first);
-            destination.second.singleBond(source.second);
-        } else {    // this will be cyclic
-            destination.second.singleBond(source.second);
-        }
-
-        mSynthesisSource = null;
-    }
-
     private static void splitAndUpdateProject(Compound compound) {
         Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound)));
         Project.instance().removeCompound(compound);
@@ -71,28 +38,16 @@ public class CompoundReactor {
         return compound;
     }
 
-    public boolean synthesis(PointF point, List<Compound> compounds) {
-        // TODO: when trying to synthesize two neighboring atoms that already have a bond, it is the case that changes the bond type (single -> double)
-        // so. 1. block this case, or 2. redirect this case to "BOND"
-        Pair<Compound, Atom> selectedSource = selectSource(point, compounds);
-
-        if (mSynthesisSource == null) {
-            mSynthesisSource = selectedSource;
-        } else {
-            if (selectedSource == null) {
-                mSynthesisSource = null;
-            } else {
-                synthesis(mSynthesisSource, selectedSource);
+    public static void makeBond(Compound c1, Atom a1, Compound c2, Atom a2) {
+        if (a1.getBondType(a2) == Bond.BondType.NONE) {
+            // only make the bond if there is none
+            a1.setBond(a2, Bond.BondType.SINGLE);
+            if (c1 != c2) {
+                c1.merge(c2);
             }
+        } else {
+            Notifier.instance().notification("Already has a bond");
         }
-        return true;
-    }
-
-    public PointF getSynthesisSourcePoint() {
-        if (mSynthesisSource != null) {
-            return mSynthesisSource.second.getPoint();
-        }
-        return null;
     }
 
     public static void alkaneToCyclo(Compound compound, Atom[] atoms, PointF lookingPoint) {

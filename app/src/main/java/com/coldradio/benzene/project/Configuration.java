@@ -5,7 +5,7 @@ public class Configuration {
     public static int BOND_LENGTH = 120;
     public static float WEDGE_WIDTH_TO_BOND_LENGTH = 0.1f;
     public static float H_BOND_LENGTH_RATIO = 0.6f;
-    public static int SELECT_RANGE = 30;
+    public static int SELECT_RANGE = BOND_LENGTH / 3;
     public static int INITIAL_REGION_SIZE = 200;
     public static int ROTATION_PIVOT_SIZE = 40;
     public static int FONT_SIZE = 50;

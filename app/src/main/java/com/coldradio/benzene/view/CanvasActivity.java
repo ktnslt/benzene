@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundInspector;
+import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
@@ -102,7 +103,12 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_bond) {
             Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
-
+            if (Project.instance().getElementSelector().selection() == ElementSelector.Selection.ATOM) {
+                Notifier.instance().notification("Select Atom to make a bond");
+                mCanvasView.synthesizing(true);
+            } else {
+                Notifier.instance().notification("Select Atom first");
+            }
         } else if (id == R.id.action_atom_deco) {
             startActivityForResult(new Intent("com.coldradio.benzene.ATOM_DECO"), ActivityRequestCode.ATOM_DECO_REQ.ordinal());
         } else if (id == R.id.action_saturate_h) {

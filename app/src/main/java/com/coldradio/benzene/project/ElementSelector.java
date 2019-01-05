@@ -1,6 +1,7 @@
 package com.coldradio.benzene.project;
 
 import android.graphics.PointF;
+import android.util.Pair;
 import android.view.MotionEvent;
 
 import com.coldradio.benzene.compound.Atom;
@@ -8,6 +9,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.MutablePair;
 import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.List;
@@ -24,29 +26,42 @@ public class ElementSelector {
     private PointF mRotationPivotPoint = new PointF();
     private boolean mIsRotating = false;
 
-    private Edge selectEdge(PointF point, Compound compound) {
-        return TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+    private static Pair<Object, Float> selectEdge(PointF point, Compound compound) {
+        MutablePair<Object, Float> selectedEdge = MutablePair.create(null, (float) Configuration.SELECT_RANGE);
+
+        TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (!a1.isVisible() || !a2.isVisible())
-                    return false;
-                PointF p1 = a1.getPoint(), p2 = a2.getPoint(), touchedPoint = (PointF) args[0];
-                float lineLength = Geometry.distanceFromPointToPoint(p1, p2);
+                if (a1.isVisible() && a2.isVisible()) {
+                    MutablePair<Object, Float> selectedEdge = (MutablePair<Object, Float>) args[1];
+                    float edgeCenterToTouchedPoint = Geometry.distanceFromPointToPoint((PointF) args[0], Geometry.centerOfLine(a1.getPoint(), a2.getPoint()));
 
-                return Geometry.distanceFromPointToLine(touchedPoint, p1, p2) < Configuration.SELECT_RANGE
-                        && Geometry.distanceFromPointToPoint(touchedPoint, p1) < (lineLength + Configuration.SELECT_RANGE)
-                        && Geometry.distanceFromPointToPoint(touchedPoint, p2) < (lineLength + Configuration.SELECT_RANGE);
+                    if (edgeCenterToTouchedPoint < Configuration.SELECT_RANGE && edgeCenterToTouchedPoint < selectedEdge.second) {
+                        selectedEdge.first = new Edge(a1, a2);
+                        selectedEdge.second = edgeCenterToTouchedPoint;
+                    }
+                }
+                return false;
             }
-        }, compound, point);
+        }, compound, point, selectedEdge);
+
+        return selectedEdge.first == null ? null : selectedEdge.toPair();
     }
 
-    private Atom selectAtom(PointF point, Compound compound) {
+    private static Pair<Object, Float> selectAtom(PointF point, Compound compound) {
+        float minDistance = Configuration.SELECT_RANGE * 2;
+        Atom minAtom = null;
+
         for (Atom atom : compound.getAtoms()) {
-            if (atom.isVisible() && Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.SELECT_RANGE) {
-                return atom;
+            float distance = Geometry.distanceFromPointToPoint(atom.getPoint(), point);
+
+            if (atom.isVisible() && distance < Configuration.SELECT_RANGE && distance < minDistance) {
+                minDistance = distance;
+                minAtom = atom;
             }
         }
-        return null;
+
+        return minAtom == null ? null : Pair.create((Object) minAtom, minDistance);
     }
 
     private void rotateToPoint(PointF point) {
@@ -60,6 +75,28 @@ public class ElementSelector {
         return Geometry.distanceFromPointToPoint(mRotationPivotPoint, point) < Configuration.ROTATION_PIVOT_SIZE;
     }
 
+    public static Pair<Object, Compound> getSelectedElement(PointF point) {
+        Pair<Object, Float> selectedElement = Pair.create(null, (float) Configuration.SELECT_RANGE);
+        Compound selectedCompound = null;
+
+        for (Compound compound : Project.instance().getCompounds()) {
+            Pair<Object, Float> candidate = selectAtom(point, compound);
+
+            if (candidate != null && candidate.second < selectedElement.second) {
+                selectedElement = candidate;
+                selectedCompound = compound;
+            }
+
+            candidate = selectEdge(point, compound);
+
+            if (candidate != null && candidate.second < selectedElement.second) {
+                selectedElement = candidate;
+                selectedCompound = compound;
+            }
+        }
+        return selectedCompound == null ? null : Pair.create(selectedElement.first, selectedCompound);
+    }
+
     public void selectCompound(Compound compound) {
         mSelectedCompound = compound;
         mSelection = Selection.COMPOUND;
@@ -67,48 +104,38 @@ public class ElementSelector {
         mRotationPivotPoint.offset(0, -200);
     }
 
-    public boolean select(PointF point, List<Compound> compoundList) {
-        for (Compound compound : compoundList) {
-            // try to select Atom first
-            Atom atom = selectAtom(point, compound);
-            mSelectedCompound = compound;
+    public boolean select(PointF point) {
+        Pair<Object, Compound> selected = getSelectedElement(point);
 
-            if (atom != null) {
-                if (mSelection == Selection.ATOM && atom == mSelectedAtom) {
-                    // selecting the same Atom
-                    selectCompound(compound);
-                } else {
-                    mSelectedAtom = atom;
-                    mSelection = Selection.ATOM;
-                }
-                return true;
+        if (selected != null && selected.first instanceof Atom) {
+            Atom selectedAtom = (Atom) selected.first;
+            if (mSelection == Selection.ATOM && selectedAtom == mSelectedAtom) {
+                // selecting the same Atom
+                selectCompound(selected.second);
+            } else {
+                mSelectedAtom = selectedAtom;
+                mSelection = Selection.ATOM;
+                mSelectedCompound = selected.second;
             }
-            // try to select Edge next
-            Edge edge = selectEdge(point, compound);
-
-            if (edge != null) {
-                if (mSelection == Selection.EDGE && edge.equals(mSelectedEdge)) {
-                    // selecting the same Edge
-                    selectCompound(compound);
-                } else {
-                    mSelectedEdge = edge;
-                    mSelection = Selection.EDGE;
-                }
-                return true;
+            return true;
+        } else if (selected != null && selected.first instanceof Edge) {
+            Edge selectedEdge = (Edge) selected.first;
+            if (mSelection == Selection.EDGE && selectedEdge.equals(mSelectedEdge)) {
+                // selecting the same Edge
+                selectCompound(selected.second);
+            } else {
+                mSelectedEdge = selectedEdge;
+                mSelection = Selection.EDGE;
+                mSelectedCompound = selected.second;
             }
+            return true;
         }
-        mSelection = Selection.NONE;
+        reset();
         return false;
     }
 
-    public boolean tryToSelect(PointF point, List<Compound> compoundList) {
-        for (Compound compound : compoundList) {
-            if (selectAtom(point, compound) != null || selectEdge(point, compound) != null) {
-                return true;
-            }
-        }
-
-        return false;
+    public boolean isAnySelected(PointF point) {
+        return getSelectedElement(point) != null;
     }
 
     public PointF getRotationPivotPoint() {

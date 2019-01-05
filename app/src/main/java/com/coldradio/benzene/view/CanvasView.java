@@ -26,6 +26,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private PointF mActualClickedPosition = new PointF();
     private boolean mScrolledAfterSelected;
     private SelectedElementAccessoryDrawer mSelectedElementAccessoryDrawer;
+    private boolean mSynthesizing;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -58,6 +59,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
 
     public void showFlipBondGuideLine(boolean show) {
         mSelectedElementAccessoryDrawer.showFlipBondGuideLine(show);
+    }
+
+    public void synthesizing(boolean syn) {
+        mSynthesizing = syn;
     }
 
     public void toCenter() {
@@ -93,11 +98,17 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
             switch (maskedAction) {
                 case MotionEvent.ACTION_UP:
                     if (!mScrolledAfterSelected) {
-                        if (! mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
-                            Project.instance().select(mActualClickedPosition);
-                            updateContextMenu();
+                        if (mSynthesizing) {
+                            if (Project.instance().synthesize(mActualClickedPosition))
+                                invalidate();
+                        } else {
+                            if (! mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
+                                Project.instance().select(mActualClickedPosition);
+                                updateContextMenu();
+                                invalidate(); // invalidate also for the de-select case
+                            }
                         }
-                        invalidate();
+                        mSynthesizing = false;
                     }
                     mScrolledAfterSelected = false;
                     break;
@@ -163,7 +174,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (!Project.instance().tryToSelect(mActualClickedPosition)) {
+        if (!Project.instance().getElementSelector().isAnySelected(mActualClickedPosition)) {
             toCenter();
         }
 

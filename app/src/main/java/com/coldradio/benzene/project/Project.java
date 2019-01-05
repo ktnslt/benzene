@@ -2,6 +2,7 @@ package com.coldradio.benzene.project;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Pair;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomicNumber;
@@ -22,7 +23,6 @@ import java.util.List;
 public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
-    private CompoundReactor mCompoundReactor = new CompoundReactor();
     private IRegionSelector mRegionSelector;    // TODO move to ElementSelector
     private ElementSelector mElementSelector = new ElementSelector();
     private Compound mCopiedCompound;
@@ -56,11 +56,7 @@ public class Project {
     }
 
     public boolean select(PointF point) {
-        return mElementSelector.select(point, Collections.unmodifiableList(mCompoundList));
-    }
-
-    public boolean tryToSelect(PointF point) {
-        return mElementSelector.tryToSelect(point, Collections.unmodifiableList(mCompoundList));
+        return mElementSelector.select(point);
     }
 
     public void removeCompound(Compound compound) {
@@ -98,9 +94,17 @@ public class Project {
         }
     }
 
-    public boolean synthesis(PointF point) {
-        mCompoundReactor.synthesis(point, Collections.unmodifiableList(mCompoundList));
-        return true;
+    public boolean synthesize(PointF point) {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            Pair<Object, Compound> toAtom = ElementSelector.getSelectedElement(point);
+
+            if (toAtom != null && toAtom.first instanceof Atom) {
+                CompoundReactor.makeBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom(), toAtom.second, (Atom) toAtom.first);
+                return true;
+            }
+            Notifier.instance().notification("Atom shall be selected");
+        }
+        return false;
     }
 
     public boolean regionSelect(PointF point, int touchAction) {
