@@ -1,6 +1,7 @@
 package com.coldradio.benzene.util;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 public class Geometry {
     public static PointF cwRotate(PointF current, PointF center, float angle) {
@@ -14,6 +15,10 @@ public class Geometry {
 
     public static float distanceFromPointToPoint(PointF p1, PointF p2) {
         return (float) Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));
+    }
+
+    public static float distanceFromPointToPoint(float x1, float y1, float x2, float y2) {
+        return (float) Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
 
     public static float distanceFromPointToLine(PointF p0, PointF p1, PointF p2) {
@@ -141,5 +146,14 @@ public class Geometry {
 
     public static PointF pointInLine(PointF l1, PointF l2, float ratioFromL1) {
         return pointInLine(l1, l2, ratioFromL1, new PointF());
+    }
+
+    public static RectF enlarge(RectF rect, float dxy) {
+        rect.left -= dxy;
+        rect.top -= dxy;
+        rect.right += dxy;
+        rect.bottom += dxy;
+
+        return rect;
     }
 }

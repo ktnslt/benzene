@@ -3,6 +3,7 @@ package com.coldradio.benzene.project;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.coldradio.benzene.util.Geometry;
@@ -14,10 +15,14 @@ public class RectSelector implements IRegionSelector {
     }
 
     private PointF[] mMarkers = new PointF[4];
+    private RectF mRegionRect = new RectF();    // this is used for drawing rect and testing 'contains()'
     private MarkerIndex mSelectedMarkerIndex = MarkerIndex.NONE;
 
-    private void reorderMarkerPoint() {
-
+    private void updateRegionRect() {
+        mRegionRect.left = Math.min(Math.min(mMarkers[0].x, mMarkers[1].x), Math.min(mMarkers[2].x, mMarkers[3].x));
+        mRegionRect.right = Math.max(Math.max(mMarkers[0].x, mMarkers[1].x), Math.max(mMarkers[2].x, mMarkers[3].x));
+        mRegionRect.top = Math.min(Math.min(mMarkers[0].y, mMarkers[1].y), Math.min(mMarkers[2].y, mMarkers[3].y));
+        mRegionRect.bottom = Math.max(Math.max(mMarkers[0].y, mMarkers[1].y), Math.max(mMarkers[2].y, mMarkers[3].y));
     }
 
     private void drawVertexMarker(Canvas canvas, Paint paint) {
@@ -48,6 +53,7 @@ public class RectSelector implements IRegionSelector {
         mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].set(center.x + shift, center.y - shift);
         mMarkers[MarkerIndex.LEFT_BOTTOM.ordinal()].set(center.x - shift, center.y + shift);
         mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].set(center.x + shift, center.y + shift);
+        updateRegionRect();
     }
 
     @Override
@@ -55,8 +61,7 @@ public class RectSelector implements IRegionSelector {
         Paint.Style origStyle = paint.getStyle();
 
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x, mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y,
-                mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x, mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y, paint);
+        canvas.drawRect(mRegionRect, paint);
         paint.setStyle(origStyle);
 
         drawVertexMarker(canvas, paint);
@@ -91,18 +96,16 @@ public class RectSelector implements IRegionSelector {
                     mMarkers[MarkerIndex.RIGHT_TOP.ordinal()].x = mMarkers[ind].x;
                     break;
             }
+            updateRegionRect();
         } else {
             return false;
         }
-
-        reorderMarkerPoint();
         return true;
     }
 
     @Override
     public boolean contains(PointF point) {
-        return mMarkers[MarkerIndex.LEFT_TOP.ordinal()].x < point.x && mMarkers[MarkerIndex.LEFT_TOP.ordinal()].y < point.y
-                && point.x < mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].x && point.y < mMarkers[MarkerIndex.RIGHT_BOTTOM.ordinal()].y;
+        return mRegionRect.contains(point.x, point.y);
     }
 
     @Override
@@ -110,6 +113,7 @@ public class RectSelector implements IRegionSelector {
         for (int ii = 0; ii < mMarkers.length; ++ii) {
             mMarkers[ii].offset(dx, dy);
         }
+        updateRegionRect();
         return true;
     }
 }

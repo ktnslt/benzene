@@ -170,7 +170,7 @@ public class Atom {
         return Collections.unmodifiableList(mBonds);
     }
 
-    public int bondNumber() {
+    public int numberOfBonds() {
         return mBonds.size();
     }
 
@@ -209,7 +209,7 @@ public class Atom {
         // returns whether the Atom is visible on the screen. Only H may be invisible
         // though AtomDecoration.ShowElementName returns false, the atom can be visible such as C
         // invisible atom cannot be selected by click
-        if (getAtomicNumber() == AtomicNumber.H && bondNumber() == 1) {
+        if (getAtomicNumber() == AtomicNumber.H && numberOfBonds() == 1) {
             // TODO. when the parent is lettering, this atom may not be seen even for C
             return mAtomDecoration.getShowElementName();
         }

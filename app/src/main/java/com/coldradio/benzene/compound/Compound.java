@@ -13,6 +13,7 @@ import java.util.List;
 public class Compound {
     protected List<Atom> mAtoms;
     private PointF mCenterOfRectangle;
+    private RectF mRegion = new RectF();
 
     private void resetAID() {
         int aid = 1;
@@ -94,18 +95,23 @@ public class Compound {
     }
 
     public RectF rectRegion() {
-        float left = (float) 10e10, top = (float) 10e10, right = (float) -10e10, bottom = (float) -10e10;
+        // TODO update only when adding or removing Atom
+        mRegion.set(10e10f, 10e10f, -10e10f, -10e10f);
 
         for (Atom atom : mAtoms) {
             PointF p = atom.getPoint();
 
-            left = Math.min(left, p.x);
-            top = Math.min(top, p.y);
-            right = Math.max(right, p.x);
-            bottom = Math.max(bottom, p.y);
+            mRegion.left = Math.min(mRegion.left, p.x);
+            mRegion.top = Math.min(mRegion.top, p.y);
+            mRegion.right = Math.max(mRegion.right, p.x);
+            mRegion.bottom = Math.max(mRegion.bottom, p.y);
         }
 
-        return new RectF(left, top, right, bottom);
+        if (mRegion.left == 10e10f) {   // when mAtoms is empty. Bug if it really happens
+            mRegion.set(0, 0, 0, 0);
+        }
+
+        return mRegion;
     }
 
     public boolean cycleBondType(Edge edge) {

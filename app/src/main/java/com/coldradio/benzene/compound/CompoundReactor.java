@@ -102,18 +102,21 @@ public class CompoundReactor {
     }
 
     public static void deleteAllHydrogen(Compound compound) {
-        List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
-
-        for (Atom h : hydrogens) {
-            CompoundReactor.deleteAtom(compound, h);
+        for (Atom atom : compound.getAtoms()) {
+            deleteAllHydrogen(compound, atom);
         }
     }
 
     public static void deleteAllHydrogen(Compound compound, Atom atom) {
+        // cannot iterating through atom.getBonds(). Concurrent Modification error since it calls cutBond();
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         for (Atom h : hydrogens) {
-            CompoundReactor.deleteAtom(compound, h);
+            if (h.getAtomicNumber() == AtomicNumber.H && h.numberOfBonds() == 1) {
+                // hydrogen with only one bond is deleted. this is because that If H has more than one bond, it can split the compound
+                h.cutBond(h.getSkeletonAtom());
+                compound.removeAtom(h);
+            }
         }
     }
 
@@ -144,9 +147,7 @@ public class CompoundReactor {
             }
         }
 
-        if (curBounds != maxBounds) {
-            CompoundArranger.adjustHydrogenPosition(atom);
-        }
+        CompoundArranger.adjustHydrogenPosition(atom);
     }
 
     public static void saturateWithHydrogen(Compound compound, AtomicNumber an, int maxBounds) {
@@ -218,7 +219,7 @@ public class CompoundReactor {
     }
 
     public static void deleteAtom(Compound compound, Atom atom) {
-        int origBondNumber = atom.bondNumber();
+        int origBondNumber = atom.numberOfBonds();
 
         deleteAtomWithoutSplitting(compound, atom);
         // when deleting a atom, the compound may be split into multiple compound
@@ -227,11 +228,12 @@ public class CompoundReactor {
         }
     }
 
-    public static void deleteAtoms(Compound compound, List<Atom> atoms) {
+    public static void deleteAtoms(List<Atom> atoms) {
         for (Atom atom : atoms) {
-            // deleteAtom(compound, atom); this is not working since compound will be deleted at the first iteration
-            deleteAtomWithoutSplitting(compound, atom);
+            Compound compound = Project.instance().findCompound(atom);
+
+            if (compound != null)
+                deleteAtom(compound, atom);
         }
-        splitAndUpdateProject(compound);
     }
 }

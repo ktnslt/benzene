@@ -21,7 +21,6 @@ import com.coldradio.benzene.project.Project;
 
 public class CanvasActivity extends AppCompatActivity {
     private CanvasView mCanvasView;
-    private long mDeleteItemClickTime_ms;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +29,11 @@ public class CanvasActivity extends AppCompatActivity {
 
         Toolbar topToolbar = findViewById(R.id.canvas_top_toolbar);
         setSupportActionBar(topToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch(NullPointerException npe) {
+            // intentionally empty
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // add CanvasView to the canvas_main layout
@@ -87,15 +90,7 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_undo) {
 
         } else if (id == R.id.action_delete_selected) {
-            long curTime_ms = System.currentTimeMillis();
-
-            if ((curTime_ms - mDeleteItemClickTime_ms) < 1500) {
-                Notifier.instance().cancel();
-                Project.instance().deleteSelectedElement();
-            } else {
-                Notifier.instance().notification("Click again to delete");
-            }
-            mDeleteItemClickTime_ms = curTime_ms;
+            Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_func_group) {
@@ -179,9 +174,10 @@ public class CanvasActivity extends AppCompatActivity {
             mCanvasView.updateContextMenu();
             mCanvasView.invalidate();
         } else {
-            // prepare the preview save
-            Project.instance().getElementSelector().reset();
-            mCanvasView.invalidate();
+            // prepare the preview save. TODO block below two lines. it is too slow. don't know why
+            // Project.instance().getElementSelector().reset();
+            // mCanvasView.invalidate();
+
             // here Project file is not saved yet. Only preview will be saved. The project file will be saved in onPause() that will be called later after this method
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
             super.onBackPressed();

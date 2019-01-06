@@ -3,7 +3,6 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.util.Geometry;
-import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -53,7 +52,7 @@ public class CompoundArranger {
         TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
-                if (a1.getBondType(a2) == Bond.BondType.DOUBLE && (a1.bondNumber() == 1 || a2.bondNumber() == 1)) {
+                if (a1.getBondType(a2) == Bond.BondType.DOUBLE && (a1.numberOfBonds() == 1 || a2.numberOfBonds() == 1)) {
                     a1.setBond(a2, Bond.BondType.DOUBLE_MIDDLE);
                 }
                 return false;

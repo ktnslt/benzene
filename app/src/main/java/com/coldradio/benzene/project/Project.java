@@ -64,6 +64,14 @@ public class Project {
         mCompoundList.remove(compound);
     }
 
+    public Compound findCompound(Atom atom) {
+        for (Compound compound : mCompoundList) {
+            if (compound.getAtoms().contains(atom))
+                return compound;
+        }
+        return null;
+    }
+
     public boolean deleteSelectedElement() {
         switch (mElementSelector.selection()) {
             case ATOM:
@@ -76,7 +84,7 @@ public class Project {
                 removeCompound(mElementSelector.getSelectedCompound());
                 break;
             case PARTIAL:
-                CompoundReactor.deleteAtoms(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAsList());
+                CompoundReactor.deleteAtoms(mElementSelector.getSelectedAsList());
                 break;
             default:
                 return false;
@@ -189,19 +197,21 @@ public class Project {
     }
 
     public RectF rectRegion() {
-        RectF rect = null;
+        RectF rect = new RectF();
 
         for (Compound compound : mCompoundList) {
             RectF compoundRegion = compound.rectRegion();
 
-            if (rect == null) {
+            if (rect.height() == 0) {
                 rect = compoundRegion;
             } else {
                 rect.union(compoundRegion);
             }
         }
 
-        return rect != null ? rect : new RectF();
+        Geometry.enlarge(rect, 20);
+
+        return rect;
     }
 
     public void offsetTo(float newLeft, float newTop) {

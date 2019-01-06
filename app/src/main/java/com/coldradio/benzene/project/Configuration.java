@@ -13,4 +13,5 @@ public class Configuration {
     public static float SUBSCRIPT_SIZE_RATIO = 0.7f;
     public static float ELECTRON_RADIUS = 4f;
     public static float CHARGE_CIRCLE_RADIUS = 10f;
+    public static int SELECTED_ATOM_BG_CIRCLE_RADIUS = 10;
 }
