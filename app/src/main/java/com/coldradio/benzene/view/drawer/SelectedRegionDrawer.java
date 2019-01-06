@@ -13,10 +13,13 @@ import com.coldradio.benzene.project.Project;
 public class SelectedRegionDrawer implements ICompoundDrawer {
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
-        IRegionSelector regionSelector = Project.instance().getElementSelector().getRegionSelector();
+        if (compound == Project.instance().getCompounds().get(0)) {
+            // draw just once
+            IRegionSelector regionSelector = Project.instance().getElementSelector().getRegionSelector();
 
-        if (regionSelector != null) {
-            regionSelector.draw(canvas, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
+            if (regionSelector != null) {
+                regionSelector.draw(canvas, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
+            }
         }
         return true;
     }

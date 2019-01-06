@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.ElementSelector;
+import com.coldradio.benzene.project.FingerSelector;
 import com.coldradio.benzene.project.IRegionSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
@@ -125,7 +126,7 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_select_by_rect) {
             Project.instance().getElementSelector().setRegionSelector(new RectSelector());
         } else if (id == R.id.action_select_by_finger) {
-
+            Project.instance().getElementSelector().setRegionSelector(new FingerSelector());
         } else {
             ret = false;
         }

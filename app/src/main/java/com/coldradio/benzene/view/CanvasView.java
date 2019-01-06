@@ -45,10 +45,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                 (Toolbar) activity.findViewById(R.id.canvas_bottom_toolbar));
 
         // register drawer
+        mDrawerManager.addPreCompoundDrawer(new SelectedRegionDrawer());
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
-        mDrawerManager.addPostCompoundDrawer(new SelectedRegionDrawer());
 
         // When View is created, the default x, y are 0, hence reset Screen's x and y
         ScreenInfo.instance().setScreenXY((int) getX(), (int) getY());

@@ -43,8 +43,13 @@ public class DrawerManager {
             for (ICompoundDrawer componentDrawer : mPreCompoundDrawer) {
                 componentDrawer.draw(compound, canvas, generalPaint);
             }
+        }
+        
+        for (Compound compound : Project.instance().getCompounds()) {
             GenericDrawer.draw(compound, canvas, generalPaint);
+        }
 
+        for (Compound compound : Project.instance().getCompounds()) {
             for (ICompoundDrawer componentDrawer : mPostCompoundDrawer) {
                 componentDrawer.draw(compound, canvas, generalPaint);
             }

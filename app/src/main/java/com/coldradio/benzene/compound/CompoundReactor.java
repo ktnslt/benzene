@@ -53,7 +53,9 @@ public class CompoundReactor {
     }
 
     public static void makeBond(Compound c1, Atom a1, Compound c2, Atom a2) {
-        if (a1.getBondType(a2) == Bond.BondType.NONE) {
+        if (a1.getAtomicNumber() == AtomicNumber.H || a2.getAtomicNumber() == AtomicNumber.H) {
+            Notifier.instance().notification("Can NOT make bond to H");
+        } else if (a1.getBondType(a2) == Bond.BondType.NONE) {
             // only make the bond if there is none
             a1.setBond(a2, Bond.BondType.SINGLE);
             if (c1 != c2) {
@@ -232,8 +234,10 @@ public class CompoundReactor {
         for (Atom atom : atoms) {
             Compound compound = Project.instance().findCompound(atom);
 
-            if (compound != null)
+            if (compound != null) {
+                // compound can be null if it is H and deleted with C
                 deleteAtom(compound, atom);
+            }
         }
     }
 }

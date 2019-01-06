@@ -13,6 +13,7 @@ import com.coldradio.benzene.util.MutablePair;
 import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ElementSelector {
@@ -79,19 +80,13 @@ public class ElementSelector {
     }
 
     private void updateSelectedAtoms() {
-        mSelectedAtomList.clear();
-
         if (selection() == Selection.PARTIAL) {
-            for (Compound compound : Project.instance().getCompounds()) {
-                for (Atom atom : compound.getAtoms()) {
-                    if (atom.isVisible() && mRegionSelector.contains(atom.getPoint())) {
-                        mSelectedAtomList.add(atom);
-                    }
-                }
-            }
+            mSelectedAtomList = mRegionSelector.getSelectedAtoms();
         } else if (selection() == Selection.ATOM) {
+            mSelectedAtomList.clear();
             mSelectedAtomList.add(mSelectedAtom);
         } else if (selection() == Selection.EDGE) {
+            mSelectedAtomList.clear();
             mSelectedAtomList.add(mSelectedEdge.first);
             mSelectedAtomList.add(mSelectedEdge.second);
         }
@@ -180,11 +175,10 @@ public class ElementSelector {
     }
 
     public List<Atom> getSelectedAsList() {
-        // TODO partially implemented at this time
         if (mSelection == Selection.COMPOUND) {
             return mSelectedCompound.getAtoms();
         } else {
-            return mSelectedAtomList;
+            return Collections.unmodifiableList(mSelectedAtomList);
         }
     }
 

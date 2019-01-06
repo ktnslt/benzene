@@ -21,8 +21,8 @@ public class Geometry {
         return (float) Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
 
-    public static float distanceFromPointToLine(PointF p0, PointF p1, PointF p2) {
-        return Math.abs((p2.y - p1.y) * p0.x - (p2.x - p1.x) * p0.y + p2.x * p1.y - p2.y * p1.x) / distanceFromPointToPoint(p1, p2);
+    public static float distanceFromPointToLine(PointF p, PointF l1, PointF l2) {
+        return Math.abs((l2.y - l1.y) * p.x - (l2.x - l1.x) * p.y + l2.x * l1.y - l2.y * l1.x) / distanceFromPointToPoint(l1, l2);
     }
 
     public static PointF zoom(PointF point, PointF center, float ratio) {
