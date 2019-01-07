@@ -19,7 +19,8 @@ public class RuleSet {
     }
 
     public RuleSet() {
-        add(new BasicRule());
+        add(new LetteringIfNotSeenRule());
+        add(new LetteringIfNotCarbonRule());
     }
 
     public static RuleSet instance() {
@@ -42,6 +43,13 @@ public class RuleSet {
     public List<Compound> apply(List<Compound> compounds) {
         for (Compound c : compounds)
             apply(c);
+
+        return compounds;
+    }
+
+    public List<Compound> apply(List<Compound> compounds, ICompoundRule rule) {
+        for (Compound c : compounds)
+            rule.apply(c);
 
         return compounds;
     }

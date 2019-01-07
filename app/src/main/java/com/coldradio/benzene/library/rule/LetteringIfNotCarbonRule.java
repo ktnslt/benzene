@@ -6,17 +6,9 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
 
-public class BasicRule implements ICompoundRule {
+public class LetteringIfNotCarbonRule implements ICompoundRule {
     @Override
     public Compound apply(Compound compound) {
-        // methane case
-        Atom carbon = CompoundInspector.returnCarbonIfC1Hn(compound);
-
-        if (carbon != null) {
-            carbon.getAtomDecoration().lettering(true);
-            CompoundArranger.showAllHydrogen(carbon, false);
-            return compound;
-        }
         // All Carbons shall not show element name, and hide H bond
         for (Atom atom : compound.getAtoms()) {
             AtomicNumber an = atom.getAtomicNumber();

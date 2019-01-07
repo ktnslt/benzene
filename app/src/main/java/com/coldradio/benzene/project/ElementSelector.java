@@ -183,14 +183,17 @@ public class ElementSelector {
     }
 
     public boolean moveSelectedElement(PointF distance) {
-        // TODO: shall move both the Atom and Edge or anything selected
         if (mSelection == Selection.COMPOUND) {
             mRotationPivotPoint.offset(distance.x, distance.y);
             mSelectedCompound.offset(distance.x, distance.y);
-            return true;
+        } else if (mSelection != Selection.NONE) {
+            for (Atom atom : mSelectedAtomList) {
+                CompoundArranger.offsetWithHiddenHydrogen(atom, distance.x, distance.y);
+            }
         } else {
             return false;
         }
+        return true;
     }
 
     public boolean rotateSelectedCompound(PointF point, int action) {

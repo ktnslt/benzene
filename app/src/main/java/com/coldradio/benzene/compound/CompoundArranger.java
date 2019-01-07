@@ -160,4 +160,15 @@ public class CompoundArranger {
                 h.getAtomDecoration().setShowElementName(show);
         }
     }
+
+    public static void offsetWithHiddenHydrogen(Atom atom, float dx, float dy) {
+        atom.offset(dx, dy);
+        for (Bond bond : atom.getBonds()) {
+            Atom boundAtom = bond.getBoundAtom();
+
+            if (boundAtom.getAtomicNumber() == AtomicNumber.H && ! boundAtom.isVisible()) {
+                boundAtom.offset(dx, dy);
+            }
+        }
+    }
 }

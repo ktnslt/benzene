@@ -3,6 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
+import com.coldradio.benzene.library.rule.LetteringIfNotSeenRule;
 import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
@@ -13,20 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundReactor {
+    private static LetteringIfNotSeenRule mLetteringIfNotSeenRule = new LetteringIfNotSeenRule();
+
     private static void splitAndUpdateProject(Compound compound) {
-        Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound)));
+        Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound), mLetteringIfNotSeenRule));
         Project.instance().removeCompound(compound);
     }
 
     private static void deleteAtomWithoutSplitting(Compound compound, Atom atom) {
         CompoundReactor.deleteAllHydrogen(compound, atom);
         // cut all bonds - iterating bonds doesn't work due to the concurrent modification
+        // hence make a copy of it for iteration
         //        for (Bond bond : atom.getBonds())
         //            atom.cutBond(bond.getBoundAtom());
-        for (Atom other : compound.getAtoms()) {
-            if (other != atom) {
-                other.cutBond(atom);
-            }
+        for (Bond bond : new ArrayList<>(atom.getBonds())) {
+            atom.cutBond(bond.getBoundAtom());
         }
         // delete atom
         compound.removeAtom(atom);
@@ -59,7 +61,7 @@ public class CompoundReactor {
             // only make the bond if there is none
             a1.setBond(a2, Bond.BondType.SINGLE);
             if (c1 != c2) {
-                c1.merge(c2);
+                merge(c1, c2);
             }
         } else {
             Notifier.instance().notification("Already has a bond");
@@ -104,8 +106,15 @@ public class CompoundReactor {
     }
 
     public static void deleteAllHydrogen(Compound compound) {
-        for (Atom atom : compound.getAtoms()) {
-            deleteAllHydrogen(compound, atom);
+        // cannot iterate through compound.getAtoms() due to Concurrent Modification
+        List<Atom> hydrogens = CompoundInspector.allHydrogens(compound);
+
+        for (Atom h : hydrogens) {
+            if (h.numberOfBonds() == 1) {
+                // hydrogen with only one bond is deleted. this is because that If H has more than one bond, it can split the compound
+                h.cutBond(h.getSkeletonAtom());
+                compound.removeAtom(h);
+            }
         }
     }
 
@@ -114,7 +123,7 @@ public class CompoundReactor {
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         for (Atom h : hydrogens) {
-            if (h.getAtomicNumber() == AtomicNumber.H && h.numberOfBonds() == 1) {
+            if (h.numberOfBonds() == 1) {
                 // hydrogen with only one bond is deleted. this is because that If H has more than one bond, it can split the compound
                 h.cutBond(h.getSkeletonAtom());
                 compound.removeAtom(h);
@@ -204,7 +213,7 @@ public class CompoundReactor {
     }
 
     public static void addFunctionalGroupToAtom(Compound compound, Atom atom, IFunctionalGroup funcGroup, boolean deleteHOfSelectedAtom) {
-        compound.merge(funcGroup.curForm());
+        merge(compound, funcGroup.curForm());
         atom.setBond(funcGroup.appendAtom(), funcGroup.bondType());
 
         Atom H = atom.getHydrogen();
@@ -239,5 +248,10 @@ public class CompoundReactor {
                 deleteAtom(compound, atom);
             }
         }
+    }
+
+    public static void merge(Compound merger, Compound mergee) {
+        merger.addAtoms(mergee);
+        Project.instance().removeCompound(mergee);
     }
 }

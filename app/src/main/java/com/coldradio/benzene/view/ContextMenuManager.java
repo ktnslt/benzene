@@ -86,7 +86,7 @@ public class ContextMenuManager {
                 break;
             case COMPOUND:
                 hideAll().
-                        show(R.id.action_coloring).
+                        //show(R.id.action_coloring).
                         show(R.id.action_delete_selected).
                         show(R.id.action_saturate_h).
                         show(R.id.action_show_h);
@@ -101,7 +101,7 @@ public class ContextMenuManager {
                 hideAll().
                         show(R.id.action_select_by_rect).
                         show(R.id.action_select_by_finger).
-                        show(R.id.action_coloring).
+                        //show(R.id.action_coloring).
                         show(R.id.action_add);
                 break;
         }

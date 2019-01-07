@@ -24,7 +24,7 @@ public class FingerSelector implements IRegionSelector {
     private void updateSelectedAtoms(PointF l1, PointF l2) {
         for (Compound compound : Project.instance().getCompounds()) {
             for (Atom atom : compound.getAtoms()) {
-                if (atom.isVisible() && Geometry.distanceFromPointToPoint(l2, atom.getPoint()) < Configuration.SELECT_RANGE) {
+                if (! mSelectedAtoms.contains(atom) && atom.isVisible() && Geometry.distanceFromPointToPoint(l2, atom.getPoint()) < Configuration.SELECT_RANGE) {
                     mSelectedAtoms.add(atom);
                 }
             }

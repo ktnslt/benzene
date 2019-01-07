@@ -3,11 +3,8 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.coldradio.benzene.project.Project;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class Compound {
@@ -120,12 +117,6 @@ public class Compound {
         return false;
     }
 
-    public void merge(Compound compound) {
-        mAtoms.addAll(compound.getAtoms());
-        Project.instance().removeCompound(compound);
-        mCenterOfRectangle = null;
-    }
-
     public void makeBond(int aid1, int aid2, Bond.BondType bondType) {
         makeBond(aid1, aid2, bondType, Bond.BondAnnotation.NONE);
     }
@@ -173,6 +164,11 @@ public class Compound {
 
     public void addAtom(Atom atom) {
         mAtoms.add(atom);
+        mCenterOfRectangle = null;
+    }
+
+    public void addAtoms(Compound compound) {
+        mAtoms.addAll(compound.getAtoms());
         mCenterOfRectangle = null;
     }
 }

@@ -92,6 +92,7 @@ public class CanvasActivity extends AppCompatActivity {
 
         } else if (id == R.id.action_delete_selected) {
             Project.instance().deleteSelectedElement();
+            Notifier.instance().notification("Total Compounds: " + String.valueOf(Project.instance().getCompounds().size()));
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_func_group) {
@@ -170,15 +171,16 @@ public class CanvasActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Project.instance().getElementSelector().getRegionSelector() != null) {
-            Project.instance().getElementSelector().setRegionSelector(null);
+        ElementSelector elementSelector = Project.instance().getElementSelector();
+
+        if (elementSelector.getRegionSelector() != null) {
+            elementSelector.setRegionSelector(null);
             mCanvasView.updateContextMenu();
             mCanvasView.invalidate();
+        } else if (elementSelector.selection() != ElementSelector.Selection.NONE) {
+            elementSelector.reset();
+            mCanvasView.invalidate();
         } else {
-            // prepare the preview save. TODO block below two lines. it is too slow. don't know why
-            // Project.instance().getElementSelector().reset();
-            // mCanvasView.invalidate();
-
             // here Project file is not saved yet. Only preview will be saved. The project file will be saved in onPause() that will be called later after this method
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
             super.onBackPressed();

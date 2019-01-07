@@ -41,6 +41,20 @@ public class CompoundInspector {
         return c;
     }
 
+    public static boolean lessThanTwoSkeletonAtom(Compound compound) {
+        Atom skeletonAtom = anySkeletonAtom(compound);
+
+        return skeletonAtom == null || skeletonAtom.getSkeletonAtom() == null;
+    }
+
+    public static Atom anySkeletonAtom(Compound compound) {
+        for (Atom atom : compound.getAtoms()) {
+            if (atom.getAtomicNumber() != AtomicNumber.H)
+                return atom;
+        }
+        return null;
+    }
+
     public static Atom[] extractSkeletonChain(Atom startAtom, int maxLen) {
         // maxLen is needed for the cyclo-compound
         List<Atom> skeletons = new ArrayList<>();

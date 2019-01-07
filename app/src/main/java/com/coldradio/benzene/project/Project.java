@@ -26,6 +26,13 @@ public class Project {
     private Compound mCopiedCompound;
     private ProjectFile mProjectFile;
 
+    private void removeEmptyCompound() {
+        for (Compound compound : mCompoundList) {
+            if (compound.size() == 0)
+                removeCompound(compound);
+        }
+    }
+
     public static Project instance() {
         return project;
     }
@@ -58,7 +65,8 @@ public class Project {
     }
 
     public void removeCompound(Compound compound) {
-        if (mElementSelector.getSelectedCompound() == compound) {
+        if (mElementSelector.selection() == ElementSelector.Selection.COMPOUND
+                && mElementSelector.getSelectedCompound() == compound) {
             mElementSelector.reset();
         }
         mCompoundList.remove(compound);
@@ -75,7 +83,12 @@ public class Project {
     public boolean deleteSelectedElement() {
         switch (mElementSelector.selection()) {
             case ATOM:
-                CompoundReactor.deleteAtom(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom());
+                Compound selectedCompound = mElementSelector.getSelectedCompound();
+
+                CompoundReactor.deleteAtom(selectedCompound, mElementSelector.getSelectedAtom());
+                // remove the compound if empty
+                if (selectedCompound.size() == 0)
+                    removeCompound(selectedCompound);
                 break;
             case EDGE:
                 CompoundReactor.deleteBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge());
@@ -85,6 +98,7 @@ public class Project {
                 break;
             case PARTIAL:
                 CompoundReactor.deleteAtoms(mElementSelector.getSelectedAsList());
+                removeEmptyCompound();
                 break;
             default:
                 return false;
