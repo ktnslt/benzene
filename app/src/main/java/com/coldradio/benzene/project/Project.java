@@ -172,7 +172,13 @@ public class Project {
             Atom atom = mElementSelector.getSelectedAtom();
 
             try {
-                atom.setAtomicNumber(AtomicNumber.valueOf(atomName));
+                AtomicNumber an = AtomicNumber.valueOf(atomName);
+
+                if (an == AtomicNumber.H && atom.numberOfBonds() > 1) {
+                    Notifier.instance().notification("H cannot have two bonds");
+                } else {
+                    atom.setAtomicNumber(an);
+                }
             } catch (IllegalArgumentException iae) {
                 atom.setArbitraryName(atomName);
             }
