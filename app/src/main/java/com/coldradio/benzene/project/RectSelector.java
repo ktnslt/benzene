@@ -137,4 +137,9 @@ public class RectSelector implements IRegionSelector {
     public List<Atom> getSelectedAtoms() {
         return mSelectedAtoms;
     }
+
+    @Override
+    public boolean canceled() {
+        return false;
+    }
 }

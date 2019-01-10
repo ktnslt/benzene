@@ -15,16 +15,14 @@ import java.util.List;
 public class FingerSelector implements IRegionSelector {
     private List<PointF> mFingerPath = new ArrayList<>();
     private List<Atom> mSelectedAtoms = new ArrayList<>();
-
-    private void reset() {
-        mFingerPath.clear();
-        mSelectedAtoms.clear();
-    }
+    private boolean mCancelSelector = false;
 
     private void updateSelectedAtoms(PointF l1, PointF l2) {
         for (Compound compound : Project.instance().getCompounds()) {
             for (Atom atom : compound.getAtoms()) {
-                if (! mSelectedAtoms.contains(atom) && atom.isVisible() && Geometry.distanceFromPointToPoint(l2, atom.getPoint()) < Configuration.SELECT_RANGE) {
+                float distance = (l1 == l2 ? Geometry.distanceFromPointToPoint(atom.getPoint(), l1) : Geometry.distanceFromPointToLineSegment(atom.getPoint(), l1, l2));
+
+                if (! mSelectedAtoms.contains(atom) && atom.isVisible() && distance < Configuration.SELECT_RANGE) {
                     mSelectedAtoms.add(atom);
                 }
             }
@@ -32,8 +30,13 @@ public class FingerSelector implements IRegionSelector {
     }
 
     private void addToPath(PointF point) {
+        if (mFingerPath.size() > 0) {
+            updateSelectedAtoms(mFingerPath.get(mFingerPath.size() - 1), point);
+        } else {
+            updateSelectedAtoms(point, point);
+        }
+        // added as new. the passed point is reused, and the reference will not be changed at all
         mFingerPath.add(new PointF(point.x, point.y));
-        updateSelectedAtoms(mFingerPath.get(mFingerPath.size() - 1), point);
     }
 
     @Override
@@ -57,8 +60,11 @@ public class FingerSelector implements IRegionSelector {
     @Override
     public boolean onTouchEvent(PointF point, int touchAction) {
         if (touchAction == MotionEvent.ACTION_DOWN) {
-            reset();
-            addToPath(point);
+            if (mFingerPath.isEmpty()) {
+                addToPath(point);
+            } else {
+                mCancelSelector = true;
+            }
         } else if (touchAction == MotionEvent.ACTION_MOVE) {
             if (Geometry.distanceFromPointToPoint(point, mFingerPath.get(mFingerPath.size() - 1)) > 20) {
                 addToPath(point);
@@ -75,5 +81,10 @@ public class FingerSelector implements IRegionSelector {
     @Override
     public List<Atom> getSelectedAtoms() {
         return mSelectedAtoms;
+    }
+
+    @Override
+    public boolean canceled() {
+        return mCancelSelector;
     }
 }

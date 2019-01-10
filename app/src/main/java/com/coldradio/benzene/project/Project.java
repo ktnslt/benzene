@@ -27,9 +27,16 @@ public class Project {
     private ProjectFile mProjectFile;
 
     private void removeEmptyCompound() {
+        // separate list for ConcurrentModificationError
+        List<Compound> emptyCompounds = new ArrayList<>();
+
         for (Compound compound : mCompoundList) {
             if (compound.size() == 0)
-                removeCompound(compound);
+                emptyCompounds.add(compound);
+        }
+
+        for (Compound compound : emptyCompounds) {
+            removeCompound(compound);
         }
     }
 

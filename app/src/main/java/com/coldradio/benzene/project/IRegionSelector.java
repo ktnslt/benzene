@@ -12,4 +12,5 @@ public interface IRegionSelector {
     void draw(Canvas canvas, Paint paint);
     boolean onTouchEvent(PointF point, int touchAction);
     List<Atom> getSelectedAtoms();
+    boolean canceled();
 }

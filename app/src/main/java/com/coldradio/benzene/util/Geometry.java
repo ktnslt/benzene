@@ -21,6 +21,16 @@ public class Geometry {
         return (float) Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
 
+    public static float distanceFromPointToLineSegment(PointF p, PointF l1, PointF l2) {
+        if (angleOfTriangle(p, l1, l2) > MathConstant.RADIAN_90 || angleOfTriangle(p, l2, l1) > MathConstant.RADIAN_90) {
+            // p is out of l1 and l2
+            return Math.min(distanceFromPointToPoint(p, l1), distanceFromPointToPoint(p, l2));
+        } else {
+            // p is within l1 and l2
+            return distanceFromPointToLine(p, l1, l2);
+        }
+    }
+
     public static float distanceFromPointToLine(PointF p, PointF l1, PointF l2) {
         return Math.abs((l2.y - l1.y) * p.x - (l2.x - l1.x) * p.y + l2.x * l1.y - l2.y * l1.x) / distanceFromPointToPoint(l1, l2);
     }
@@ -80,6 +90,15 @@ public class Geometry {
 
     public static PointF[] regularTrianglePoint(PointF p1, PointF p2) {
         return new PointF[]{cwRotate(p1, p2, (float) Math.toRadians(60)), cwRotate(p1, p2, (float) Math.toRadians(-60))};
+    }
+
+    public static float angleOfTriangle(PointF p1, PointF p2, PointF center) {
+        // calculated from cos 2 law
+        float a = distanceFromPointToPoint(center, p1);
+        float b = distanceFromPointToPoint(center, p2);
+        float c = distanceFromPointToPoint(p1, p2);
+
+        return (float) Math.acos((a * a + b * b - c * c) / (2 * a * b));
     }
 
     public static float angle(PointF from, PointF to, PointF center) {

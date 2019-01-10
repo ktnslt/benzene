@@ -51,7 +51,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
 
         // When View is created, the default x, y are 0, hence reset Screen's x and y
-        ScreenInfo.instance().setScreenXY((int) getX(), (int) getY());
+        ScreenInfo.instance().setScreen((int) getX(), (int) getY(), getWidth(), getHeight());
     }
 
     public void updateContextMenu() {
@@ -70,7 +70,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         // The project is offset to zero. this might be helpful to keep Atoms among zero points.
         // In case that Atom's position is too large, the precision might be problems.
         if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
-            Project.instance().offsetTo(0, 0);
+            //Project.instance().offsetTo(0, 0);
 
             PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
 
@@ -82,7 +82,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        ScreenInfo.instance().setScreenSize(getWidth(), getHeight());
+        ScreenInfo.instance().setScreen((int) getX(), (int) getY(), getWidth(), getHeight());
         mDrawerManager.draw(canvas);
     }
 
@@ -154,7 +154,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);
-            ScreenInfo.instance().offset(distanceX, distanceY);
         }
 
         return true;

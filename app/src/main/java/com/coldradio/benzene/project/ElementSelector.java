@@ -232,8 +232,11 @@ public class ElementSelector {
         if (mRegionSelector != null) {
             ret = mRegionSelector.onTouchEvent(point, touchAction);
 
-            if (ret)
+            if (mRegionSelector.canceled()) {
+                reset();
+            } else if (ret) {
                 updateSelectedAtoms();
+            }
         }
 
         return ret;
