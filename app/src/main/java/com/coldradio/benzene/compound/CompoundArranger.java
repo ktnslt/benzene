@@ -1,6 +1,7 @@
 package com.coldradio.benzene.compound;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.MathConstant;
@@ -27,6 +28,22 @@ public class CompoundArranger {
         compound.offset(center.x - compoundCenter.x, center.y - compoundCenter.y);
 
         return compound;
+    }
+
+    public static PointF center(List<Compound> compoundList) {
+        if (compoundList.size() > 0) {
+            RectF allRegion = compoundList.get(0).rectRegion();
+
+            for (Compound compound : compoundList) {
+                RectF region = compound.rectRegion();
+
+                allRegion.union(region);
+            }
+
+            return new PointF(allRegion.centerX(), allRegion.centerY());
+        } else {
+            return new PointF(0, 0); // TODO: return the center of the screen?
+        }
     }
 
     public static Compound zoom(Compound compound, float ratio) {

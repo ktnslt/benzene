@@ -23,7 +23,7 @@ public class Project {
     private static final Project project = new Project();
     private List<Compound> mCompoundList = new ArrayList<>();
     private ElementSelector mElementSelector = new ElementSelector();
-    private Compound mCopiedCompound;
+    private ElementCopier mElementCopier = new ElementCopier();
     private ProjectFile mProjectFile;
 
     private void removeEmptyCompound() {
@@ -137,41 +137,22 @@ public class Project {
         return false;
     }
 
-    public PointF centerOfAllCompounds() {
-        if (mCompoundList.size() > 0) {
-            RectF allRegion = mCompoundList.get(0).rectRegion();
-
-            for (Compound compound : mCompoundList) {
-                RectF region = compound.rectRegion();
-
-                allRegion.union(region);
-            }
-
-            return new PointF(allRegion.centerX(), allRegion.centerY());
-        } else {
-            return new PointF(0, 0); // TODO: return the center of the screen?
-        }
-    }
-
     public boolean rotateSelectedCompound(PointF point, int action) {
         return mElementSelector.rotateSelectedCompound(point, action);
     }
 
     public void copySelectedCompound() {
-        mCopiedCompound = mElementSelector.getSelectedCompound().copy();
+        mElementCopier.copy(mElementSelector.getSelectedAsList());
     }
 
     public void pasteSelectedCompound(PointF point) {
-        if (mCopiedCompound != null) {
-            Compound compound = mCopiedCompound.copy();
-
-            CompoundArranger.alignCenter(compound, point);
-            addCompoundAsSelected(compound);
+        if (mElementCopier.hasCopied()) {
+            mElementCopier.paste(Project.instance());
         }
     }
 
     public boolean hasCopiedCompound() {
-        return mCopiedCompound != null;
+        return mElementCopier.hasCopied();
     }
 
     public void changeSelectedAtom(String atomName) {

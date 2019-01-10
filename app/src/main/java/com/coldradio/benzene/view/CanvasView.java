@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.ScreenInfo;
@@ -72,7 +73,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
             //Project.instance().offsetTo(0, 0);
 
-            PointF centerOfAllCompounds = Project.instance().centerOfAllCompounds();
+            PointF centerOfAllCompounds = CompoundArranger.center(Project.instance().getCompounds());
 
             setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
             setScrollY((int) centerOfAllCompounds.y - ScreenInfo.instance().screenHeight() / 2);
