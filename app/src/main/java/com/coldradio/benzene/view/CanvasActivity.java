@@ -83,7 +83,7 @@ public class CanvasActivity extends AppCompatActivity {
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_copy) {
             Project.instance().copySelectedCompound();
-            Notifier.instance().notification("Compound Copied");
+            Notifier.instance().notification(Project.instance().getElementCopier().numberOfCopiedCompounds() + " Compounds Copied");
         } else if (id == R.id.action_paste) {
             Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
         } else if (id == R.id.action_redo) {

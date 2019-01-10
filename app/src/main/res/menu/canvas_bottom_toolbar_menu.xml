@@ -84,6 +84,7 @@
         android:id="@+id/action_coloring"
         android:orderInCategory="95"
         android:title="Atom Coloring"
+        android:visible="false"
         android:icon="@drawable/ic_menu_coloring"
         app:showAsAction="always" />
 

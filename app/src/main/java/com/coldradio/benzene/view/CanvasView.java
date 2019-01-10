@@ -29,9 +29,19 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private boolean mScrolledAfterSelected;
     private SelectedElementAccessoryDrawer mSelectedElementAccessoryDrawer;
     private boolean mSynthesizing;
+    private boolean mFirstDraw = true;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
+    }
+
+    private void toCenter() {
+        if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
+            PointF centerOfAllCompounds = CompoundArranger.center(Project.instance().getCompounds());
+
+            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
+            setScrollY((int) centerOfAllCompounds.y - ScreenInfo.instance().screenHeight() / 2);
+        }
     }
 
     public CanvasView(Activity activity) {
@@ -52,7 +62,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
 
         // When View is created, the default x, y are 0, hence reset Screen's x and y
-        ScreenInfo.instance().setScreen((int) getX(), (int) getY(), getWidth(), getHeight());
+        ScreenInfo.instance().setScreen(getScrollX(), getScrollY(), getWidth(), getHeight());
     }
 
     public void updateContextMenu() {
@@ -67,23 +77,16 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mSynthesizing = syn;
     }
 
-    public void toCenter() {
-        // The project is offset to zero. this might be helpful to keep Atoms among zero points.
-        // In case that Atom's position is too large, the precision might be problems.
-        if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
-            //Project.instance().offsetTo(0, 0);
-
-            PointF centerOfAllCompounds = CompoundArranger.center(Project.instance().getCompounds());
-
-            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
-            setScrollY((int) centerOfAllCompounds.y - ScreenInfo.instance().screenHeight() / 2);
-        }
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        ScreenInfo.instance().setScreen((int) getX(), (int) getY(), getWidth(), getHeight());
+        ScreenInfo.instance().setScreen(getScrollX(), getScrollY(), getWidth(), getHeight());
+
+        if (mFirstDraw) {
+            toCenter();
+            mFirstDraw = false;
+        }
+        //canvas.drawCircle(ScreenInfo.instance().centerPoint().x, ScreenInfo.instance().centerPoint().y, 10, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
         mDrawerManager.draw(canvas);
     }
 

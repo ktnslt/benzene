@@ -7,6 +7,9 @@ import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
+import com.coldradio.benzene.compound.CompoundReactor;
+import com.coldradio.benzene.library.rule.LetteringIfNotSeenRule;
+import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.util.ScreenInfo;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.List;
 
 public class ElementCopier {
     private List<Compound> mCopiedCompound = new ArrayList<>();
+    private LetteringIfNotSeenRule mLetteringIfNotSeenRule = new LetteringIfNotSeenRule();
 
     private void restoreBond(Compound compound, List<Atom> selectedAtoms) {
         // here selectedAtoms are assigned with AID that is synchronized in compound as well
@@ -22,14 +26,14 @@ public class ElementCopier {
                 Atom that_atom = bond.getBoundAtom();
 
                 if (selectedAtoms.contains(that_atom)) {
-                    compound.makeBond(atom.getAID(), that_atom.getAID(), bond.getBondType());
+                    compound.makeBond(atom.getAID(), that_atom.getAID(), bond.getBondType(), bond.getBondAnnotation());
                 }
             }
         }
     }
 
     public void copy(List<Atom> selectedAtoms) {
-        Compound compound = new Compound();
+        Compound tmpCompound = new Compound();
         int aid = 0;
 
         for (Atom atom : selectedAtoms) {
@@ -37,13 +41,14 @@ public class ElementCopier {
         }
 
         for (Atom atom : selectedAtoms) {
-            compound.addAtom(atom.copy());
+            tmpCompound.addAtom(atom.copy());
         }
 
         // restore the bond
-        restoreBond(compound, selectedAtoms);
+        restoreBond(tmpCompound, selectedAtoms);
 
-        mCopiedCompound = CompoundInspector.split(compound);
+        mCopiedCompound = CompoundInspector.split(CompoundReactor.saturateWithHydrogen(tmpCompound));
+        RuleSet.instance().apply(mCopiedCompound, mLetteringIfNotSeenRule);
     }
 
     public void paste(Project project) {
@@ -64,5 +69,9 @@ public class ElementCopier {
 
     public boolean hasCopied() {
         return ! mCopiedCompound.isEmpty();
+    }
+
+    public int numberOfCopiedCompounds() {
+        return mCopiedCompound.size();
     }
 }

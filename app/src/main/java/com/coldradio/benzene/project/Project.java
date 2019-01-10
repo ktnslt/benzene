@@ -67,6 +67,10 @@ public class Project {
         return mElementSelector;
     }
 
+    public ElementCopier getElementCopier() {
+        return mElementCopier;
+    }
+
     public boolean select(PointF point) {
         return mElementSelector.select(point);
     }

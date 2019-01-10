@@ -21,6 +21,16 @@ public class ContextMenuManager {
         }
     }
 
+    private void enableItem(Toolbar toolbar, int id, boolean enable) {
+        if (toolbar != null) {
+            MenuItem item = toolbar.getMenu().findItem(id);
+
+            if (item != null) {
+                item.setEnabled(enable);
+            }
+        }
+    }
+
     private ContextMenuManager show(int id) {
         showItem(mBottomToolbar, id, true);
         return this;
@@ -46,9 +56,9 @@ public class ContextMenuManager {
     }
 
     private void setTopToolbar(boolean paste, boolean cut, boolean copy) {
-        showItem(mTopToolbar, R.id.action_paste, paste);
-        showItem(mTopToolbar, R.id.action_cut, cut);
-        showItem(mTopToolbar, R.id.action_copy, copy);
+//        enableItem(mTopToolbar, R.id.action_paste, paste);
+//        enableItem(mTopToolbar, R.id.action_cut, cut);
+//        enableItem(mTopToolbar, R.id.action_copy, copy);
     }
 
     public ContextMenuManager(Toolbar topToolbar, Toolbar bottomToolbar) {

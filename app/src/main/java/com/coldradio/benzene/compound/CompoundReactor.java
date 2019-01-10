@@ -174,6 +174,14 @@ public class CompoundReactor {
         }
     }
 
+    public static Compound saturateWithHydrogen(Compound compound) {
+        saturateWithHydrogen(compound, AtomicNumber.C, 4);
+        saturateWithHydrogen(compound, AtomicNumber.O, 2);
+        saturateWithHydrogen(compound, AtomicNumber.N, 3);
+
+        return compound;
+    }
+
     public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber) * (oppositeSite ? -1 : 1);
         Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation

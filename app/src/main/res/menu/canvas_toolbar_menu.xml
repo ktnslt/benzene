@@ -3,32 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_cut"
-        android:orderInCategory="10"
-        android:title="Cut"
-        android:icon="@drawable/ic_menu_cut"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_copy"
-        android:orderInCategory="30"
-        android:title="Copy"
-        android:icon="@drawable/ic_menu_copy"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_paste"
-        android:orderInCategory="40"
-        android:title="Paste"
-        android:icon="@drawable/ic_menu_paste"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_undo"
-        android:orderInCategory="50"
+        android:orderInCategory="10"
         android:title="Undo"
         android:icon="@drawable/ic_menu_undo"
         android:checkable="true"
@@ -37,8 +13,39 @@
 
     <item
         android:id="@+id/action_redo"
-        android:orderInCategory="60"
+        android:orderInCategory="20"
         android:title="Redo"
         android:icon="@drawable/ic_menu_redo"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="30"
+        android:title="Redo"
+        android:icon="@drawable/ic_menu_save"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_cut"
+        android:orderInCategory="40"
+        android:title="Cut"
+        android:icon="@drawable/ic_menu_cut"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_copy"
+        android:orderInCategory="50"
+        android:title="Copy"
+        android:icon="@drawable/ic_menu_copy"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_paste"
+        android:orderInCategory="60"
+        android:title="Paste"
+        android:icon="@drawable/ic_menu_paste"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
 </menu>
