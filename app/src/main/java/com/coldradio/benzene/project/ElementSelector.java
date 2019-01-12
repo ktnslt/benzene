@@ -29,6 +29,7 @@ public class ElementSelector {
     private boolean mIsRotating = false;
     private IRegionSelector mRegionSelector;
     private List<Atom> mSelectedAtomList = new ArrayList<>();
+    private boolean mSelectionCancelled;
 
     private static Pair<Object, Float> selectEdge(PointF point, Compound compound) {
         MutablePair<Object, Float> selectedEdge = MutablePair.create(null, (float) Configuration.SELECT_RANGE);
@@ -231,8 +232,9 @@ public class ElementSelector {
 
         if (mRegionSelector != null) {
             ret = mRegionSelector.onTouchEvent(point, touchAction);
+            mSelectionCancelled = mRegionSelector.canceled();
 
-            if (mRegionSelector.canceled()) {
+            if (mSelectionCancelled) {
                 reset();
             } else if (ret) {
                 updateSelectedAtoms();
@@ -254,5 +256,9 @@ public class ElementSelector {
 
     public IRegionSelector getRegionSelector() {
         return mRegionSelector;
+    }
+
+    public boolean selectionCancelled() {
+        return mSelectionCancelled;
     }
 }

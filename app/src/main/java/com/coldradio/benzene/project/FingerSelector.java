@@ -63,7 +63,10 @@ public class FingerSelector implements IRegionSelector {
             if (mFingerPath.isEmpty()) {
                 addToPath(point);
             } else {
-                mCancelSelector = true;
+                // shall return false. if return true, this ACTION_DOWN event will not go to GestureDetector.
+                // Then, the GestureDetector scroll the screen without DOWN event only with MOVE event
+                mCancelSelector = true; // this will delete this object, hence no need to reset it to false
+                return false;
             }
         } else if (touchAction == MotionEvent.ACTION_MOVE) {
             if (Geometry.distanceFromPointToPoint(point, mFingerPath.get(mFingerPath.size() - 1)) > 20) {

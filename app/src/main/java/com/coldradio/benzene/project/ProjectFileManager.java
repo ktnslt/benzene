@@ -79,6 +79,9 @@ public class ProjectFileManager {
     }
 
     public void savePreviewOnly(Project project, View view) {
+        // shift the project not to have compounds in negative region.
+        project.offsetTo(10, 10);
+
         ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
     }
 

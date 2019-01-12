@@ -188,4 +188,26 @@ public class CompoundArranger {
             }
         }
     }
+
+    public static void flipBond(Atom fromAtom, final Atom edgeAtom, Compound compound) {
+        // fromAtom and edgeAtom has an bond
+        if (compound != null) {
+            final PointF l1 = fromAtom.getPoint(), l2 = edgeAtom.getPoint();
+
+            // fromAtom and edgeAtom shall have a bond. All atoms linked to fromAtom will be flipped here
+            TreeTraveler.travelIfTrue(new TreeTraveler.IAtomVisitor() {
+                @Override
+                public boolean visit(Atom atom, Object... args) {
+                    if (atom != edgeAtom) {
+                        atom.setPoint(Geometry.symmetricToLine(atom.getPoint(), l1, l2));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }, fromAtom);
+
+            compound.positionModified();
+        }
+    }
 }

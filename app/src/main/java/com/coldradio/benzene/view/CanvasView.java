@@ -60,9 +60,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
-
-        // When View is created, the default x, y are 0, hence reset Screen's x and y
-        ScreenInfo.instance().setScreen(getScrollX(), getScrollY(), getWidth(), getHeight());
     }
 
     public void updateContextMenu() {
@@ -102,7 +99,13 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         } else if (!mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
+            if (Project.instance().getElementSelector().selectionCancelled()) {
+                updateContextMenu();
+            }
+
             switch (maskedAction) {
+                // the overall sequence is ACTION_DOWN (first finger) -> ACTION_POINTER_DOWN (second finger)
+                // if makes ACTION_DOWN cannot replace below CASE, causing de-select whatever selected when try to move the selected element.
                 case MotionEvent.ACTION_UP:
                     if (!mScrolledAfterSelected) {
                         if (mSynthesizing) {
@@ -112,8 +115,8 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                             if (!mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
                                 Project.instance().select(mActualClickedPosition);
                                 updateContextMenu();
-                                invalidate(); // invalidate also for the de-select case
                             }
+                            invalidate(); // invalidate also for the de-select case
                         }
                         mSynthesizing = false;
                     }

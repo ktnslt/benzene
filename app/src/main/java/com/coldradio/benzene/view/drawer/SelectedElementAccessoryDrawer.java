@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.ElementSelector;
@@ -76,10 +77,10 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
 
             if (mFlipBound1.contains((int) clickedPoint.x, (int) clickedPoint.y)) {
                 // Bound1 towards edge.second
-                Project.instance().flipBond(edge.second, edge.first);
+                CompoundArranger.flipBond(edge.second, edge.first, Project.instance().findCompound(edge.second));
             } else if (mFlipBound2.contains((int) clickedPoint.x, (int) clickedPoint.y)) {
                 // Bond2 towards edge.first
-                Project.instance().flipBond(edge.first, edge.second);
+                CompoundArranger.flipBond(edge.first, edge.second, Project.instance().findCompound(edge.second));
             } else {
                 return false;
             }

@@ -171,4 +171,8 @@ public class Compound {
         mAtoms.addAll(compound.getAtoms());
         mCenterOfRectangle = null;
     }
+
+    public void positionModified() {
+        mCenterOfRectangle = null;
+    }
 }

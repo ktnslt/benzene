@@ -246,23 +246,6 @@ public class Project {
         }
     }
 
-    public void flipBond(Atom fromAtom, final Atom edgeAtom) {
-        final PointF l1 = fromAtom.getPoint(), l2 = edgeAtom.getPoint();
-
-        // fromAtom and edgeAtom shall have a bond. All atoms linked to fromAtom will be flipped here
-        TreeTraveler.travelIfTrue(new TreeTraveler.IAtomVisitor() {
-            @Override
-            public boolean visit(Atom atom, Object... args) {
-                if (atom != edgeAtom) {
-                    atom.setPoint(Geometry.symmetricToLine(atom.getPoint(), l1, l2));
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }, fromAtom);
-    }
-
     public void showHydrogenForSelectedElement(boolean show) {
         for (Atom atom : mElementSelector.getSelectedAsList()) {
             CompoundArranger.showAllHydrogen(atom, show);
