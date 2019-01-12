@@ -68,7 +68,7 @@ public class ContextMenuManager {
 
     public void update() {
         // tom toolbar update
-        if (Project.instance().getElementSelector().selection() != ElementSelector.Selection.NONE) {
+        if (Project.instance().getElementSelector().hasSelected()) {
             setTopToolbar(false, true, true);
         } else if (Project.instance().hasCopiedCompound()) {
             setTopToolbar(true, false, false);

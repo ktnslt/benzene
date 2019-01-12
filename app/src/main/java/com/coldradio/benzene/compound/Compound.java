@@ -8,9 +8,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Compound {
-    protected List<Atom> mAtoms;
+    private List<Atom> mAtoms;
     private PointF mCenterOfRectangle;
     private RectF mRegion = new RectF();
+    private long mID;
+    private static long msIdBase;
 
     private void resetAID() {
         int aid = 1;
@@ -22,10 +24,12 @@ public class Compound {
 
     public Compound() {
         mAtoms = new ArrayList<>();
+        mID = msIdBase++;
     }
 
     public Compound(List<Atom> atoms) {
         mAtoms = atoms;
+        mID = msIdBase++;
     }
 
     public Compound(int[] aids, AtomicNumber[] atomicNumber) {
@@ -34,10 +38,13 @@ public class Compound {
         for (int ii = 0; ii < aids.length; ++ii) {
             mAtoms.add(new Atom(aids[ii], atomicNumber[ii]));
         }
+        mID = msIdBase++;
     }
 
     public Compound copy() {
         Compound that_compound = new Compound();
+
+        that_compound.mID = this.mID;
 
         for (Atom this_atom : mAtoms) {
             that_compound.mAtoms.add(this_atom.copy());
@@ -63,6 +70,10 @@ public class Compound {
             if (atom.getAID() == aid) return atom;
         }
         return null;
+    }
+
+    public long getID() {
+        return mID;
     }
 
     public int size() {

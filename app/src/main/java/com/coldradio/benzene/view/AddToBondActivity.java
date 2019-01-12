@@ -1,7 +1,6 @@
 package com.coldradio.benzene.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +18,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.PaintSet;
@@ -122,17 +122,13 @@ public class AddToBondActivity extends AppCompatActivity {
         findViewById(R.id.a2b_btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent data = new Intent();
                 int edgeNumber = Integer.parseInt(mEdgeNumber.getText().toString());
 
                 if (edgeNumber >= 3) {
-                    data.putExtra("EdgeNumber", edgeNumber);
-                    data.putExtra("OppositeSite", mOppositeSite);
-                    data.putExtra("DeleteHydrogenBeforeAdd", mDeleteHydrogenBeforeAdd);
-                    data.putExtra("SaturateWithHydrogen", mSaturateWithHydrogen);
-                    setResult(RESULT_OK, data);
-                    finish();
+                    ProjectFileManager.instance().pushCompoundChangedHistory(Project.instance().getElementSelector().getSelectedCompound());
+                    Project.instance().addCyclicToSelectedBond(edgeNumber, mOppositeSite, mDeleteHydrogenBeforeAdd, mSaturateWithHydrogen);
                 }
+                finish();
             }
         });
 

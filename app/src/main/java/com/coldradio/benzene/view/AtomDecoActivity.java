@@ -17,9 +17,11 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.AtomicNumber;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Notifier;
 
 public class AtomDecoActivity extends AppCompatActivity {
@@ -29,10 +31,12 @@ public class AtomDecoActivity extends AppCompatActivity {
     private EditText mChargeET;
     private SeekBar mChargeAsCircleSeekBox;
     // saved originals
+    // TODO below 4 is not necessary since the whole mOrigCompound is saved
     private AtomDecoration mOriginalAtomDecoration;
     private boolean mOrigShowHydrogenBond;
     private AtomicNumber mOrigAtomicNumber;
     private String mOrigArbitraryName;
+    private Compound mOrigCompound;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,6 +174,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProjectFileManager.instance().pushCompoundChangedHistory(mOrigCompound);
                 finish();
             }
         });
@@ -290,6 +295,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         mOrigShowHydrogenBond = CompoundInspector.showAnyHydrogen(mSelectedAtom);
         mOrigAtomicNumber = mSelectedAtom.getAtomicNumber();
         mOrigArbitraryName = mSelectedAtom.getArbitraryName();
+        mOrigCompound = Project.instance().getElementSelector().getSelectedCompound().copy();
 
         // set the default values
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElementName());

@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.DrawerManager;
@@ -27,9 +29,11 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private boolean mMoveSelectedElement;
     private PointF mActualClickedPosition = new PointF();
     private boolean mScrolledAfterSelected;
+    private boolean mElementMoved;
     private SelectedElementAccessoryDrawer mSelectedElementAccessoryDrawer;
     private boolean mSynthesizing;
     private boolean mFirstDraw = true;
+    private Toolbar mTopToolbar;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -52,14 +56,33 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mSelectedElementAccessoryDrawer = new SelectedElementAccessoryDrawer(getResources().getDrawable(R.drawable.ic_menu_flip_bond));
 
         mGestureDetector = new GestureDetectorCompat(getContext(), this);
-        mContextMenuManager = new ContextMenuManager((Toolbar) activity.findViewById(R.id.canvas_top_toolbar),
-                (Toolbar) activity.findViewById(R.id.canvas_bottom_toolbar));
+        mTopToolbar = activity.findViewById(R.id.canvas_top_toolbar);
+        mContextMenuManager = new ContextMenuManager(mTopToolbar, (Toolbar) activity.findViewById(R.id.canvas_bottom_toolbar));
 
         // register drawer
         mDrawerManager.addPreCompoundDrawer(new SelectedRegionDrawer());
         mDrawerManager.addPreCompoundDrawer(new SelectedElementBackgroundDrawer());
         mDrawerManager.addPostCompoundDrawer(new AtomDecorationDrawer());
         mDrawerManager.addPostCompoundDrawer(mSelectedElementAccessoryDrawer);
+
+        ProjectFileManager.instance().clearHistory();
+
+        // register listener
+        ProjectFileManager.instance().addListener(new ProjectFileManager.OnChangeListener() {
+            @Override
+            public void saved() {
+                MenuItem item = mTopToolbar.getMenu().findItem(R.id.action_save);
+                if (item != null)
+                    item.setVisible(false);
+            }
+
+            @Override
+            public void changed() {
+                MenuItem item = mTopToolbar.getMenu().findItem(R.id.action_save);
+                if (item != null)
+                    item.setVisible(true);
+            }
+        });
     }
 
     public void updateContextMenu() {
@@ -89,17 +112,19 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        ElementSelector elementSelector = Project.instance().getElementSelector();
+
         calcActualClickedPosition(event);
 
         if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
-        } else if (Project.instance().getElementSelector().onTouchEvent(mActualClickedPosition, event.getAction())) {
+        } else if (elementSelector.onTouchEvent(mActualClickedPosition, event.getAction())) {
             invalidate();
         } else if (!mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
-            if (Project.instance().getElementSelector().selectionCancelled()) {
+            if (elementSelector.selectionCancelled()) {
                 updateContextMenu();
             }
 
@@ -109,8 +134,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                 case MotionEvent.ACTION_UP:
                     if (!mScrolledAfterSelected) {
                         if (mSynthesizing) {
-                            if (Project.instance().synthesize(mActualClickedPosition))
+                            // the pushAllChangedHistory for synthesize is handled in synthesize()
+                            if (Project.instance().synthesize(mActualClickedPosition)) {
                                 invalidate();
+                            }
                         } else {
                             if (!mSelectedElementAccessoryDrawer.flipBond(mActualClickedPosition)) {
                                 Project.instance().select(mActualClickedPosition);
@@ -120,6 +147,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                         }
                         mSynthesizing = false;
                     }
+                    mElementMoved = false;
                     mScrolledAfterSelected = false;
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN:
@@ -156,8 +184,13 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         pmScrollDistance.set(-distanceX, -distanceY);
         mScrolledAfterSelected = true;
 
-        if (mMoveSelectedElement && Project.instance().getElementSelector().selection() != ElementSelector.Selection.NONE) {
+        if (mMoveSelectedElement && Project.instance().getElementSelector().hasSelected()) {
+            if (! mElementMoved) {
+                // this is first movement
+                ProjectFileManager.instance().pushForChange();
+            }
             Project.instance().getElementSelector().moveSelectedElement(pmScrollDistance);
+            mElementMoved = true;
             invalidate();
         } else {
             scrollBy((int) distanceX, (int) distanceY);

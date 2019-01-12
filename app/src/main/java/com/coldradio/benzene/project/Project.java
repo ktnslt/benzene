@@ -13,7 +13,6 @@ import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Notifier;
-import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,9 +47,11 @@ public class Project {
         return Collections.unmodifiableList(mCompoundList);
     }
 
-    public void addCompoundAsSelected(Compound compound) {
+    public void addCompound(Compound compound, boolean select) {
         mCompoundList.add(compound);
-        mElementSelector.selectCompound(compound);
+        if (select) {
+            mElementSelector.selectCompound(compound);
+        }
     }
 
     public void addCompounds(List<Compound> compounds) {
@@ -86,6 +87,14 @@ public class Project {
     public Compound findCompound(Atom atom) {
         for (Compound compound : mCompoundList) {
             if (compound.getAtoms().contains(atom))
+                return compound;
+        }
+        return null;
+    }
+
+    public Compound findCompound(long cID) {
+        for (Compound compound : mCompoundList) {
+            if (compound.getID() == cID)
                 return compound;
         }
         return null;
@@ -133,6 +142,7 @@ public class Project {
             Pair<Object, Compound> toAtom = ElementSelector.getSelectedElement(point);
 
             if (toAtom != null && toAtom.first instanceof Atom) {
+                ProjectFileManager.instance().pushAllChangedHistory(Project.instance().getCompounds());
                 CompoundReactor.makeBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedAtom(), toAtom.second, (Atom) toAtom.first);
                 return true;
             }
@@ -263,5 +273,17 @@ public class Project {
             if (atom.getAtomicNumber() == an)
                 CompoundReactor.saturateWithHydrogen(compound, atom, maxH);
         }
+    }
+
+    public Compound replaceCompound(long cID, Compound compound) {
+        Compound c = findCompound(cID);
+
+        if (c != null) {
+            removeCompound(c);
+            mCompoundList.add(compound);
+
+            return c;
+        }
+        return null;
     }
 }

@@ -16,6 +16,8 @@ import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.SearchFilter;
+import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.project.history.CompoundAddedHistory;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
@@ -121,8 +123,9 @@ class CompoundPreview extends View implements View.OnClickListener {
 
         CompoundArranger.zoomToStandard(compound, 1);
         CompoundArranger.alignCenter(compound, ScreenInfo.instance().centerPoint());
-        Project.instance().addCompoundAsSelected(compound);
+        Project.instance().addCompound(compound, true);
 
         Notifier.instance().notification(mCompoundIndex.preferredIUPACName + " is added");
+        ProjectFileManager.instance().push(new CompoundAddedHistory(compound));
     }
 }

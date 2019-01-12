@@ -16,9 +16,11 @@ import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.compound.funcgroup.*;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
@@ -96,7 +98,10 @@ public class AddToAtomActivity extends AppCompatActivity {
         findViewById(R.id.a2a_btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CompoundReactor.addFunctionalGroupToAtom(Project.instance().getElementSelector().getSelectedCompound(), attachAtom, mFuncGroup, mDeleteHOfSelectedAtom);
+                Compound c = Project.instance().getElementSelector().getSelectedCompound();
+
+                ProjectFileManager.instance().pushCompoundChangedHistory(c);
+                CompoundReactor.addFunctionalGroupToAtom(c, attachAtom, mFuncGroup, mDeleteHOfSelectedAtom);
                 finish();
             }
         });

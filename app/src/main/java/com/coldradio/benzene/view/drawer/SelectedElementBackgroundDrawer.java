@@ -26,7 +26,7 @@ public class SelectedElementBackgroundDrawer implements ICompoundDrawer {
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
         final ElementSelector elementSelector = Project.instance().getElementSelector();
 
-        if (elementSelector.selection() == ElementSelector.Selection.NONE)
+        if (! elementSelector.hasSelected())
             return false;
         if (elementSelector.selection() != ElementSelector.Selection.PARTIAL && elementSelector.getSelectedCompound() != compound)
             return false;

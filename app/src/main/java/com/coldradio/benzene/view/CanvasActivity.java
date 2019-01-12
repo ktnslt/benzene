@@ -13,7 +13,6 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.FingerSelector;
-import com.coldradio.benzene.project.IRegionSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
 import com.coldradio.benzene.util.Notifier;
@@ -74,34 +73,44 @@ public class CanvasActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         boolean ret = true;
+        ElementSelector elementSelector = Project.instance().getElementSelector();
 
         // FliBondGuideLine will be turned on if the menu is selected
         mCanvasView.showFlipBondGuideLine(false);
 
         if (id == R.id.action_cut) {
+            ProjectFileManager.instance().pushForDeletion();
             Project.instance().copySelectedCompound();
             Project.instance().deleteSelectedElement();
         } else if (id == R.id.action_copy) {
             Project.instance().copySelectedCompound();
             Notifier.instance().notification(Project.instance().getElementCopier().numberOfCopiedCompounds() + " Compounds Copied");
         } else if (id == R.id.action_paste) {
+            if (Project.instance().getElementCopier().hasCopied()) {
+                ProjectFileManager.instance().pushAllChangedHistory(Project.instance().getCompounds());  // can paste multiple compounds
+            }
             Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
         } else if (id == R.id.action_redo) {
-
+            ProjectFileManager.instance().redo();
         } else if (id == R.id.action_undo) {
-
+            ProjectFileManager.instance().undo();
+        } else if (id == R.id.action_save) {
+            ProjectFileManager.instance().saveWithoutPreview(Project.instance());
         } else if (id == R.id.action_delete_selected) {
+            ProjectFileManager.instance().pushForDeletion();
             Project.instance().deleteSelectedElement();
             Notifier.instance().notification("Total Compounds: " + String.valueOf(Project.instance().getCompounds().size()));
         } else if (id == R.id.action_add) {
             startActivity(new Intent("com.coldradio.benzene.COMPOUND_SEARCH"));
         } else if (id == R.id.action_func_group) {
-            startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_ATOM"), ActivityRequestCode.ADD_TO_ATOM_REQ.ordinal());
+            startActivity(new Intent("com.coldradio.benzene.ADD_TO_ATOM"));
         } else if (id == R.id.action_add_cyclic_to_bond) {
-            startActivityForResult(new Intent("com.coldradio.benzene.ADD_TO_BOND"), ActivityRequestCode.ADD_TO_BOND_REQ.ordinal());
+            startActivity(new Intent("com.coldradio.benzene.ADD_TO_BOND"));
         } else if (id == R.id.action_bond) {
+            ProjectFileManager.instance().pushForChange();
             Project.instance().cycleBondType();
         } else if (id == R.id.action_synthesize) {
+            // no action for push
             if (Project.instance().getElementSelector().selection() == ElementSelector.Selection.ATOM) {
                 Notifier.instance().notification("Select Atom to make a bond");
                 mCanvasView.synthesizing(true);
@@ -109,16 +118,20 @@ public class CanvasActivity extends AppCompatActivity {
                 Notifier.instance().notification("Select Atom first");
             }
         } else if (id == R.id.action_atom_deco) {
-            startActivityForResult(new Intent("com.coldradio.benzene.ATOM_DECO"), ActivityRequestCode.ATOM_DECO_REQ.ordinal());
+            startActivity(new Intent("com.coldradio.benzene.ATOM_DECO"));
         } else if (id == R.id.action_saturate_h) {
             startActivity(new Intent("com.coldradio.benzene.SATURATE_H"));
         } else if (id == R.id.action_wedge_up) {
+            ProjectFileManager.instance().pushForChange();
             Project.instance().bondAnnotation(true);
         } else if (id == R.id.action_wedge_down) {
+            ProjectFileManager.instance().pushForChange();
             Project.instance().bondAnnotation(false);
         } else if (id == R.id.action_flip_bond) {
+            // no action for push
             mCanvasView.showFlipBondGuideLine(true);
         } else if (id == R.id.action_show_h) {
+            ProjectFileManager.instance().pushForChange();
             Project.instance().showHydrogenForSelectedElement(! CompoundInspector.showAnyHydrogen(Project.instance().getElementSelector().getSelectedAsList()));
         } else if (id == android.R.id.home) {
             // Toolbar back Button
@@ -149,21 +162,6 @@ public class CanvasActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ActivityRequestCode.ADD_TO_BOND_REQ.ordinal()) {
-            if (resultCode == RESULT_OK) {
-                Project.instance().addCyclicToSelectedBond(data.getIntExtra("EdgeNumber", 6),
-                        data.getBooleanExtra("OppositeSite", false),
-                        data.getBooleanExtra("DeleteHydrogenBeforeAdd", true),
-                        data.getBooleanExtra("SaturateWithHydrogen", true));
-                mCanvasView.invalidate();
-            }
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         ProjectFileManager.instance().saveWithoutPreview(Project.instance());
@@ -177,7 +175,7 @@ public class CanvasActivity extends AppCompatActivity {
             elementSelector.setRegionSelector(null);
             mCanvasView.updateContextMenu();
             mCanvasView.invalidate();
-        } else if (elementSelector.selection() != ElementSelector.Selection.NONE) {
+        } else if (elementSelector.hasSelected()) {
             elementSelector.reset();
             mCanvasView.invalidate();
         } else {

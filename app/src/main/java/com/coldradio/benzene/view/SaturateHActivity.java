@@ -10,11 +10,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomicNumber;
-import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 
 public class SaturateHActivity extends AppCompatActivity {
     private TextView mCarbonHMaxTV, mNitrogenHMaxTV, mOxygenHMaxTV;
@@ -98,13 +96,20 @@ public class SaturateHActivity extends AppCompatActivity {
         findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (findViewById(R.id.sb_carbon_max_h).isEnabled()) {
+                boolean carbonEnabled = findViewById(R.id.sb_carbon_max_h).isEnabled();
+                boolean nitrogenEnabled = findViewById(R.id.sb_nitrogen_max_h).isEnabled();
+                boolean oxygenEnabled = findViewById(R.id.sb_oxygen_max_h).isEnabled();
+
+                if (carbonEnabled || nitrogenEnabled || oxygenEnabled) {
+                    ProjectFileManager.instance().pushCompoundChangedHistory(Project.instance().getElementSelector().getSelectedCompound());
+                }
+                if (carbonEnabled) {
                     Project.instance().saturateSelectedWithHydrogen(AtomicNumber.C, Integer.parseInt(mCarbonHMaxTV.getText().toString()));
                 }
-                if (findViewById(R.id.sb_nitrogen_max_h).isEnabled()) {
+                if (nitrogenEnabled) {
                     Project.instance().saturateSelectedWithHydrogen(AtomicNumber.N, Integer.parseInt(mNitrogenHMaxTV.getText().toString()));
                 }
-                if (findViewById(R.id.sb_oxygen_max_h).isEnabled()) {
+                if (oxygenEnabled) {
                     Project.instance().saturateSelectedWithHydrogen(AtomicNumber.O, Integer.parseInt(mOxygenHMaxTV.getText().toString()));
                 }
                 finish();

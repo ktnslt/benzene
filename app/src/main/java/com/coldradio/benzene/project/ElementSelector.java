@@ -202,6 +202,7 @@ public class ElementSelector {
             return false;
 
         if (action == MotionEvent.ACTION_DOWN && isPivotGrasped(point)) {
+            ProjectFileManager.instance().pushCompoundChangedHistory(mSelectedCompound);
             mIsRotating = true;
         } else if (action == MotionEvent.ACTION_MOVE && mIsRotating) {
             rotateToPoint(point);
@@ -215,6 +216,10 @@ public class ElementSelector {
 
     public Selection selection() {
         return mSelection;
+    }
+
+    public boolean hasSelected() {
+        return mSelection != Selection.NONE;
     }
 
     public boolean isSelected(Atom atom) {

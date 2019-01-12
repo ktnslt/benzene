@@ -12,6 +12,7 @@ import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.Geometry;
 
 public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
@@ -77,9 +78,11 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
 
             if (mFlipBound1.contains((int) clickedPoint.x, (int) clickedPoint.y)) {
                 // Bound1 towards edge.second
+                ProjectFileManager.instance().pushForChange();
                 CompoundArranger.flipBond(edge.second, edge.first, Project.instance().findCompound(edge.second));
             } else if (mFlipBound2.contains((int) clickedPoint.x, (int) clickedPoint.y)) {
                 // Bond2 towards edge.first
+                ProjectFileManager.instance().pushForChange();
                 CompoundArranger.flipBond(edge.first, edge.second, Project.instance().findCompound(edge.second));
             } else {
                 return false;

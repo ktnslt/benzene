@@ -4,6 +4,11 @@ import android.content.Context;
 import android.view.View;
 
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.project.history.AllChangedHistory;
+import com.coldradio.benzene.project.history.CompoundChangedHistory;
+import com.coldradio.benzene.project.history.CompoundDeletedHistory;
+import com.coldradio.benzene.project.history.History;
+import com.coldradio.benzene.project.history.HistoryManager;
 import com.coldradio.benzene.util.Notifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectFileManager {
+    public interface OnChangeListener {
+        void saved();
+        void changed();
+    }
+    enum ChangeEventType {
+        SAVED, CHANGED
+    }
     private static ProjectFileManager smInstance = new ProjectFileManager();
     private List<ProjectFile> mSavedProjects = new ArrayList<>();
     private String mProjectFileRootDir;
@@ -28,6 +40,8 @@ public class ProjectFileManager {
     }.getType();
     private Gson mGson = new GsonBuilder().create();
     private String FILE_EXTENSION = ".bzn";
+    private List<OnChangeListener> mListener = new ArrayList<>();
+    private HistoryManager mHistoryManager = new HistoryManager();
 
     private String defaultProjectName() {
         for (int ii = 1; ; ++ii) {
@@ -36,6 +50,15 @@ public class ProjectFileManager {
             if (getProjectFile(defaultName) == null) {
                 return defaultName;
             }
+        }
+    }
+
+    private void notifyListener(ChangeEventType eventType) {
+        for (OnChangeListener listener : mListener) {
+            if (eventType == ChangeEventType.SAVED)
+                listener.saved();
+            else if (eventType == ChangeEventType.CHANGED)
+                listener.changed();
         }
     }
 
@@ -67,6 +90,7 @@ public class ProjectFileManager {
                 mSavedProjects.add(projectFile);
             }
             projectFile.saved();
+            notifyListener(ChangeEventType.SAVED);
         } catch (IOException ioe) {
             Notifier.instance().notification("Saving Errors");
         } finally {
@@ -153,5 +177,62 @@ public class ProjectFileManager {
 
     public String projectFileRootDir() {
         return mProjectFileRootDir;
+    }
+
+    public void addListener(OnChangeListener listener) {
+        if (!mListener.contains(listener)) {
+            mListener.add(listener);
+        }
+    }
+
+    public void pushForDeletion() {
+        ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
+
+        if (selection == ElementSelector.Selection.COMPOUND) {
+            push(new CompoundDeletedHistory(Project.instance().getElementSelector().getSelectedCompound()));
+        } else {
+            pushAllChangedHistory(Project.instance().getCompounds());
+        }
+    }
+
+    public void pushForChange() {
+        ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
+
+        if (selection == ElementSelector.Selection.PARTIAL) {
+            pushAllChangedHistory(Project.instance().getCompounds());
+        } else {
+            pushCompoundChangedHistory(Project.instance().getElementSelector().getSelectedCompound());
+        }
+    }
+
+    public void pushCompoundChangedHistory(Compound compound) {
+        mHistoryManager.push(new CompoundChangedHistory(compound));
+        notifyListener(ChangeEventType.CHANGED);
+    }
+
+    public void push(History history) {
+        mHistoryManager.push(history);
+        notifyListener(ChangeEventType.CHANGED);
+    }
+
+    public void pushAllChangedHistory(List<Compound> compoundList) {
+        mHistoryManager.push(new AllChangedHistory(compoundList));
+        notifyListener(ChangeEventType.CHANGED);
+    }
+
+    public void redo() {
+        Project.instance().getElementSelector().reset();
+        mHistoryManager.redo();
+        notifyListener(ChangeEventType.CHANGED);
+    }
+
+    public void undo() {
+        Project.instance().getElementSelector().reset();
+        mHistoryManager.undo();
+        notifyListener(ChangeEventType.CHANGED);
+    }
+
+    public void clearHistory() {
+        mHistoryManager.reset();
     }
 }
