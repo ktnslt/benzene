@@ -16,7 +16,6 @@ import android.widget.SeekBar;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
-import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
@@ -30,12 +29,6 @@ public class AtomDecoActivity extends AppCompatActivity {
     private Preview mAtomDecoView;
     private EditText mChargeET;
     private SeekBar mChargeAsCircleSeekBox;
-    // saved originals
-    // TODO below 4 is not necessary since the whole mOrigCompound is saved
-    private AtomDecoration mOriginalAtomDecoration;
-    private boolean mOrigShowHydrogenBond;
-    private AtomicNumber mOrigAtomicNumber;
-    private String mOrigArbitraryName;
     private Compound mOrigCompound;
 
     @Override
@@ -51,7 +44,10 @@ public class AtomDecoActivity extends AppCompatActivity {
             return;
         }
         mSelectedAtomDecoration = mSelectedAtom.getAtomDecoration();
-        readAndSaveAtomDecoration();
+        // save the originals
+        mOrigCompound = Project.instance().getElementSelector().getSelectedCompound().copy();
+
+        setInitialAtomConfiguration();
 
         // setting for AtomDecoView
         ViewGroup preview = findViewById(R.id.atom_deco_view);
@@ -182,12 +178,7 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSelectedAtom.setAtomDecoration(mOriginalAtomDecoration);
-                mSelectedAtom.setAtomicNumber(mOrigAtomicNumber);
-                if (mOrigAtomicNumber == AtomicNumber.TEXT) {
-                    mSelectedAtom.setArbitraryName(mOrigArbitraryName);
-                }
-                CompoundArranger.showAllHydrogen(mSelectedAtom, mOrigShowHydrogenBond);
+                Project.instance().replaceCompound(mOrigCompound.getID(), mOrigCompound);
                 finish();
             }
         });
@@ -289,18 +280,11 @@ public class AtomDecoActivity extends AppCompatActivity {
         mAtomDecoView.invalidate();
     }
 
-    private void readAndSaveAtomDecoration() {
-        // save the originals
-        mOriginalAtomDecoration = mSelectedAtomDecoration.copy();
-        mOrigShowHydrogenBond = CompoundInspector.showAnyHydrogen(mSelectedAtom);
-        mOrigAtomicNumber = mSelectedAtom.getAtomicNumber();
-        mOrigArbitraryName = mSelectedAtom.getArbitraryName();
-        mOrigCompound = Project.instance().getElementSelector().getSelectedCompound().copy();
-
+    private void setInitialAtomConfiguration() {
         // set the default values
         ((CheckBox)findViewById(R.id.atom_deco_cb_show_element)).setChecked(mSelectedAtomDecoration.getShowElementName());
         ((CheckBox)findViewById(R.id.atom_deco_cb_lettering)).setChecked(mSelectedAtomDecoration.isLettering());
-        ((CheckBox)findViewById(R.id.atom_deco_cb_show_h)).setChecked(mOrigShowHydrogenBond);
+        ((CheckBox)findViewById(R.id.atom_deco_cb_show_h)).setChecked(CompoundInspector.showAnyHydrogen(mSelectedAtom));
         findViewById(R.id.atom_deco_btn_select_element).setEnabled(false);
 
         ((EditText)findViewById(R.id.atom_deco_et_charge)).setText(String.valueOf(mSelectedAtomDecoration.getCharge()));

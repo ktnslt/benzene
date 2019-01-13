@@ -4,8 +4,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.Project;
 
 public class CompoundChangedHistory extends History {
-    private final Compound mOriginalCompound;
-    private Compound mUndoCompound;
+    private Compound mOriginalCompound;
 
     public CompoundChangedHistory(Compound compound) {
         super(compound.getID());
@@ -14,11 +13,11 @@ public class CompoundChangedHistory extends History {
 
     @Override
     public void undo() {
-        mUndoCompound = Project.instance().replaceCompound(mCID, mOriginalCompound);
+        mOriginalCompound = Project.instance().replaceCompound(mCID, mOriginalCompound);
     }
 
     @Override
     public void redo() {
-        Project.instance().replaceCompound(mCID, mUndoCompound);
+        mOriginalCompound = Project.instance().replaceCompound(mCID, mOriginalCompound);
     }
 }

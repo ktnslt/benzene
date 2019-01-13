@@ -8,12 +8,12 @@ public class CompoundAddedHistory extends History {
 
     public CompoundAddedHistory(Compound compound) {
         super(compound.getID());
-        mAddedCompound = compound;
+        mAddedCompound = compound.copy();
     }
 
     @Override
     public void undo() {
-        Project.instance().removeCompound(mAddedCompound);
+        Project.instance().removeCompound(Project.instance().findCompound(mCID));
     }
 
     @Override

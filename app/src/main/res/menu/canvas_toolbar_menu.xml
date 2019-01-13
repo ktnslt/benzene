@@ -52,7 +52,7 @@
     <item
         android:id="@+id/action_screenshot"
         android:orderInCategory="70"
-        android:title="Shot to Clipboard"
+        android:title="Shot to Gallery"
         android:icon="@drawable/ic_menu_screenshot"
         android:visible="true"
         app:showAsAction="ifRoom" />

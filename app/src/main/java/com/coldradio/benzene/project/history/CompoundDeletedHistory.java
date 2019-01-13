@@ -7,7 +7,7 @@ public class CompoundDeletedHistory extends History {
     public final Compound mDeletedCompound;
 
     public CompoundDeletedHistory(Compound compound) {
-        super(-1);
+        super(compound.getID());
         mDeletedCompound = compound;
     }
 
@@ -18,6 +18,6 @@ public class CompoundDeletedHistory extends History {
 
     @Override
     public void redo() {
-        Project.instance().removeCompound(mDeletedCompound);
+        Project.instance().removeCompound(Project.instance().findCompound(mCID));
     }
 }

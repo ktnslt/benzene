@@ -11,8 +11,8 @@ public class Compound {
     private List<Atom> mAtoms;
     private PointF mCenterOfRectangle;
     private RectF mRegion = new RectF();
-    private long mID;
-    private static long msIdBase;
+    private short mCID;
+    private static short msCIDGen;
 
     private void resetAID() {
         int aid = 1;
@@ -24,12 +24,12 @@ public class Compound {
 
     public Compound() {
         mAtoms = new ArrayList<>();
-        mID = msIdBase++;
+        mCID = msCIDGen++;
     }
 
     public Compound(List<Atom> atoms) {
         mAtoms = atoms;
-        mID = msIdBase++;
+        mCID = msCIDGen++;
     }
 
     public Compound(int[] aids, AtomicNumber[] atomicNumber) {
@@ -38,13 +38,12 @@ public class Compound {
         for (int ii = 0; ii < aids.length; ++ii) {
             mAtoms.add(new Atom(aids[ii], atomicNumber[ii]));
         }
-        mID = msIdBase++;
+        mCID = msCIDGen++;
     }
 
     public Compound copy() {
         Compound that_compound = new Compound();
-
-        that_compound.mID = this.mID;
+        that_compound.mCID = this.mCID;
 
         for (Atom this_atom : mAtoms) {
             that_compound.mAtoms.add(this_atom.copy());
@@ -65,6 +64,14 @@ public class Compound {
         return that_compound;
     }
 
+    public Compound copyAsNew() {
+        Compound copied = copy();
+
+        copied.mCID = msCIDGen++;
+
+        return copied;
+    }
+
     public Atom getAtom(int aid) {
         for (Atom atom : mAtoms) {
             if (atom.getAID() == aid) return atom;
@@ -72,8 +79,8 @@ public class Compound {
         return null;
     }
 
-    public long getID() {
-        return mID;
+    public short getID() {
+        return mCID;
     }
 
     public int size() {

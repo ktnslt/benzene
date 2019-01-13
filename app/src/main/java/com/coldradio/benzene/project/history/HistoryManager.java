@@ -23,19 +23,19 @@ public class HistoryManager {
     }
 
     public void redo() {
-        Notifier.instance().notification("Redo " + (mCurrentState + 1) + "/" + mHistory.size());
         if (mCurrentState < mHistory.size() - 1) {
             ++mCurrentState;
             mHistory.get(mCurrentState).redo();
         }
+        Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
     }
 
     public void undo() {
-        Notifier.instance().notification("Undo " + (mCurrentState + 1) + "/" + mHistory.size());
         if (mCurrentState >= 0) {
             mHistory.get(mCurrentState).undo();
             --mCurrentState;
         }
+        Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
     }
 
     public void reset() {

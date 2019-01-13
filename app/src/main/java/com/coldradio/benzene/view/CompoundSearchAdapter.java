@@ -119,7 +119,7 @@ class CompoundPreview extends View implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Compound compound = mCompoundIndex.compound.copy();
+        Compound compound = mCompoundIndex.compound.copyAsNew();
 
         CompoundArranger.zoomToStandard(compound, 1);
         CompoundArranger.alignCenter(compound, ScreenInfo.instance().centerPoint());

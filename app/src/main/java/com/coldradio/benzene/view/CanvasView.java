@@ -187,7 +187,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (mMoveSelectedElement && Project.instance().getElementSelector().hasSelected()) {
             if (! mElementMoved) {
                 // this is first movement
-                ProjectFileManager.instance().pushForChange();
+                ProjectFileManager.instance().pushForMove();
             }
             Project.instance().getElementSelector().moveSelectedElement(pmScrollDistance);
             mElementMoved = true;

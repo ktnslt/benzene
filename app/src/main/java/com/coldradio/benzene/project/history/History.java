@@ -1,9 +1,9 @@
 package com.coldradio.benzene.project.history;
 
 public class History {
-    protected final long mCID;
+    protected final short mCID;
 
-    public History(long cID) {
+    public History(short cID) {
         mCID = cID;
     }
 

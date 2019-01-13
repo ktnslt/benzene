@@ -7,6 +7,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.project.history.AllChangedHistory;
 import com.coldradio.benzene.project.history.CompoundChangedHistory;
 import com.coldradio.benzene.project.history.CompoundDeletedHistory;
+import com.coldradio.benzene.project.history.CompoundMovedHistory;
 import com.coldradio.benzene.project.history.History;
 import com.coldradio.benzene.project.history.HistoryManager;
 import com.coldradio.benzene.util.Notifier;
@@ -36,8 +37,7 @@ public class ProjectFileManager {
     private static ProjectFileManager smInstance = new ProjectFileManager();
     private List<ProjectFile> mSavedProjects = new ArrayList<>();
     private String mProjectFileRootDir;
-    private Type mCompoundListType = new TypeToken<List<Compound>>() {
-    }.getType();
+    private Type mCompoundListType = new TypeToken<List<Compound>>() {}.getType();
     private Gson mGson = new GsonBuilder().create();
     private String FILE_EXTENSION = ".bzn";
     private List<OnChangeListener> mListener = new ArrayList<>();
@@ -186,22 +186,32 @@ public class ProjectFileManager {
     }
 
     public void pushForDeletion() {
-        ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
+        ElementSelector elementSelector = Project.instance().getElementSelector();
 
-        if (selection == ElementSelector.Selection.COMPOUND) {
-            push(new CompoundDeletedHistory(Project.instance().getElementSelector().getSelectedCompound()));
+        if (elementSelector.selection() == ElementSelector.Selection.COMPOUND) {
+            push(new CompoundDeletedHistory(elementSelector.getSelectedCompound()));
         } else {
             pushAllChangedHistory(Project.instance().getCompounds());
         }
     }
 
     public void pushForChange() {
-        ElementSelector.Selection selection = Project.instance().getElementSelector().selection();
+        ElementSelector elementSelector = Project.instance().getElementSelector();
 
-        if (selection == ElementSelector.Selection.PARTIAL) {
+        if (elementSelector.selection() == ElementSelector.Selection.PARTIAL) {
             pushAllChangedHistory(Project.instance().getCompounds());
         } else {
-            pushCompoundChangedHistory(Project.instance().getElementSelector().getSelectedCompound());
+            pushCompoundChangedHistory(elementSelector.getSelectedCompound());
+        }
+    }
+
+    public void pushForMove() {
+        ElementSelector elementSelector = Project.instance().getElementSelector();
+
+        if (elementSelector.selection() == ElementSelector.Selection.COMPOUND) {
+            push(new CompoundMovedHistory(elementSelector.getSelectedCompound()));
+        } else {
+            pushForChange();
         }
     }
 

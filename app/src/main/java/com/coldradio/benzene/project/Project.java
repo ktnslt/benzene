@@ -210,6 +210,13 @@ public class Project {
         mCompoundList = compounds;
     }
 
+    public List<Compound> replaceAllCompounds(List<Compound> compounds) {
+        List<Compound> ret = mCompoundList;
+
+        mCompoundList = compounds;
+        return ret;
+    }
+
     public ProjectFile getProjectFile() {
         return mProjectFile;
     }
