@@ -1,5 +1,7 @@
 package com.coldradio.benzene.project;
 
+import android.graphics.Bitmap;
+
 public class Configuration {
     public static int BOND_THICKNESS = 4;
     public static int BOND_LENGTH = 120;
@@ -15,4 +17,6 @@ public class Configuration {
     public static float CHARGE_CIRCLE_RADIUS = 10f;
     public static int SELECTED_ATOM_BG_CIRCLE_RADIUS = 10;
     public static int MAX_HISTORY_LIST = 50;
+    public static Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.PNG;
+    public static String IMAGE_FORMAT_EXT = "png";
 }

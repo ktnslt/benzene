@@ -1,7 +1,9 @@
 package com.coldradio.benzene.view;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +17,9 @@ import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.FingerSelector;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
+import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.PermissionManager;
 import com.coldradio.benzene.util.ScreenInfo;
 import com.coldradio.benzene.project.Project;
 
@@ -42,6 +46,8 @@ public class CanvasActivity extends AppCompatActivity {
             mCanvasView = new CanvasView(this);
             canvas_layout.addView(mCanvasView);
         }
+
+        PermissionManager.instance().checkAndRequestPermission(this, PermissionManager.PermissionCode.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -96,6 +102,10 @@ public class CanvasActivity extends AppCompatActivity {
             ProjectFileManager.instance().undo();
         } else if (id == R.id.action_save) {
             ProjectFileManager.instance().saveWithoutPreview(Project.instance());
+        } else if (id == R.id.action_shot_to_gallery) {
+            ImageUtil.saveToGallery(mCanvasView, ScreenInfo.instance().region(), getApplicationContext());
+        } else if (id == R.id.action_share_screenshot) {
+
         } else if (id == R.id.action_delete_selected) {
             ProjectFileManager.instance().pushForDeletion();
             Project.instance().deleteSelectedElement();
@@ -183,5 +193,10 @@ public class CanvasActivity extends AppCompatActivity {
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionManager.instance().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

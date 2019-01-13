@@ -40,11 +40,13 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     }
 
     private void toCenter() {
-        if (ScreenInfo.instance().screenWidth() * ScreenInfo.instance().screenHeight() != 0) {
+        ScreenInfo screen = ScreenInfo.instance();
+
+        if (screen.screenWidth() != 0 && screen.screenHeight() != 0) {
             PointF centerOfAllCompounds = CompoundArranger.center(Project.instance().getCompounds());
 
-            setScrollX((int) centerOfAllCompounds.x - ScreenInfo.instance().screenWidth() / 2);
-            setScrollY((int) centerOfAllCompounds.y - ScreenInfo.instance().screenHeight() / 2);
+            setScrollX((int) centerOfAllCompounds.x - screen.screenWidth() / 2);
+            setScrollY((int) centerOfAllCompounds.y - screen.screenHeight() / 2);
         }
     }
 

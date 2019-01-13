@@ -22,20 +22,26 @@ public class HistoryManager {
         Notifier.instance().notification("History " + mHistory.size());
     }
 
-    public void redo() {
+    public boolean redo() {
         if (mCurrentState < mHistory.size() - 1) {
             ++mCurrentState;
             mHistory.get(mCurrentState).redo();
+
+            Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
+            return true;
         }
-        Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
+        return false;
     }
 
-    public void undo() {
+    public boolean undo() {
         if (mCurrentState >= 0) {
             mHistory.get(mCurrentState).undo();
             --mCurrentState;
+
+            Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
+            return true;
         }
-        Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
+        return false;
     }
 
     public void reset() {

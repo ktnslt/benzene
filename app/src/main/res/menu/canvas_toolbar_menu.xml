@@ -50,7 +50,15 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_screenshot"
+        android:id="@+id/action_share_screenshot"
+        android:orderInCategory="70"
+        android:title="Share Screenshot"
+        android:icon="@drawable/ic_menu_share"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_shot_to_gallery"
         android:orderInCategory="70"
         android:title="Shot to Gallery"
         android:icon="@drawable/ic_menu_screenshot"

@@ -104,9 +104,9 @@ public class ProjectFileManager {
 
     public void savePreviewOnly(Project project, View view) {
         // shift the project not to have compounds in negative region.
-        project.offsetTo(10, 10);
+        //project.offsetTo(10, 10);
 
-        ImageCreator.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+        PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
     }
 
     public void load(String fileName, Project project) {
@@ -232,14 +232,16 @@ public class ProjectFileManager {
 
     public void redo() {
         Project.instance().getElementSelector().reset();
-        mHistoryManager.redo();
-        notifyListener(ChangeEventType.CHANGED);
+        if (mHistoryManager.redo()) {
+            notifyListener(ChangeEventType.CHANGED);
+        }
     }
 
     public void undo() {
         Project.instance().getElementSelector().reset();
-        mHistoryManager.undo();
-        notifyListener(ChangeEventType.CHANGED);
+        if (mHistoryManager.undo()) {
+            notifyListener(ChangeEventType.CHANGED);
+        }
     }
 
     public void clearHistory() {

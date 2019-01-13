@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.project.ImageCreator;
+import com.coldradio.benzene.project.PreviewHandler;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFile;
 import com.coldradio.benzene.project.ProjectFileManager;
@@ -73,7 +73,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
         holder.mProjectName.setText(projectFile.getName());
-        ImageCreator.showPreview(holder.mImageView, projectFile.getName());
+        PreviewHandler.showPreview(holder.mImageView, projectFile.getName());
     }
 
     @Override
