@@ -55,7 +55,7 @@ public class ElementCopier {
         List<Compound> pastingCompoundList = new ArrayList<>();
 
         for (Compound compound : mCopiedCompound) {
-            pastingCompoundList.add(compound.copy());
+            pastingCompoundList.add(compound.copyAsNew());
         }
 
         PointF centerOfCompounds = CompoundArranger.center(pastingCompoundList);

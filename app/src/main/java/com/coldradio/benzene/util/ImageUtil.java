@@ -24,19 +24,16 @@ public class ImageUtil {
 
     private static String availableFileName(File dir) {
         String filename = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
-
-        File candidate = new File(dir, filename);
+        File candidate = new File(dir, filename + "." + Configuration.IMAGE_FORMAT_EXT);
 
         if (! candidate.exists()) {
-            return filename + "." + Configuration.IMAGE_FORMAT_EXT;
+            return candidate.getName();
         }
 
         for (int ii = 1; ; ++ii) {
-            String candidateName = filename + ii;
-
-            candidate = new File(dir, candidateName);
+            candidate = new File(dir, filename + ii + "." +  Configuration.IMAGE_FORMAT_EXT);
             if (! candidate.exists()) {
-                return candidateName + "." + Configuration.IMAGE_FORMAT_EXT;
+                return candidate.getName();
             }
         }
     }
@@ -44,7 +41,7 @@ public class ImageUtil {
     private static void addImageToGallery(final String filePath, final Context context) {
         ContentValues values = new ContentValues();
 
-        //values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + Configuration.IMAGE_FORMAT_EXT);
         values.put(MediaStore.MediaColumns.DATA, filePath);
 

@@ -93,12 +93,22 @@ public class Geometry {
     }
 
     public static float angleOfTriangle(PointF p1, PointF p2, PointF center) {
+        if (p1.equals(p2) || p2.equals(center) || center.equals(p1)) {
+            return Float.NaN;
+        }
         // calculated from cos 2 law
         float a = distanceFromPointToPoint(center, p1);
         float b = distanceFromPointToPoint(center, p2);
         float c = distanceFromPointToPoint(p1, p2);
+        float arg = (a * a + b * b - c * c) / (2 * a * b);
 
-        return (float) Math.acos((a * a + b * b - c * c) / (2 * a * b));
+        if (arg >= 1) {
+            return 0;
+        } else if (arg <= -1) {
+            return MathConstant.RADIAN_180;
+        } else {
+            return (float) Math.acos(arg);
+        }
     }
 
     public static float angle(PointF from, PointF to, PointF center) {

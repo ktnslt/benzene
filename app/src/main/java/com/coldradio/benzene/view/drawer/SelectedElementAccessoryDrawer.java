@@ -36,6 +36,14 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
         mFlipIcon.draw(canvas);
     }
 
+    private void drawRotationPivot(PointF pivot, PointF center, String text, Canvas canvas) {
+        canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
+        canvas.drawLine(pivot.x, pivot.y, center.x, center.y, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
+        if (text != null && ! text.isEmpty()) {
+            DrawingLib.drawText(text, pivot, false, 0, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
+        }
+    }
+
     public SelectedElementAccessoryDrawer(Drawable flipIcon) {
         mFlipIcon = flipIcon;
     }
@@ -46,12 +54,8 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
 
         if (elementSelector.selection() == ElementSelector.Selection.COMPOUND && elementSelector.getSelectedCompound() == compound) {
             // draw ration pivot
-            PointF pivot = elementSelector.getRotationPivotPoint();
-            PointF center = elementSelector.getSelectedCompound().centerOfRectangle();
-            Paint dashedLinePaint = PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE);
-
-            canvas.drawCircle(pivot.x, pivot.y, Configuration.ROTATION_PIVOT_SIZE, dashedLinePaint);
-            canvas.drawLine(pivot.x, pivot.y, center.x, center.y, dashedLinePaint);
+            drawRotationPivot(elementSelector.getRotationPivotPoint(true), elementSelector.getSelectedCompound().centerOfRectangle(), null, canvas);
+            drawRotationPivot(elementSelector.getRotationPivotPoint(false), elementSelector.getSelectedCompound().centerOfRectangle(), "10", canvas);
         } else if (elementSelector.selection() == ElementSelector.Selection.EDGE && elementSelector.getSelectedCompound() == compound && mShowFlipBondGuideLine) {
             // draw guideline
             Edge edge = elementSelector.getSelectedEdge();

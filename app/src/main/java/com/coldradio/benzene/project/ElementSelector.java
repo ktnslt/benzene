@@ -9,7 +9,9 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.util.Geometry;
+import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.MutablePair;
+import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
@@ -25,7 +27,9 @@ public class ElementSelector {
     private Atom mSelectedAtom;
     private Edge mSelectedEdge;
     private Compound mSelectedCompound;     // the selected compound or the compound that the selected Atom belongs to
-    private PointF mRotationPivotPoint = new PointF();
+    // 0 is for all degree rotation, 1 is for 10 degree rotation
+    private PointF[] mRotationPivotPoints = new PointF[]{new PointF(), new PointF()};
+    private int mGraspedPivotIndex;
     private boolean mIsRotating = false;
     private IRegionSelector mRegionSelector;
     private List<Atom> mSelectedAtomList = new ArrayList<>();
@@ -70,14 +74,31 @@ public class ElementSelector {
     }
 
     private void rotateToPoint(PointF point) {
-        float angle = Geometry.angle(mRotationPivotPoint, point, mSelectedCompound.centerOfRectangle());
+        float angle = Geometry.angle(mRotationPivotPoints[mGraspedPivotIndex], point, mSelectedCompound.centerOfRectangle());
 
-        CompoundArranger.rotateByCenterOfRectangle(mSelectedCompound, angle);
-        mRotationPivotPoint = Geometry.cwRotate(mRotationPivotPoint, mSelectedCompound.centerOfRectangle(), angle);
+        if (mGraspedPivotIndex == 1) {
+            // rotation by 10 degree
+            if (angle > MathConstant.RADIAN_10 || angle < -MathConstant.RADIAN_10) {
+                angle = (float) Math.toRadians(((int) (Math.toDegrees(angle) / 10)) * 10);
+            } else {
+                angle = 0;
+            }
+        }
+
+        if (angle != 0) {
+            CompoundArranger.rotateByCenterOfRectangle(mSelectedCompound, angle);
+            mRotationPivotPoints[0] = Geometry.cwRotate(mRotationPivotPoints[0], mSelectedCompound.centerOfRectangle(), angle);
+            mRotationPivotPoints[1] = Geometry.cwRotate(mRotationPivotPoints[1], mSelectedCompound.centerOfRectangle(), angle);
+        }
     }
 
-    private boolean isPivotGrasped(PointF point) {
-        return Geometry.distanceFromPointToPoint(mRotationPivotPoint, point) < Configuration.ROTATION_PIVOT_SIZE;
+    private int isPivotGrasped(PointF point) {
+        for (int ii = 0; ii < mRotationPivotPoints.length; ++ii) {
+            if (Geometry.distanceFromPointToPoint(mRotationPivotPoints[ii], point) < Configuration.ROTATION_PIVOT_SIZE) {
+                return ii;
+            }
+        }
+        return -1;
     }
 
     private void updateSelectedAtoms() {
@@ -118,8 +139,12 @@ public class ElementSelector {
     public void selectCompound(Compound compound) {
         mSelectedCompound = compound;
         mSelection = Selection.COMPOUND;
-        mRotationPivotPoint.set(compound.centerOfRectangle());
-        mRotationPivotPoint.offset(0, -200);
+
+        mRotationPivotPoints[0].set(compound.centerOfRectangle());
+        mRotationPivotPoints[0].offset(0, -200);
+
+        mRotationPivotPoints[1].set(compound.centerOfRectangle());
+        mRotationPivotPoints[1].offset(0, 200);
     }
 
     public boolean select(PointF point) {
@@ -158,8 +183,8 @@ public class ElementSelector {
         return getSelectedElement(point) != null;
     }
 
-    public PointF getRotationPivotPoint() {
-        return mRotationPivotPoint;
+    public PointF getRotationPivotPoint(boolean allDegree) {
+        return mRotationPivotPoints[allDegree ? 0 : 1];
     }
 
     public Compound getSelectedCompound() {
@@ -185,7 +210,9 @@ public class ElementSelector {
 
     public boolean moveSelectedElement(PointF distance) {
         if (mSelection == Selection.COMPOUND) {
-            mRotationPivotPoint.offset(distance.x, distance.y);
+            mRotationPivotPoints[0].offset(distance.x, distance.y);
+            mRotationPivotPoints[1].offset(distance.x, distance.y);
+
             mSelectedCompound.offset(distance.x, distance.y);
         } else if (mSelection != Selection.NONE) {
             for (Atom atom : mSelectedAtomList) {
@@ -201,7 +228,8 @@ public class ElementSelector {
         if (mSelection != Selection.COMPOUND)
             return false;
 
-        if (action == MotionEvent.ACTION_DOWN && isPivotGrasped(point)) {
+        if (action == MotionEvent.ACTION_DOWN
+                && (mGraspedPivotIndex = isPivotGrasped(point)) >= 0) {
             ProjectFileManager.instance().pushCompoundChangedHistory(mSelectedCompound);
             mIsRotating = true;
         } else if (action == MotionEvent.ACTION_MOVE && mIsRotating) {
@@ -250,12 +278,16 @@ public class ElementSelector {
     }
 
     public void setRegionSelector(IRegionSelector regionSelector) {
-        mRegionSelector = regionSelector;
-        if (mRegionSelector != null) {
-            mSelection = Selection.PARTIAL;
-            updateSelectedAtoms();
+        if (!Project.instance().getCompounds().isEmpty()) {
+            mRegionSelector = regionSelector;
+            if (mRegionSelector != null) {
+                mSelection = Selection.PARTIAL;
+                updateSelectedAtoms();
+            } else {
+                reset();
+            }
         } else {
-            reset();
+            Notifier.instance().notification("No Compound to select");
         }
     }
 
