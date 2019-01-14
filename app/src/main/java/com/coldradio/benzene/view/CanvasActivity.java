@@ -142,15 +142,15 @@ public class CanvasActivity extends AppCompatActivity {
             mCanvasView.showFlipBondGuideLine(true);
         } else if (id == R.id.action_show_h) {
             ProjectFileManager.instance().pushForChange();
-            Project.instance().showHydrogenForSelectedElement(! CompoundInspector.showAnyHydrogen(Project.instance().getElementSelector().getSelectedAsList()));
+            Project.instance().showHydrogenForSelectedElement(! CompoundInspector.showAnyHydrogen(elementSelector.getSelectedAsList()));
         } else if (id == android.R.id.home) {
             // Toolbar back Button
             ProjectFileManager.instance().savePreviewOnly(Project.instance(), mCanvasView);
             ret = false; // to call super.onOptionsItemSelected(item);
         } else if (id == R.id.action_select_by_rect) {
-            Project.instance().getElementSelector().setRegionSelector(new RectSelector());
+            elementSelector.setRegionSelector(new RectSelector());
         } else if (id == R.id.action_select_by_finger) {
-            Project.instance().getElementSelector().setRegionSelector(new FingerSelector());
+            elementSelector.setRegionSelector(new FingerSelector());
         } else {
             ret = false;
         }

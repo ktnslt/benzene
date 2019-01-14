@@ -34,6 +34,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private boolean mSynthesizing;
     private boolean mFirstDraw = true;
     private Toolbar mTopToolbar;
+    private boolean mDoubleTapped;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -121,8 +122,10 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
+            mDoubleTapped = false;
         } else if (elementSelector.onTouchEvent(mActualClickedPosition, event.getAction())) {
             invalidate();
+            mDoubleTapped = false;
         } else if (!mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
@@ -134,7 +137,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                 // the overall sequence is ACTION_DOWN (first finger) -> ACTION_POINTER_DOWN (second finger)
                 // if makes ACTION_DOWN cannot replace below CASE, causing de-select whatever selected when try to move the selected element.
                 case MotionEvent.ACTION_UP:
-                    if (!mScrolledAfterSelected) {
+                    if (!mScrolledAfterSelected && !mDoubleTapped) {
                         if (mSynthesizing) {
                             // the pushAllChangedHistory for synthesize is handled in synthesize()
                             if (Project.instance().synthesize(mActualClickedPosition)) {
@@ -159,6 +162,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                     mMoveSelectedElement = false;
                     break;
             }
+            mDoubleTapped = false;
         }
 
         return true;
@@ -187,7 +191,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         mScrolledAfterSelected = true;
 
         if (mMoveSelectedElement && Project.instance().getElementSelector().hasSelected()) {
-            if (! mElementMoved) {
+            if (!mElementMoved) {
                 // this is first movement
                 ProjectFileManager.instance().pushForMove();
             }
@@ -222,6 +226,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
             toCenter();
         }
 
+        mDoubleTapped = true;
         return true;
     }
 

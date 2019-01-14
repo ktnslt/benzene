@@ -31,7 +31,7 @@ public class ImageUtil {
         }
 
         for (int ii = 1; ; ++ii) {
-            candidate = new File(dir, filename + ii + "." +  Configuration.IMAGE_FORMAT_EXT);
+            candidate = new File(dir, filename + "-" + ii + "." +  Configuration.IMAGE_FORMAT_EXT);
             if (! candidate.exists()) {
                 return candidate.getName();
             }
