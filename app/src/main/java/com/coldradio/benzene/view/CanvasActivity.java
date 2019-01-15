@@ -1,6 +1,5 @@
 package com.coldradio.benzene.view;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,13 +14,13 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.FingerSelector;
+import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
 import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.PermissionManager;
 import com.coldradio.benzene.util.ScreenInfo;
-import com.coldradio.benzene.project.Project;
 
 public class CanvasActivity extends AppCompatActivity {
     private CanvasView mCanvasView;
@@ -39,6 +38,7 @@ public class CanvasActivity extends AppCompatActivity {
             // intentionally empty
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(Project.instance().getProjectFile().getName());
 
         // add CanvasView to the canvas_main layout
         ViewGroup canvas_layout = findViewById(R.id.canvas_main);
@@ -85,17 +85,27 @@ public class CanvasActivity extends AppCompatActivity {
         mCanvasView.showFlipBondGuideLine(false);
 
         if (id == R.id.action_cut) {
-            ProjectFileManager.instance().pushForDeletion();
-            Project.instance().copySelectedCompound();
-            Project.instance().deleteSelectedElement();
+            if (elementSelector.hasSelected()) {
+                ProjectFileManager.instance().pushForDeletion();
+                Project.instance().copySelectedCompound();
+                Project.instance().deleteSelectedElement();
+            } else {
+                Notifier.instance().notification("Nothing Selected");
+            }
         } else if (id == R.id.action_copy) {
-            Project.instance().copySelectedCompound();
-            Notifier.instance().notification(Project.instance().getElementCopier().numberOfCopiedCompounds() + " Compounds Copied");
+            if (elementSelector.hasSelected()) {
+                Project.instance().copySelectedCompound();
+                Notifier.instance().notification(Project.instance().getElementCopier().numberOfCopiedCompounds() + " Compounds Copied");
+            } else {
+                Notifier.instance().notification("Nothing Selected");
+            }
         } else if (id == R.id.action_paste) {
             if (Project.instance().getElementCopier().hasCopied()) {
                 ProjectFileManager.instance().pushAllChangedHistory(Project.instance().getCompounds());  // can paste multiple compounds
+                Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
+            } else {
+                Notifier.instance().notification("Nothing Copied");
             }
-            Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
         } else if (id == R.id.action_redo) {
             ProjectFileManager.instance().redo();
         } else if (id == R.id.action_undo) {

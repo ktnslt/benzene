@@ -104,11 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.my_compounds) {
+        if (id == R.id.help) {
             // Handle the camera action
-        } else if (id == R.id.start_new) {
-
-        } else if (id == R.id.library) {
+        } else if (id == R.id.settings) {
 
         }
 

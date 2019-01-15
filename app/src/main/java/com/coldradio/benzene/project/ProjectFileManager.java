@@ -31,17 +31,19 @@ public class ProjectFileManager {
         void saved();
         void changed();
     }
-    enum ChangeEventType {
+
+    private enum ChangeEventType {
         SAVED, CHANGED
     }
     private static ProjectFileManager smInstance = new ProjectFileManager();
-    private List<ProjectFile> mSavedProjects = new ArrayList<>();
+    private List<ProjectFile> mStoredProjectsInDevice = new ArrayList<>();
     private String mProjectFileRootDir;
     private Type mCompoundListType = new TypeToken<List<Compound>>() {}.getType();
     private Gson mGson = new GsonBuilder().create();
     private String FILE_EXTENSION = ".bzn";
     private List<OnChangeListener> mListener = new ArrayList<>();
     private HistoryManager mHistoryManager = new HistoryManager();
+    private boolean mCurrentProjectNeverChanged = true;
 
     private String defaultProjectName() {
         for (int ii = 1; ; ++ii) {
@@ -55,10 +57,12 @@ public class ProjectFileManager {
 
     private void notifyListener(ChangeEventType eventType) {
         for (OnChangeListener listener : mListener) {
-            if (eventType == ChangeEventType.SAVED)
+            if (eventType == ChangeEventType.SAVED) {
                 listener.saved();
-            else if (eventType == ChangeEventType.CHANGED)
+            } else if (eventType == ChangeEventType.CHANGED) {
                 listener.changed();
+                mCurrentProjectNeverChanged = false;
+            }
         }
     }
 
@@ -68,6 +72,10 @@ public class ProjectFileManager {
 
     public void setContext(Context context) {
         mProjectFileRootDir = context.getFilesDir().getPath() + "/";
+    }
+
+    public boolean isCurrentProjectNeverChanged() {
+        return mCurrentProjectNeverChanged;
     }
 
     public void saveWithoutPreview(Project project) {
@@ -87,7 +95,7 @@ public class ProjectFileManager {
             mGson.toJson(project.getCompounds(), writer);
 
             if (getProjectFile(projectFile.getName()) == null) {
-                mSavedProjects.add(projectFile);
+                mStoredProjectsInDevice.add(projectFile);
             }
             projectFile.saved();
             notifyListener(ChangeEventType.SAVED);
@@ -103,10 +111,9 @@ public class ProjectFileManager {
     }
 
     public void savePreviewOnly(Project project, View view) {
-        // shift the project not to have compounds in negative region.
-        //project.offsetTo(10, 10);
-
-        PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+        if (!ProjectFileManager.instance().isCurrentProjectNeverChanged()) {
+            PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+        }
     }
 
     public void load(String fileName, Project project) {
@@ -139,7 +146,7 @@ public class ProjectFileManager {
     }
 
     public void load() {
-        mSavedProjects.clear();
+        mStoredProjectsInDevice.clear();
         File dir = new File(mProjectFileRootDir);
 
         if (dir.exists()) {
@@ -148,7 +155,7 @@ public class ProjectFileManager {
             for (int ii = 0; ii < files.length; ++ii) {
                 if (!files[ii].isDirectory() && files[ii].getName().endsWith(FILE_EXTENSION)) {
                     String nameWithoutExtension = files[ii].getName().substring(0, files[ii].getName().length() - FILE_EXTENSION.length());
-                    mSavedProjects.add(new ProjectFile(nameWithoutExtension));
+                    mStoredProjectsInDevice.add(new ProjectFile(nameWithoutExtension));
                 }
             }
         }
@@ -159,7 +166,7 @@ public class ProjectFileManager {
     }
 
     public ProjectFile getProjectFile(String projectName) {
-        for (ProjectFile file : mSavedProjects) {
+        for (ProjectFile file : mStoredProjectsInDevice) {
             if (file.getName().equals(projectName)) {
                 return file;
             }
@@ -168,15 +175,33 @@ public class ProjectFileManager {
     }
 
     public ProjectFile getProjectFile(int index) {
-        return mSavedProjects.get(index);
+        return mStoredProjectsInDevice.get(index);
     }
 
     public int projectFileNumber() {
-        return mSavedProjects.size();
+        return mStoredProjectsInDevice.size();
     }
 
     public String projectFileRootDir() {
         return mProjectFileRootDir;
+    }
+
+    public boolean renameProject(String oldProjectName, String newProjectName) {
+        return false;
+    }
+
+    public boolean deleteProject(String projectName) {
+        ProjectFile pjtFile = getProjectFile(projectName);
+
+        if (pjtFile != null) {
+            File file = new File(mProjectFileRootDir, projectName + FILE_EXTENSION);
+            return file.delete();
+        }
+        return false;
+    }
+
+    public String makeCopy(String projectName) {
+        return null;
     }
 
     public void addListener(OnChangeListener listener) {

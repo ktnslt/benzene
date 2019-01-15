@@ -42,6 +42,23 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
+                            int id = menuItem.getItemId();
+
+                            if (id == R.id.action_project_rename) {
+                                ProjectFileManager.instance().renameProject(mProjectName.getText().toString(), "");
+                            } else if (id == R.id.action_project_share_image) {
+
+                            } else if (id == R.id.action_project_share_project_file) {
+
+                            } else if (id == R.id.action_project_copy) {
+
+                            } else if (id == R.id.action_project_delete) {
+                                if (ProjectFileManager.instance().deleteProject(mProjectName.getText().toString())) {
+
+                                }
+                            } else {
+                                return false;
+                            }
                             return true;
                         }
                     });

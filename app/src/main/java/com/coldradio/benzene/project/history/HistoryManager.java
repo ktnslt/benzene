@@ -1,7 +1,6 @@
 package com.coldradio.benzene.project.history;
 
 import com.coldradio.benzene.project.Configuration;
-import com.coldradio.benzene.util.Notifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +18,12 @@ public class HistoryManager {
         }
         mHistory.add(history);
         mCurrentState = mHistory.size() - 1;
-        Notifier.instance().notification("History " + mHistory.size());
     }
 
     public boolean redo() {
         if (mCurrentState < mHistory.size() - 1) {
             ++mCurrentState;
             mHistory.get(mCurrentState).redo();
-
-            Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
             return true;
         }
         return false;
@@ -37,8 +33,6 @@ public class HistoryManager {
         if (mCurrentState >= 0) {
             mHistory.get(mCurrentState).undo();
             --mCurrentState;
-
-            Notifier.instance().notification("History " + (mCurrentState + 1) + "/" + mHistory.size());
             return true;
         }
         return false;
