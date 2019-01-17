@@ -1,12 +1,12 @@
 package com.coldradio.benzene.util;
 
-import com.coldradio.benzene.project.Configuration;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
+import java.text.DateFormat;
+import java.util.Date;
 
 public class FileUtil {
     public static String INVALID_CHARS = "\\/:*?\"<>|&%";
@@ -108,6 +108,17 @@ public class FileUtil {
     }
 
     public static long lastModifiedTime(String filePath) {
-        return new File(filePath + Configuration.PROJECT_FILE_EXT).lastModified();
+        File file = new File(filePath);
+
+        if (file.exists())
+            return file.lastModified();
+        return 0;
+    }
+
+    public static String toDateTimeString(long timeInMs) {
+        Date date = new Date();
+
+        date.setTime(timeInMs);
+        return DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date);
     }
 }

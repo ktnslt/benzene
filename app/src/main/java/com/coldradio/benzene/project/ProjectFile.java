@@ -18,7 +18,7 @@ public class ProjectFile {
 
         @Override
         public int compare(ProjectFile o1, ProjectFile o2) {
-            return mReversed ? o2.mName.compareTo(o1.mName) : o1.mName.compareTo(o2.mName);
+            return mReversed ? o2.mName.compareToIgnoreCase(o1.mName) : o1.mName.compareToIgnoreCase(o2.mName);
         }
     }
     public static class LastModifiedTimeComparator implements Comparator<ProjectFile> {
@@ -60,6 +60,10 @@ public class ProjectFile {
 
     public String getName() {
         return mName;
+    }
+
+    public long lastModified() {
+        return mLastModifiedTime;
     }
 
     public boolean hasSavedFile() {

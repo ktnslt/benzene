@@ -26,6 +26,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
 
     static class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mProjectName;
+        private TextView mLastModifiedTime;
         private ImageView mImageView;
         private int mHolderPosition;
         final private ProjectViewAdapter mAdapter;
@@ -33,6 +34,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectViewHolder(View v, ProjectViewAdapter adapter) {
             super(v);
             mProjectName = v.findViewById(R.id.project_view_name);
+            mLastModifiedTime = v.findViewById(R.id.project_view_last_modified);
             mImageView = v.findViewById(R.id.project_view_preview);
             mAdapter = adapter;
             v.setOnClickListener(this);
@@ -115,6 +117,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
         holder.mProjectName.setText(projectFile.getName());
+        holder.mLastModifiedTime.setText(FileUtil.toDateTimeString(projectFile.lastModified()));
         holder.mHolderPosition = position;
         PreviewHandler.showPreview(holder.mImageView, projectFile.getName());
     }

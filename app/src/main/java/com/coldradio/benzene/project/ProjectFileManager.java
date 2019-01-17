@@ -48,7 +48,7 @@ public class ProjectFileManager {
     private List<OnChangeListener> mListener = new ArrayList<>();
     private HistoryManager mHistoryManager = new HistoryManager();
     private boolean mCurrentProjectNeverChanged = true;
-    private SortType mSortType = SortType.SORT_BY_NAME;
+    private SortType mSortType = SortType.SORT_BY_LMT_REV;
 
     private String defaultProjectName() {
         for (int ii = 1; ; ++ii) {
@@ -110,7 +110,6 @@ public class ProjectFileManager {
 
             if (getProjectFile(projectFile.getName()) == null) {
                 mStoredProjectsInDevice.add(projectFile);
-                sort();
             }
             projectFile.saved();
             notifyListener(ChangeEventType.SAVED);
@@ -197,7 +196,6 @@ public class ProjectFileManager {
         ProjectFile projectFile = getProjectFile(projectName);
 
         if (projectFile != null && projectFile.rename(newProjectName)) {
-            sort();
             return true;
         }
         return false;
@@ -220,8 +218,7 @@ public class ProjectFileManager {
             ProjectFile copiedFile = projectFile.copy();
 
             if (copiedFile != null) {
-                mStoredProjectsInDevice.add(copiedFile);
-                sort();
+                mStoredProjectsInDevice.add(mStoredProjectsInDevice.indexOf(projectFile) + 1, copiedFile);
                 return copiedFile.getName();
             }
         }

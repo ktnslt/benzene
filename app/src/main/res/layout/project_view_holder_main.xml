@@ -15,16 +15,26 @@
         <ImageView
             android:id="@+id/project_view_preview"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="150dp" />
 
         <TextView
             android:id="@+id/project_view_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/project_view_preview" />
+
+        <TextView
+            android:id="@+id/project_view_last_modified"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/project_view_preview" />
 
         <ImageButton
