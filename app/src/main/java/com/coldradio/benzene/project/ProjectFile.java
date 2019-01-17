@@ -46,12 +46,12 @@ public class ProjectFile {
 
     public ProjectFile(String fileName) {
         mName = fileName;
-        mLastModifiedTime = FileUtil.lastModifiedTime(mName);
+        mLastModifiedTime = FileUtil.lastModifiedTime(Environment.instance().projectFilePath() + mName + Configuration.PROJECT_FILE_EXT);
     }
 
     public ProjectFile(String fileName, boolean createdNew) {
         mName = fileName;
-        mLastModifiedTime = FileUtil.lastModifiedTime(mName);
+        mLastModifiedTime = FileUtil.lastModifiedTime(Environment.instance().projectFilePath() + mName + Configuration.PROJECT_FILE_EXT);
 
         if (createdNew) {
             mHasSavedFile = false;

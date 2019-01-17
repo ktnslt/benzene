@@ -107,7 +107,7 @@ public class FileUtil {
         return true;
     }
 
-    public static long lastModifiedTime(String name) {
-        return new File(Environment.instance().projectFilePath(), name + Configuration.PROJECT_FILE_EXT).lastModified();
+    public static long lastModifiedTime(String filePath) {
+        return new File(filePath + Configuration.PROJECT_FILE_EXT).lastModified();
     }
 }

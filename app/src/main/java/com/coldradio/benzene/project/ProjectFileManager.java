@@ -60,6 +60,18 @@ public class ProjectFileManager {
         }
     }
 
+    private void sort() {
+        if (mSortType == SortType.SORT_BY_NAME) {
+            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator());
+        } else if (mSortType == SortType.SORT_BY_NAME_REV) {
+            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator(true));
+        } else if (mSortType == SortType.SORT_BY_LMT) {
+            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator());
+        } else if (mSortType == SortType.SORT_BY_LMT_REV) {
+            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator(true));
+        }
+    }
+
     private void notifyListener(ChangeEventType eventType) {
         for (OnChangeListener listener : mListener) {
             if (eventType == ChangeEventType.SAVED) {
@@ -86,6 +98,7 @@ public class ProjectFileManager {
             ProjectFile projectFile = project.getProjectFile();
 
             if (!projectFile.hasSavedFile() && project.isEmpty()) {
+                // created as new, but nothing in it case
                 return;
             }
             File file = new File(Environment.instance().projectFilePath() + project.getProjectFile().getName() + Configuration.PROJECT_FILE_EXT);
@@ -97,6 +110,7 @@ public class ProjectFileManager {
 
             if (getProjectFile(projectFile.getName()) == null) {
                 mStoredProjectsInDevice.add(projectFile);
+                sort();
             }
             projectFile.saved();
             notifyListener(ChangeEventType.SAVED);
@@ -155,6 +169,7 @@ public class ProjectFileManager {
                 }
             }
         }
+        sort();
     }
 
     public ProjectFile createNew() {
@@ -182,6 +197,7 @@ public class ProjectFileManager {
         ProjectFile projectFile = getProjectFile(projectName);
 
         if (projectFile != null && projectFile.rename(newProjectName)) {
+            sort();
             return true;
         }
         return false;
@@ -205,6 +221,7 @@ public class ProjectFileManager {
 
             if (copiedFile != null) {
                 mStoredProjectsInDevice.add(copiedFile);
+                sort();
                 return copiedFile.getName();
             }
         }
@@ -281,17 +298,8 @@ public class ProjectFileManager {
     }
 
     public void sortByNext() {
-        Notifier.instance().notification(mSortType.toString());
-
-        if (mSortType == SortType.SORT_BY_NAME) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator());
-        } else if (mSortType == SortType.SORT_BY_NAME_REV) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator(true));
-        } else if (mSortType == SortType.SORT_BY_LMT) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator());
-        } else if (mSortType == SortType.SORT_BY_LMT_REV) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator(true));
-        }
         mSortType = SortType.values()[(mSortType.ordinal() + 1) % SortType.values().length];
+        sort();
+        Notifier.instance().notification(mSortType.toString());
     }
 }
