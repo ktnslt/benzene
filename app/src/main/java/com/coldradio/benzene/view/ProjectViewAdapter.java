@@ -17,6 +17,9 @@ import com.coldradio.benzene.project.PreviewHandler;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFile;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.util.EditTextDialog;
+import com.coldradio.benzene.util.FileUtil;
+import com.coldradio.benzene.util.Notifier;
 
 public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.ProjectViewHolder> {
     private static Activity smMainActivity;
@@ -24,11 +27,14 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
     static class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mProjectName;
         private ImageView mImageView;
+        private int mHolderPosition;
+        final private ProjectViewAdapter mAdapter;
 
-        ProjectViewHolder(View v) {
+        ProjectViewHolder(View v, ProjectViewAdapter adapter) {
             super(v);
             mProjectName = v.findViewById(R.id.project_view_name);
             mImageView = v.findViewById(R.id.project_view_preview);
+            mAdapter = adapter;
             v.setOnClickListener(this);
 
             // More Menu Button
@@ -43,19 +49,38 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             int id = menuItem.getItemId();
+                            final String projectNameString = mProjectName.getText().toString();
 
                             if (id == R.id.action_project_rename) {
-                                ProjectFileManager.instance().renameProject(mProjectName.getText().toString(), "");
+                                final EditTextDialog dialog = new EditTextDialog(smMainActivity);
+
+                                dialog.setOkListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (FileUtil.validFileName(projectNameString)) {
+                                            if (ProjectFileManager.instance().rename(projectNameString, dialog.getInputText())) {
+                                                mAdapter.notifyItemChanged(mHolderPosition);
+                                            } else {
+                                                Notifier.instance().notification("Rename File Failed");
+                                            }
+                                            dialog.dismiss();
+                                        } else {
+                                            Notifier.instance().notification("Invalid Chars " + FileUtil.INVALID_CHARS);
+                                        }
+                                    }
+                                }).setInitialText(projectNameString);
+                                dialog.show();
                             } else if (id == R.id.action_project_share_image) {
 
                             } else if (id == R.id.action_project_share_project_file) {
 
                             } else if (id == R.id.action_project_copy) {
-
-                            } else if (id == R.id.action_project_delete) {
-                                if (ProjectFileManager.instance().deleteProject(mProjectName.getText().toString())) {
-
+                                if (ProjectFileManager.instance().copy(projectNameString) != null) {
+                                    mAdapter.notifyDataSetChanged();
                                 }
+                            } else if (id == R.id.action_project_delete) {
+                                ProjectFileManager.instance().delete(projectNameString);
+                                mAdapter.notifyItemRemoved(mHolderPosition);
                             } else {
                                 return false;
                             }
@@ -82,7 +107,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
     public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_view_holder_main, parent, false);
 
-        return new ProjectViewHolder(v);
+        return new ProjectViewHolder(v, this);
     }
 
     @Override
@@ -90,11 +115,12 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
         holder.mProjectName.setText(projectFile.getName());
+        holder.mHolderPosition = position;
         PreviewHandler.showPreview(holder.mImageView, projectFile.getName());
     }
 
     @Override
     public int getItemCount() {
-        return ProjectFileManager.instance().projectFileNumber();
+        return ProjectFileManager.instance().numberOfProjects();
     }
 }

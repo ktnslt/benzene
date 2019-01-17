@@ -14,7 +14,6 @@ public class ProjectView extends View {
 
         // set context for those needs
         Notifier.instance().setContext(this.getContext());
-        ProjectFileManager.instance().setContext(this.getContext());
         ProjectFileManager.instance().load();
     }
 }

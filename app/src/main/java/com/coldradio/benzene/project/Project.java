@@ -155,8 +155,13 @@ public class Project {
         return mElementSelector.rotateSelectedCompound(point, action);
     }
 
-    public void copySelectedCompound() {
-        mElementCopier.copy(mElementSelector.getSelectedAsList());
+    public boolean copySelectedCompound() {
+        if (mElementSelector.hasSelected()) {
+            mElementCopier.copy(mElementSelector.getSelectedAsList());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void pasteSelectedCompound(PointF point) {

@@ -1,7 +1,6 @@
 package com.coldradio.benzene.view;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,7 +20,7 @@ import android.view.ViewGroup;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
-import com.coldradio.benzene.util.ScreenInfo;
+import com.coldradio.benzene.util.Environment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView.Adapter mProjectViewAdapter;
@@ -32,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.project_toolbar);
         setSupportActionBar(toolbar);
+
+        // call this as early as possible
+        Environment.instance().setContext(this.getApplicationContext());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -93,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_search) {
 
         } else if (id == R.id.action_sort) {
-
+            ProjectFileManager.instance().sortByNext();
+            mProjectViewAdapter.notifyDataSetChanged();
         }
 
         return super.onOptionsItemSelected(item);

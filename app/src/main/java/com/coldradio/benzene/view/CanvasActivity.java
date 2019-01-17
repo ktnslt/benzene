@@ -93,15 +93,15 @@ public class CanvasActivity extends AppCompatActivity {
                 Notifier.instance().notification("Nothing Selected");
             }
         } else if (id == R.id.action_copy) {
-            if (elementSelector.hasSelected()) {
-                Project.instance().copySelectedCompound();
+            if (Project.instance().copySelectedCompound()) {
                 Notifier.instance().notification(Project.instance().getElementCopier().numberOfCopiedCompounds() + " Compounds Copied");
             } else {
                 Notifier.instance().notification("Nothing Selected");
             }
         } else if (id == R.id.action_paste) {
             if (Project.instance().getElementCopier().hasCopied()) {
-                ProjectFileManager.instance().pushAllChangedHistory(Project.instance().getCompounds());  // can paste multiple compounds
+                // can paste multiple compounds. And push() shall be called before paste()
+                ProjectFileManager.instance().pushAllChangedHistory(Project.instance().getCompounds());
                 Project.instance().pasteSelectedCompound(ScreenInfo.instance().centerPoint());
             } else {
                 Notifier.instance().notification("Nothing Copied");

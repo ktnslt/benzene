@@ -18,5 +18,6 @@ public class Configuration {
     public static int SELECTED_ATOM_BG_CIRCLE_RADIUS = 10;
     public static int MAX_HISTORY_LIST = 50;
     public static Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.PNG;
-    public static String IMAGE_FORMAT_EXT = "png";
+    public static String IMAGE_FILE_EXT = ".png";
+    public static String PROJECT_FILE_EXT = ".bzn";
 }

@@ -22,27 +22,17 @@ import java.util.Locale;
 public class ImageUtil {
     private static Paint mBgPaint;
 
-    private static String availableFileName(File dir) {
-        String filename = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
-        File candidate = new File(dir, filename + "." + Configuration.IMAGE_FORMAT_EXT);
+    private static String availableFileName(String dir) {
+        String prefix = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
 
-        if (! candidate.exists()) {
-            return candidate.getName();
-        }
-
-        for (int ii = 1; ; ++ii) {
-            candidate = new File(dir, filename + "-" + ii + "." +  Configuration.IMAGE_FORMAT_EXT);
-            if (! candidate.exists()) {
-                return candidate.getName();
-            }
-        }
+        return FileUtil.availableFileName(dir, prefix, Configuration.IMAGE_FILE_EXT);
     }
 
     private static void addImageToGallery(final String filePath, final Context context) {
         ContentValues values = new ContentValues();
 
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + Configuration.IMAGE_FORMAT_EXT);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + Configuration.IMAGE_FILE_EXT.substring(1));
         values.put(MediaStore.MediaColumns.DATA, filePath);
 
         context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
@@ -78,7 +68,7 @@ public class ImageUtil {
         File dir = new File(directoryPath);
 
         if (dir.exists() || dir.mkdirs()) {
-            File file = new File(dir, availableFileName(dir));
+            File file = new File(dir, availableFileName(dir.toString()));
 
             try {
                 FileOutputStream out = new FileOutputStream(file);

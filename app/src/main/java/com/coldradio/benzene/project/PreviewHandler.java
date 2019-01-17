@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.coldradio.benzene.util.Environment;
 import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
 
 public class PreviewHandler {
     public static void savePreview(View view, RectF region, String projectName) {
-        File file = new File(ProjectFileManager.instance().projectFileRootDir() + projectName + ".png");
+        File file = new File(Environment.instance().projectFilePath() + projectName + Configuration.IMAGE_FILE_EXT);
 
         try {
             Bitmap bitmap = ImageUtil.createBitmap(view, region);
@@ -38,7 +39,7 @@ public class PreviewHandler {
     }
 
     public static void showPreview(ImageView imageView, String projectName) {
-        File file = new File(ProjectFileManager.instance().projectFileRootDir() + projectName + ".png");
+        File file = new File(Environment.instance().projectFilePath() + projectName + Configuration.IMAGE_FILE_EXT);
 
         if (file.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
