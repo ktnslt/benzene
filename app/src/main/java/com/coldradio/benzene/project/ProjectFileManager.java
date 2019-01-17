@@ -211,18 +211,19 @@ public class ProjectFileManager {
         return false;
     }
 
-    public String copy(String projectName) {
+    public int copy(String projectName) {
         ProjectFile projectFile = getProjectFile(projectName);
+        int insertedIndex = -1;
 
         if (projectFile != null) {
             ProjectFile copiedFile = projectFile.copy();
 
             if (copiedFile != null) {
-                mStoredProjectsInDevice.add(mStoredProjectsInDevice.indexOf(projectFile) + 1, copiedFile);
-                return copiedFile.getName();
+                insertedIndex = mStoredProjectsInDevice.indexOf(projectFile) + 1;
+                mStoredProjectsInDevice.add(insertedIndex, copiedFile);
             }
         }
-        return null;
+        return insertedIndex;
     }
 
     public void addListener(OnChangeListener listener) {

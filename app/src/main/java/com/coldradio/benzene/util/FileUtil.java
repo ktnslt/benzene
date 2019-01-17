@@ -1,5 +1,7 @@
 package com.coldradio.benzene.util;
 
+import com.coldradio.benzene.project.Configuration;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -120,5 +122,9 @@ public class FileUtil {
 
         date.setTime(timeInMs);
         return DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date);
+    }
+
+    public static boolean exists(String fileName) {
+        return new File(Environment.instance().projectFilePath(), fileName + Configuration.PROJECT_FILE_EXT).exists();
     }
 }

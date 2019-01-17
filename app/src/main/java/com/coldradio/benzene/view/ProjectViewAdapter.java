@@ -59,7 +59,9 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                 dialog.setOkListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (FileUtil.validFileName(projectNameString)) {
+                                        if (FileUtil.exists(dialog.getInputText())) {
+                                            Notifier.instance().notification("Already exists");
+                                        } else if (FileUtil.validFileName(projectNameString)) {
                                             if (ProjectFileManager.instance().rename(projectNameString, dialog.getInputText())) {
                                                 mAdapter.notifyItemChanged(mHolderPosition);
                                             } else {
@@ -77,8 +79,10 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                             } else if (id == R.id.action_project_share_project_file) {
 
                             } else if (id == R.id.action_project_copy) {
-                                if (ProjectFileManager.instance().copy(projectNameString) != null) {
-                                    mAdapter.notifyDataSetChanged();
+                                int insertedIndex = ProjectFileManager.instance().copy(projectNameString);
+
+                                if (insertedIndex >= 0) {
+                                    mAdapter.notifyItemInserted(insertedIndex);
                                 }
                             } else if (id == R.id.action_project_delete) {
                                 ProjectFileManager.instance().delete(projectNameString);
