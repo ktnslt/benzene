@@ -109,7 +109,7 @@ public class ProjectFileManager {
             mGson.toJson(project.getCompounds(), writer);
 
             if (getProjectFile(projectFile.getName()) == null) {
-                mStoredProjectsInDevice.add(projectFile);
+                mStoredProjectsInDevice.add(0, projectFile);
             }
             projectFile.saved();
             notifyListener(ChangeEventType.SAVED);

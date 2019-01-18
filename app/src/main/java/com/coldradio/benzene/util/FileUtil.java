@@ -1,10 +1,16 @@
 package com.coldradio.benzene.util;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
+
 import com.coldradio.benzene.project.Configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
@@ -40,6 +46,15 @@ public class FileUtil {
         if (reader != null) {
             try {
                 reader.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void closeIgnoreException(OutputStream out) {
+        if (out != null) {
+            try {
+                out.close();
             } catch (Exception e) {
             }
         }
@@ -126,5 +141,32 @@ public class FileUtil {
 
     public static boolean exists(String fileName) {
         return new File(Environment.instance().projectFilePath(), fileName + Configuration.PROJECT_FILE_EXT).exists();
+    }
+
+    public static boolean share(String filePath, Activity activity) {
+        try {
+            Intent share = new Intent(Intent.ACTION_SEND);
+            File file = new File(filePath);
+
+            if (!file.exists()) {
+                return false;
+            }
+
+            if (filePath.endsWith(Configuration.IMAGE_FILE_EXT)) {
+                share.setType("image/" + Configuration.IMAGE_FILE_EXT.substring(1));
+            } else {
+                share.setType("text/xml");
+            }
+
+            Uri uri = FileProvider.getUriForFile(activity, "com.coldradio.benzene.fileprovider", file);
+
+            share.putExtra(Intent.EXTRA_STREAM, uri);
+            activity.startActivity(Intent.createChooser(share, "Share to Others"));
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -13,11 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.project.PreviewHandler;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFile;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.EditTextDialog;
+import com.coldradio.benzene.util.Environment;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
 
@@ -75,9 +77,13 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                 }).setInitialText(projectNameString);
                                 dialog.show();
                             } else if (id == R.id.action_project_share_image) {
-
+                                if (!FileUtil.share(Environment.instance().projectFilePath() + projectNameString + Configuration.IMAGE_FILE_EXT, smMainActivity)) {
+                                    Notifier.instance().notification("Share Failed");
+                                }
                             } else if (id == R.id.action_project_share_project_file) {
-
+                                if (!FileUtil.share(Environment.instance().projectFilePath() + projectNameString + Configuration.PROJECT_FILE_EXT, smMainActivity)) {
+                                    Notifier.instance().notification("Share Failed");
+                                }
                             } else if (id == R.id.action_project_copy) {
                                 int insertedIndex = ProjectFileManager.instance().copy(projectNameString);
 

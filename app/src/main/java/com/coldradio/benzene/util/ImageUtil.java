@@ -69,17 +69,17 @@ public class ImageUtil {
 
         if (dir.exists() || dir.mkdirs()) {
             File file = new File(dir, availableFileName(dir.toString()));
+            FileOutputStream out = null;
 
             try {
-                FileOutputStream out = new FileOutputStream(file);
+                out = new FileOutputStream(file);
                 bitmap.compress(Configuration.IMAGE_FORMAT, 100, out);
-
                 out.flush();
-                out.close();
-
                 addImageToGallery(file.toString(), context);
             } catch (Exception e) {
                 Notifier.instance().notification("Saving Image Failed");
+            } finally {
+                FileUtil.closeIgnoreException(out);
             }
         } else {
             Notifier.instance().notification("Direction Creation Failed");
