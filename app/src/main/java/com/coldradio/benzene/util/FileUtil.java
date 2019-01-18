@@ -140,7 +140,7 @@ public class FileUtil {
     }
 
     public static boolean exists(String fileName) {
-        return new File(Environment.instance().projectFilePath(), fileName + Configuration.PROJECT_FILE_EXT).exists();
+        return new File(AppEnv.instance().projectFileDir(), fileName + Configuration.PROJECT_FILE_EXT).exists();
     }
 
     public static boolean share(String filePath, Activity activity) {
@@ -168,5 +168,14 @@ public class FileUtil {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean makeDirIfNotExist(String path) {
+        File dir = new File(path);
+
+        if (dir.exists() || dir.mkdirs()) {
+            return true;
+        }
+        return false;
     }
 }

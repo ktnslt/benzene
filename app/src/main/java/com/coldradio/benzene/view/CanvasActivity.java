@@ -17,6 +17,7 @@ import com.coldradio.benzene.project.FingerSelector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
+import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.PermissionManager;
@@ -113,9 +114,14 @@ public class CanvasActivity extends AppCompatActivity {
         } else if (id == R.id.action_save) {
             ProjectFileManager.instance().saveWithoutPreview(Project.instance());
         } else if (id == R.id.action_shot_to_gallery) {
-            ImageUtil.saveToGallery(mCanvasView, ScreenInfo.instance().region(), getApplicationContext());
+            ImageUtil.shotToGallery(mCanvasView, ScreenInfo.instance().region(), getApplicationContext());
         } else if (id == R.id.action_share_screenshot) {
+            String imagePath = ImageUtil.shotToTemporary(mCanvasView, ScreenInfo.instance().region(), getApplicationContext());
 
+            if (imagePath != null) {
+                FileUtil.share(imagePath, this);
+                // cannot delete the temporary file here. it needs to exist to be shared for some time
+            }
         } else if (id == R.id.action_delete_selected) {
             ProjectFileManager.instance().pushForDeletion();
             Project.instance().deleteSelectedElement();

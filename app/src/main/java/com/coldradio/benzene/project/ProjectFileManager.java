@@ -9,7 +9,7 @@ import com.coldradio.benzene.project.history.CompoundDeletedHistory;
 import com.coldradio.benzene.project.history.CompoundMovedHistory;
 import com.coldradio.benzene.project.history.History;
 import com.coldradio.benzene.project.history.HistoryManager;
-import com.coldradio.benzene.util.Environment;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
 import com.google.gson.Gson;
@@ -26,7 +26,6 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ProjectFileManager {
@@ -101,7 +100,7 @@ public class ProjectFileManager {
                 // created as new, but nothing in it case
                 return;
             }
-            File file = new File(Environment.instance().projectFilePath() + project.getProjectFile().getName() + Configuration.PROJECT_FILE_EXT);
+            File file = new File(AppEnv.instance().projectFileDir() + project.getProjectFile().getName() + Configuration.PROJECT_FILE_EXT);
             file.createNewFile();
 
             writer = new FileWriter(file);
@@ -134,7 +133,7 @@ public class ProjectFileManager {
         Reader reader = null;
 
         try {
-            File file = new File(Environment.instance().projectFilePath() + fileName + Configuration.PROJECT_FILE_EXT);
+            File file = new File(AppEnv.instance().projectFileDir() + fileName + Configuration.PROJECT_FILE_EXT);
             reader = new FileReader(file);
 
             List<Compound> readCompounds = mGson.fromJson(reader, mCompoundListType);
@@ -157,7 +156,7 @@ public class ProjectFileManager {
 
     public void load() {
         mStoredProjectsInDevice.clear();
-        File dir = new File(Environment.instance().projectFilePath());
+        File dir = new File(AppEnv.instance().projectFileDir());
 
         if (dir.exists()) {
             File[] files = dir.listFiles();

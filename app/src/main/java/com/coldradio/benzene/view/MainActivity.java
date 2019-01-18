@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
-import com.coldradio.benzene.util.Environment;
+import com.coldradio.benzene.util.AppEnv;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView.Adapter mProjectViewAdapter;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         // call this as early as possible
-        Environment.instance().setContext(this.getApplicationContext());
+        AppEnv.instance().setContext(this.getApplicationContext());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

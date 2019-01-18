@@ -1,6 +1,6 @@
 package com.coldradio.benzene.project;
 
-import com.coldradio.benzene.util.Environment;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 
 import java.util.Comparator;
@@ -46,12 +46,12 @@ public class ProjectFile {
 
     public ProjectFile(String fileName) {
         mName = fileName;
-        mLastModifiedTime = FileUtil.lastModifiedTime(Environment.instance().projectFilePath() + mName + Configuration.PROJECT_FILE_EXT);
+        mLastModifiedTime = FileUtil.lastModifiedTime(AppEnv.instance().projectFileDir() + mName + Configuration.PROJECT_FILE_EXT);
     }
 
     public ProjectFile(String fileName, boolean createdNew) {
         mName = fileName;
-        mLastModifiedTime = FileUtil.lastModifiedTime(Environment.instance().projectFilePath() + mName + Configuration.PROJECT_FILE_EXT);
+        mLastModifiedTime = FileUtil.lastModifiedTime(AppEnv.instance().projectFileDir() + mName + Configuration.PROJECT_FILE_EXT);
 
         if (createdNew) {
             mHasSavedFile = false;
@@ -79,7 +79,7 @@ public class ProjectFile {
         if (!FileUtil.validFileName(newName)) {
             return false;
         }
-        String path = Environment.instance().projectFilePath();
+        String path = AppEnv.instance().projectFileDir();
 
         FileUtil.rename(path + mName + Configuration.IMAGE_FILE_EXT, path + newName + Configuration.IMAGE_FILE_EXT);
 
@@ -91,7 +91,7 @@ public class ProjectFile {
     }
 
     public boolean delete() {
-        String path = Environment.instance().projectFilePath();
+        String path = AppEnv.instance().projectFileDir();
 
         // delete preview
         FileUtil.delete(path + mName + Configuration.IMAGE_FILE_EXT);
@@ -102,7 +102,7 @@ public class ProjectFile {
     }
 
     public ProjectFile copy() {
-        String path = Environment.instance().projectFilePath();
+        String path = AppEnv.instance().projectFileDir();
 
         String copiedName = FileUtil.nameWithoutExtension(FileUtil.availableFileName(path, mName, Configuration.PROJECT_FILE_EXT), Configuration.PROJECT_FILE_EXT);
 
