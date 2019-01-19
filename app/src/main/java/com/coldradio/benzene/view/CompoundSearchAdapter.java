@@ -1,48 +1,34 @@
 package com.coldradio.benzene.view;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
-import com.coldradio.benzene.util.SearchFilter;
-import com.coldradio.benzene.project.ProjectFileManager;
-import com.coldradio.benzene.project.history.CompoundAddedHistory;
-import com.coldradio.benzene.util.Notifier;
-import com.coldradio.benzene.util.ScreenInfo;
-import com.coldradio.benzene.project.Project;
-import com.coldradio.benzene.view.drawer.GenericDrawer;
-import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
     static class CompoundViewHolder extends RecyclerView.ViewHolder {
-        private TextView mCompoundNameTextView;
-        private TextView mCompoundDescriptionTextView;
-        private CompoundPreview mCompoundPreview;
+        private TextView mTitle;
+        private TextView mCID;
+        private TextView mMF;
+        private TextView mMW;
+        private TextView mIUPACName;
+        private ImageView mPreview;
 
         private CompoundViewHolder(View v) {
             super(v);
-            mCompoundNameTextView = v.findViewById(R.id.compound_name);
-            mCompoundDescriptionTextView = v.findViewById(R.id.compound_description);
-
-            // set compound review
-            ViewGroup preview = v.findViewById(R.id.compound_holder_main);
-
-            if (preview != null) {
-                mCompoundPreview = new CompoundPreview(v.getContext());
-                preview.addView(mCompoundPreview);
-            }
+            mTitle = v.findViewById(R.id.tv_title);
+            mCID = v.findViewById(R.id.tv_cid);
+            mMF = v.findViewById(R.id.tv_mf);
+            mMW = v.findViewById(R.id.tv_mw);
+            mIUPACName = v.findViewById(R.id.tv_iupac);
+            mPreview = v.findViewById(R.id.iv_preview);
         }
     }
 
@@ -55,54 +41,16 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
     @Override
     public void onBindViewHolder(@NonNull CompoundViewHolder holder, int position) {
         CompoundIndex index = CompoundLibrary.instance().getCompoundIndex(position);
-        SearchFilter filter = CompoundLibrary.instance().getSearchFilter();
 
-        holder.mCompoundNameTextView.setText(filter != null ? Html.fromHtml(filter.styleKeyword(index.preferredIUPACName)) : index.preferredIUPACName);
-        holder.mCompoundDescriptionTextView.setText(filter != null ? Html.fromHtml(filter.styleKeyword(index.otherNames)) : index.otherNames);
-        holder.mCompoundPreview.setCompoundIndex(index);
+        holder.mTitle.setText(index.title);
+        holder.mCID.setText(String.valueOf(index.cid));
+        holder.mMF.setText(index.mf);
+        holder.mMW.setText(String.valueOf(index.mw));
+        holder.mIUPACName.setText(index.IUPAC);
     }
 
     @Override
     public int getItemCount() {
         return CompoundLibrary.instance().size();
-    }
-}
-
-class CompoundPreview extends View implements View.OnClickListener {
-    private CompoundIndex mCompoundIndex;
-
-    public CompoundPreview(Context context) {
-        super(context);
-        setOnClickListener(this);
-    }
-
-    public void setCompoundIndex(CompoundIndex compoundIndex) {
-        mCompoundIndex = compoundIndex;
-        CompoundArranger.alignCenter(mCompoundIndex.compound, new PointF(getWidth()/5, getHeight()/2));
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        CompoundArranger.alignCenter(mCompoundIndex.compound, new PointF(w/5, h/2));
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        GenericDrawer.draw(mCompoundIndex.compound, canvas, PaintSet.instance().paint(PaintSet.PaintType.GENERAL));
-    }
-
-    @Override
-    public void onClick(View v) {
-        Compound compound = mCompoundIndex.compound.copyAsNew();
-
-        CompoundArranger.zoomToStandard(compound, 1);
-        CompoundArranger.alignCenter(compound, ScreenInfo.instance().centerPoint());
-        Project.instance().addCompound(compound, true);
-
-        Notifier.instance().notification(mCompoundIndex.preferredIUPACName + " is added");
-        ProjectFileManager.instance().push(new CompoundAddedHistory(compound));
     }
 }

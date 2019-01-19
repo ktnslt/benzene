@@ -4,13 +4,19 @@ import android.content.Context;
 import android.view.View;
 
 import com.coldradio.benzene.library.CompoundLibrary;
+import com.coldradio.benzene.library.local.LocalCompounds;
+import com.coldradio.benzene.library.local.LocalSearch;
+import com.coldradio.benzene.library.pubchem.PubChemSearch;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.project.ProjectFileManager;
 
 public class ProjectView extends View {
     public ProjectView(Context context) {
         super(context);
-        CompoundLibrary.instance().parseLibrary(this.getResources());
+
+        //compound library settings
+        LocalCompounds.instance().parseLibrary(this.getResources());
+        CompoundLibrary.instance().addCompoundSearch(new LocalSearch());
 
         // set context for those needs
         Notifier.instance().setContext(this.getContext());

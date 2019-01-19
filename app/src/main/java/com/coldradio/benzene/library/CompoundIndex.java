@@ -1,20 +1,19 @@
 package com.coldradio.benzene.library;
 
-import com.coldradio.benzene.compound.Compound;
-
 public class CompoundIndex {
-    final public String preferredIUPACName;
-    final public String otherNames;
-    final public Compound compound;
+    final public String title;
+    final public int cid;
+    final public String mf;
+    final public float mw;
+    final public String IUPAC;
+    final public String pngPath;
 
-    public CompoundIndex(String iupacName, String names, Compound c) {
-        preferredIUPACName = iupacName;
-        otherNames = names;
-        compound = c;
-    }
-
-    @Override
-    public String toString() {
-        return preferredIUPACName;
+    public CompoundIndex(String title, int cid, String mf, float mw, String IUPAC, String pngPath) {
+        this.title = title;
+        this.cid = cid;
+        this.mf = mf;
+        this.mw = mw;
+        this.IUPAC = IUPAC;
+        this.pngPath = pngPath;
     }
 }

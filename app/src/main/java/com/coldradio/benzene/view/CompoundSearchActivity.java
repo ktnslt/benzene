@@ -5,16 +5,20 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
-import com.coldradio.benzene.util.StringSearchFilter;
+import com.coldradio.benzene.library.OnSearchResultArrived;
+import com.coldradio.benzene.library.pubchem.PubChemSearch;
+import com.coldradio.benzene.util.Notifier;
 
-public class CompoundSearchActivity extends AppCompatActivity implements TextWatcher {
+import java.util.List;
+
+public class CompoundSearchActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private RecyclerView.Adapter mAdapter;
 
     @Override
@@ -38,31 +42,35 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextWat
         // set listener for EditText
         EditText editText = findViewById(R.id.compound_search_edittext);
         if (editText != null) {
-            editText.addTextChangedListener(this);
+            editText.setOnEditorActionListener(this);
         }
+
+        CompoundLibrary.instance().setSearchResultReadyListener(new OnSearchResultArrived() {
+            @Override
+            public void arrived(List<CompoundIndex> compoundIndexList, int posStart, int itemCount) {
+                mAdapter.notifyItemRangeInserted(posStart, itemCount);
+            }
+
+            @Override
+            public void arrived(CompoundIndex compoundIndex, int position) {
+                mAdapter.notifyItemInserted(position);
+            }
+        });
+
+        CompoundLibrary.instance().addCompoundSearch(new PubChemSearch(this));
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() == 0) {
-            CompoundLibrary.instance().resetSearchFilter();
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        String keyword = v.getText().toString();
+
+        if (!keyword.isEmpty()) {
+            CompoundLibrary.instance().search(keyword);
+            mAdapter.notifyDataSetChanged();
         } else {
-            CompoundLibrary.instance().setSearchFilter(new StringSearchFilter<CompoundIndex>(s.toString()));
+            Notifier.instance().notification("No Search Keywords");
         }
-        mAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
-
-    @Override
-    public void onBackPressed() {
-        CompoundLibrary.instance().resetSearchFilter();
-        super.onBackPressed();
+        return false;
     }
 }

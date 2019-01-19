@@ -18,6 +18,7 @@ public class Notifier {
 
     public void notification(String msg) {
         if (mContext != null) {
+            cancel();
             mToastMessage = Toast.makeText(mContext, msg, Toast.LENGTH_SHORT);
             mToastMessage.show();
         }
