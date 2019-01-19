@@ -24,7 +24,7 @@ public class ImageUtil {
     private static String availableScreenShotFileName(String dir) {
         String prefix = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date());
 
-        return FileUtil.availableFileName(dir, prefix, Configuration.IMAGE_FILE_EXT);
+        return FileUtil.availableFileNameExt(dir, prefix, Configuration.IMAGE_FILE_EXT);
     }
 
     private static void addImageToGallery(final String filePath, final Context context) {
@@ -98,6 +98,7 @@ public class ImageUtil {
         String dir = AppEnv.instance().temporaryDir();
 
         if (FileUtil.makeDirIfNotExist(dir)) {
+            FileUtil.removeAllFilesInDir(dir);
             String filePath = dir + availableScreenShotFileName(dir);
 
             if (shotToFile(filePath, view, rect, context)) {

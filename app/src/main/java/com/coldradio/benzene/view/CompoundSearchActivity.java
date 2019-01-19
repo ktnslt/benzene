@@ -10,8 +10,9 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
-import com.coldradio.benzene.library.StringSearchFilter;
+import com.coldradio.benzene.util.StringSearchFilter;
 
 public class CompoundSearchActivity extends AppCompatActivity implements TextWatcher {
     private RecyclerView.Adapter mAdapter;
@@ -46,7 +47,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextWat
         if (s.length() == 0) {
             CompoundLibrary.instance().resetSearchFilter();
         } else {
-            CompoundLibrary.instance().setSearchFilter(new StringSearchFilter(s.toString()));
+            CompoundLibrary.instance().setSearchFilter(new StringSearchFilter<CompoundIndex>(s.toString()));
         }
         mAdapter.notifyDataSetChanged();
     }

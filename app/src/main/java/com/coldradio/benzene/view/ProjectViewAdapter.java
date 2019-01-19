@@ -2,8 +2,10 @@ package com.coldradio.benzene.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,16 +26,15 @@ import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
 
 public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.ProjectViewHolder> {
-    private static Activity smMainActivity;
+    private Activity mMainActivity;
 
     static class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mProjectName;
         private TextView mLastModifiedTime;
         private ImageView mImageView;
-        private int mHolderPosition;
         final private ProjectViewAdapter mAdapter;
 
-        ProjectViewHolder(View v, ProjectViewAdapter adapter) {
+        private ProjectViewHolder(View v, ProjectViewAdapter adapter) {
             super(v);
             mProjectName = v.findViewById(R.id.project_view_name);
             mLastModifiedTime = v.findViewById(R.id.project_view_last_modified);
@@ -46,7 +47,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PopupMenu popup = new PopupMenu(smMainActivity, v);
+                    PopupMenu popup = new PopupMenu(mAdapter.mMainActivity, v);
 
                     popup.getMenuInflater().inflate(R.menu.project_view_popup_menu, popup.getMenu());
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -56,7 +57,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                             final String projectNameString = mProjectName.getText().toString();
 
                             if (id == R.id.action_project_rename) {
-                                final EditTextDialog dialog = new EditTextDialog(smMainActivity);
+                                final EditTextDialog dialog = new EditTextDialog(mAdapter.mMainActivity);
 
                                 dialog.setOkListener(new View.OnClickListener() {
                                     @Override
@@ -65,7 +66,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                             Notifier.instance().notification("Already exists");
                                         } else if (FileUtil.validFileName(projectNameString)) {
                                             if (ProjectFileManager.instance().rename(projectNameString, dialog.getInputText())) {
-                                                mAdapter.notifyItemChanged(mHolderPosition);
+                                                mAdapter.notifyItemChanged(getAdapterPosition());
                                             } else {
                                                 Notifier.instance().notification("Rename File Failed");
                                             }
@@ -77,11 +78,11 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                 }).setInitialText(projectNameString);
                                 dialog.show();
                             } else if (id == R.id.action_project_share_image) {
-                                if (!FileUtil.share(AppEnv.instance().projectFileDir() + projectNameString + Configuration.IMAGE_FILE_EXT, smMainActivity)) {
+                                if (!FileUtil.share(AppEnv.instance().projectFileDir() + projectNameString + Configuration.IMAGE_FILE_EXT, mAdapter.mMainActivity)) {
                                     Notifier.instance().notification("Share Failed");
                                 }
                             } else if (id == R.id.action_project_share_project_file) {
-                                if (!FileUtil.share(AppEnv.instance().projectFileDir() + projectNameString + Configuration.PROJECT_FILE_EXT, smMainActivity)) {
+                                if (!FileUtil.share(AppEnv.instance().projectFileDir() + projectNameString + Configuration.PROJECT_FILE_EXT, mAdapter.mMainActivity)) {
                                     Notifier.instance().notification("Share Failed");
                                 }
                             } else if (id == R.id.action_project_copy) {
@@ -92,7 +93,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                 }
                             } else if (id == R.id.action_project_delete) {
                                 ProjectFileManager.instance().delete(projectNameString);
-                                mAdapter.notifyItemRemoved(mHolderPosition);
+                                mAdapter.notifyItemRemoved(getAdapterPosition());
                             } else {
                                 return false;
                             }
@@ -106,29 +107,32 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
 
         @Override
         public void onClick(View v) {
-            ProjectFileManager.instance().load(mProjectName.getText().toString(), Project.instance());
-            ProjectViewAdapter.smMainActivity.startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.CANVAS_REQ.ordinal());
+            ProjectFileManager.instance().loadToProject(mProjectName.getText().toString(), Project.instance());
+            mAdapter.mMainActivity.startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.CANVAS_REQ.ordinal());
         }
     }
 
     public ProjectViewAdapter(Activity activity) {
-        smMainActivity = activity;
+        mMainActivity = activity;
     }
 
-    @Override
-    public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull @Override
+    public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_view_holder_main, parent, false);
 
         return new ProjectViewHolder(v, this);
     }
 
     @Override
-    public void onBindViewHolder(ProjectViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
-        holder.mProjectName.setText(projectFile.getName());
+        if (ProjectFileManager.instance().hasFilter()) {
+            holder.mProjectName.setText(Html.fromHtml(ProjectFileManager.instance().getFilter().styleKeyword(projectFile.getName())));
+        } else {
+            holder.mProjectName.setText(projectFile.getName());
+        }
         holder.mLastModifiedTime.setText(FileUtil.toDateTimeString(projectFile.lastModified()));
-        holder.mHolderPosition = position;
         PreviewHandler.showPreview(holder.mImageView, projectFile.getName());
     }
 

@@ -8,6 +8,7 @@ import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.library.rule.RuleSet;
+import com.coldradio.benzene.util.SearchFilter;
 import com.google.gson.Gson;
 
 import java.io.InputStreamReader;
@@ -111,12 +112,8 @@ public class CompoundLibrary {
             return mFilteredCompounds.size();
     }
 
-    public void setSearchFilter(SearchFilter filter) {
-        if (mSearchFilter != null && filter.subsetOf(mSearchFilter)) {
-            mFilteredCompounds = filter.filtered(mFilteredCompounds);
-        } else {
-            mFilteredCompounds = filter.filtered(mAllCompounds);
-        }
+    public void setSearchFilter(SearchFilter<CompoundIndex> filter) {
+        mFilteredCompounds = filter.filtered(mAllCompounds);
         mSearchFilter = filter;
     }
 

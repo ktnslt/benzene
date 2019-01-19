@@ -12,4 +12,9 @@ public class CompoundIndex {
         otherNames = names;
         compound = c;
     }
+
+    @Override
+    public String toString() {
+        return preferredIUPACName;
+    }
 }

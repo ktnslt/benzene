@@ -3,6 +3,7 @@ package com.coldradio.benzene.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
-import com.coldradio.benzene.library.SearchFilter;
+import com.coldradio.benzene.util.SearchFilter;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.history.CompoundAddedHistory;
 import com.coldradio.benzene.util.Notifier;
@@ -25,12 +26,12 @@ import com.coldradio.benzene.view.drawer.GenericDrawer;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
-    public static class CompoundViewHolder extends RecyclerView.ViewHolder {
+    static class CompoundViewHolder extends RecyclerView.ViewHolder {
         private TextView mCompoundNameTextView;
         private TextView mCompoundDescriptionTextView;
         private CompoundPreview mCompoundPreview;
 
-        CompoundViewHolder(View v) {
+        private CompoundViewHolder(View v) {
             super(v);
             mCompoundNameTextView = v.findViewById(R.id.compound_name);
             mCompoundDescriptionTextView = v.findViewById(R.id.compound_description);
@@ -45,43 +46,19 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
         }
     }
 
-    private String styleKeyword(String msg, SearchFilter filter) {
-        if (filter == null || filter.getKeyword().length() == 0)
-            return msg;
-
-        StringBuilder sb = new StringBuilder();
-        String keyword = filter.getKeyword();
-
-        for (int ii = 0, next; ii >= 0 && ii < msg.length(); ) {
-            next = msg.indexOf(keyword, ii);
-
-            if (next < 0) {
-                sb.append(msg.substring(ii, msg.length()));
-                break;
-            } else {
-                sb.append(msg.substring(ii, next));
-                sb.append("<font color=black>");
-                sb.append(keyword);
-                sb.append("</font>");
-                ii = next + keyword.length();
-            }
-        }
-
-        return sb.toString();
-    }
-    @Override
-    public CompoundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public CompoundViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.compound_holder_main, parent, false);
         return new CompoundViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(CompoundViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CompoundViewHolder holder, int position) {
         CompoundIndex index = CompoundLibrary.instance().getCompoundIndex(position);
         SearchFilter filter = CompoundLibrary.instance().getSearchFilter();
 
-        holder.mCompoundNameTextView.setText(Html.fromHtml(styleKeyword(index.preferredIUPACName, filter)));
-        holder.mCompoundDescriptionTextView.setText(Html.fromHtml(styleKeyword(index.otherNames, filter)));
+        holder.mCompoundNameTextView.setText(filter != null ? Html.fromHtml(filter.styleKeyword(index.preferredIUPACName)) : index.preferredIUPACName);
+        holder.mCompoundDescriptionTextView.setText(filter != null ? Html.fromHtml(filter.styleKeyword(index.otherNames)) : index.otherNames);
         holder.mCompoundPreview.setCompoundIndex(index);
     }
 

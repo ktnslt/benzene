@@ -19,11 +19,16 @@ import android.view.ViewGroup;
 
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFile;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.AppEnv;
+import com.coldradio.benzene.util.EditTextDialog;
+import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.StringSearchFilter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView.Adapter mProjectViewAdapter;
+    private MenuItem mRemoveFilterItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.project_toolbar_menu, menu);
+        mRemoveFilterItem = menu.findItem(R.id.action_remove_filter);
+
+        if (mRemoveFilterItem != null) {
+            mRemoveFilterItem.setVisible(ProjectFileManager.instance().hasFilter());
+        }
+
         return true;
     }
 
@@ -92,8 +103,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_search) {
+        if (id == R.id.action_filter) {
+            final EditTextDialog dialog = new EditTextDialog(this);
 
+            dialog.setOkListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String inputText = dialog.getInputText();
+
+                    if (inputText != null && !inputText.isEmpty()) {
+                        ProjectFileManager.instance().setFilter(new StringSearchFilter<ProjectFile>(inputText));
+                        dialog.dismiss();
+                        mProjectViewAdapter.notifyDataSetChanged();
+                        if (mRemoveFilterItem != null) {
+                            mRemoveFilterItem.setVisible(true);
+                        }
+                    } else {
+                        Notifier.instance().notification("Nothing Inputted");
+                    }
+                }
+            }).setTitle("Project Name Filter").show();
+        } else if (id == R.id.action_remove_filter) {
+            // here always filter exists
+            ProjectFileManager.instance().setFilter(null);
+            mProjectViewAdapter.notifyDataSetChanged();
+            if (mRemoveFilterItem != null) {
+                mRemoveFilterItem.setVisible(false);
+            }
         } else if (id == R.id.action_sort) {
             ProjectFileManager.instance().sortByNext();
             mProjectViewAdapter.notifyDataSetChanged();

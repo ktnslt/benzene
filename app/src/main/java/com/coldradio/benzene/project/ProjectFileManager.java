@@ -12,6 +12,7 @@ import com.coldradio.benzene.project.history.HistoryManager;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.SearchFilter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class ProjectFileManager {
     public enum SortType {
-        SORT_BY_NAME, SORT_BY_NAME_REV, SORT_BY_LMT, SORT_BY_LMT_REV
+        SORT_BY_NAME, SORT_BY_NAME_REV, SORT_BY_OLD, SORT_BY_RECENT
     }
     public interface OnChangeListener {
         void saved();
@@ -47,27 +48,19 @@ public class ProjectFileManager {
     private List<OnChangeListener> mListener = new ArrayList<>();
     private HistoryManager mHistoryManager = new HistoryManager();
     private boolean mCurrentProjectNeverChanged = true;
-    private SortType mSortType = SortType.SORT_BY_LMT_REV;
+    private SortType mSortType = SortType.SORT_BY_RECENT;
+    private SearchFilter<ProjectFile> mFilter;
+    private List<ProjectFile> mFilteredStoredProjectsInDevice;
 
-    private String defaultProjectName() {
-        for (int ii = 1; ; ++ii) {
-            String defaultName = "Untitled" + String.valueOf(ii);
-
-            if (getProjectFile(defaultName) == null) {
-                return defaultName;
-            }
-        }
-    }
-
-    private void sort() {
+    private void sort(List<ProjectFile> projectFiles) {
         if (mSortType == SortType.SORT_BY_NAME) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator());
+            Collections.sort(projectFiles, new ProjectFile.NameComparator());
         } else if (mSortType == SortType.SORT_BY_NAME_REV) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.NameComparator(true));
-        } else if (mSortType == SortType.SORT_BY_LMT) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator());
-        } else if (mSortType == SortType.SORT_BY_LMT_REV) {
-            Collections.sort(mStoredProjectsInDevice, new ProjectFile.LastModifiedTimeComparator(true));
+            Collections.sort(projectFiles, new ProjectFile.NameComparator(true));
+        } else if (mSortType == SortType.SORT_BY_OLD) {
+            Collections.sort(projectFiles, new ProjectFile.LastModifiedTimeComparator());
+        } else if (mSortType == SortType.SORT_BY_RECENT) {
+            Collections.sort(projectFiles, new ProjectFile.LastModifiedTimeComparator(true));
         }
     }
 
@@ -80,6 +73,19 @@ public class ProjectFileManager {
                 mCurrentProjectNeverChanged = false;
             }
         }
+    }
+
+    private ProjectFile getProjectFile(String projectName, List<ProjectFile> projectFileList) {
+        for (ProjectFile file : projectFileList) {
+            if (file.getName().equals(projectName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    private List<ProjectFile> chooseProjectList() {
+        return mFilteredStoredProjectsInDevice != null ? mFilteredStoredProjectsInDevice : mStoredProjectsInDevice;
     }
 
     public static ProjectFileManager instance() {
@@ -109,6 +115,9 @@ public class ProjectFileManager {
 
             if (getProjectFile(projectFile.getName()) == null) {
                 mStoredProjectsInDevice.add(0, projectFile);
+                if (mFilteredStoredProjectsInDevice != null) {
+                    mFilteredStoredProjectsInDevice.add(0, projectFile);
+                }
             }
             projectFile.saved();
             notifyListener(ChangeEventType.SAVED);
@@ -129,7 +138,7 @@ public class ProjectFileManager {
         }
     }
 
-    public void load(String fileName, Project project) {
+    public void loadToProject(String fileName, Project project) {
         Reader reader = null;
 
         try {
@@ -154,7 +163,7 @@ public class ProjectFileManager {
         }
     }
 
-    public void load() {
+    public void initProjectListAtStartUp() {
         mStoredProjectsInDevice.clear();
         File dir = new File(AppEnv.instance().projectFileDir());
 
@@ -167,28 +176,25 @@ public class ProjectFileManager {
                 }
             }
         }
-        sort();
+        sort(mStoredProjectsInDevice);
     }
 
     public ProjectFile createNew() {
-        return new ProjectFile(defaultProjectName(), true);
+        String fileName = FileUtil.availableProjectFileName("Untitled");
+
+        return new ProjectFile(fileName, true);
     }
 
     public ProjectFile getProjectFile(String projectName) {
-        for (ProjectFile file : mStoredProjectsInDevice) {
-            if (file.getName().equals(projectName)) {
-                return file;
-            }
-        }
-        return null;
+        return getProjectFile(projectName, chooseProjectList());
     }
 
     public ProjectFile getProjectFile(int index) {
-        return mStoredProjectsInDevice.get(index);
+        return chooseProjectList().get(index);
     }
 
     public int numberOfProjects() {
-        return mStoredProjectsInDevice.size();
+        return chooseProjectList().size();
     }
 
     public boolean rename(String projectName, String newProjectName) {
@@ -205,6 +211,9 @@ public class ProjectFileManager {
 
         if (projectFile != null && projectFile.delete()) {
             mStoredProjectsInDevice.remove(projectFile);
+            if (mFilteredStoredProjectsInDevice != null) {
+                mFilteredStoredProjectsInDevice.remove(projectFile);
+            }
             return true;
         }
         return false;
@@ -220,6 +229,11 @@ public class ProjectFileManager {
             if (copiedFile != null) {
                 insertedIndex = mStoredProjectsInDevice.indexOf(projectFile) + 1;
                 mStoredProjectsInDevice.add(insertedIndex, copiedFile);
+
+                if (mFilteredStoredProjectsInDevice != null) {
+                    insertedIndex = mFilteredStoredProjectsInDevice.indexOf(projectFile) + 1;
+                    mFilteredStoredProjectsInDevice.add(insertedIndex, copiedFile);
+                }
             }
         }
         return insertedIndex;
@@ -296,7 +310,24 @@ public class ProjectFileManager {
 
     public void sortByNext() {
         mSortType = SortType.values()[(mSortType.ordinal() + 1) % SortType.values().length];
-        sort();
+        sort(chooseProjectList());
         Notifier.instance().notification(mSortType.toString());
+    }
+
+    public void setFilter(SearchFilter<ProjectFile> filter) {
+        mFilter = filter;
+
+        mFilteredStoredProjectsInDevice = null;
+        if (mFilter != null) {
+            mFilteredStoredProjectsInDevice = mFilter.filtered(mStoredProjectsInDevice);
+        }
+    }
+
+    public boolean hasFilter() {
+        return mFilter != null;
+    }
+
+    public SearchFilter<ProjectFile> getFilter() {
+        return mFilter;
     }
 }

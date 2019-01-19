@@ -8,7 +8,6 @@ import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
 
 public class ContextMenuManager {
-    private Toolbar mTopToolbar;
     private Toolbar mBottomToolbar;
 
     private void showItem(Toolbar toolbar, int id, boolean show) {
@@ -55,26 +54,12 @@ public class ContextMenuManager {
         return this;
     }
 
-    private void setTopToolbar(boolean paste, boolean cut, boolean copy) {
-//        enableItem(mTopToolbar, R.id.action_paste, paste);
-//        enableItem(mTopToolbar, R.id.action_cut, cut);
-//        enableItem(mTopToolbar, R.id.action_copy, copy);
-    }
-
     public ContextMenuManager(Toolbar topToolbar, Toolbar bottomToolbar) {
-        mTopToolbar = topToolbar;
+        // mTopToolbar = topToolbar;
         mBottomToolbar = bottomToolbar;
     }
 
     public void update() {
-        // tom toolbar update
-        if (Project.instance().getElementSelector().hasSelected()) {
-            setTopToolbar(false, true, true);
-        } else if (Project.instance().hasCopiedCompound()) {
-            setTopToolbar(true, false, false);
-        } else {
-            setTopToolbar(false, false, false);
-        }
         // bottom toolbar update
         switch(Project.instance().getElementSelector().selection()) {
             case ATOM:

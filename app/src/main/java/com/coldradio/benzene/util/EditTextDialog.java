@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.coldradio.benzene.R;
 
 public class EditTextDialog {
     private AlertDialog mDialog;
     private View mDialogView;
+    private TextView mTitleTextView;
 
     public EditTextDialog(Activity activity) {
         mDialog = new AlertDialog.Builder(activity).create();
         mDialogView = activity.getLayoutInflater().inflate(R.layout.edittext_dialog_main, null);
+        mTitleTextView = mDialogView.findViewById(R.id.tv_title);
 
         // set default listener
         mDialogView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
@@ -52,6 +55,11 @@ public class EditTextDialog {
 
     public EditTextDialog setInitialText(String text) {
         ((EditText)mDialogView.findViewById(R.id.edit_text)).setText(text);
+        return this;
+    }
+
+    public EditTextDialog setTitle(String title) {
+        mTitleTextView.setText(title);
         return this;
     }
 }

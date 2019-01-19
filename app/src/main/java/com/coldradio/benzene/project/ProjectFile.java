@@ -62,6 +62,11 @@ public class ProjectFile {
         return mName;
     }
 
+    @Override
+    public String toString() {
+        return mName;
+    }
+
     public long lastModified() {
         return mLastModifiedTime;
     }
@@ -103,8 +108,7 @@ public class ProjectFile {
 
     public ProjectFile copy() {
         String path = AppEnv.instance().projectFileDir();
-
-        String copiedName = FileUtil.nameWithoutExtension(FileUtil.availableFileName(path, mName, Configuration.PROJECT_FILE_EXT), Configuration.PROJECT_FILE_EXT);
+        String copiedName = FileUtil.availableProjectFileName(mName);
 
         FileUtil.copy(path + mName + Configuration.IMAGE_FILE_EXT, path + copiedName + Configuration.IMAGE_FILE_EXT);
         if (FileUtil.copy(path + mName + Configuration.PROJECT_FILE_EXT, path + copiedName + Configuration.PROJECT_FILE_EXT)) {

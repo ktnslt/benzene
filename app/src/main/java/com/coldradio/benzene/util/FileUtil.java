@@ -68,7 +68,11 @@ public class FileUtil {
         return new File(filePath).delete();
     }
 
-    public static String availableFileName(String dirPath, String name, String postfix) {
+    public static String availableProjectFileName(String name) {
+        return nameWithoutExtension(availableFileNameExt(AppEnv.instance().projectFileDir(), name, Configuration.PROJECT_FILE_EXT), Configuration.PROJECT_FILE_EXT);
+    }
+
+    public static String availableFileNameExt(String dirPath, String name, String postfix) {
         String prefix = prefixFromName(name);
         File candidate = new File(dirPath, prefix + postfix);
 
@@ -177,5 +181,16 @@ public class FileUtil {
             return true;
         }
         return false;
+    }
+
+    public static void removeAllFilesInDir(String path) {
+        File dirFile = new File(path);
+        File[] files = dirFile.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                file.delete();
+            }
+        }
     }
 }
