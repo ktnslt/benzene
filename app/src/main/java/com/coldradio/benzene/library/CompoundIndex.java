@@ -2,7 +2,10 @@ package com.coldradio.benzene.library;
 
 import android.graphics.Bitmap;
 
-public class CompoundIndex {
+import com.android.volley.Response;
+import com.coldradio.benzene.compound.Compound;
+
+public abstract class CompoundIndex {
     final public String title;
     final public int cid;
     final public String mf;
@@ -25,4 +28,6 @@ public class CompoundIndex {
     public Bitmap getBitmap() {
         return bitmap;
     }
+
+    public abstract void requestCompound(Response.Listener<Compound> onCompoundReady);
 }

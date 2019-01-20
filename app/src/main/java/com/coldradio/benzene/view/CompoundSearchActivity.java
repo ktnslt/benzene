@@ -52,7 +52,8 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
 
             @Override
             public void arrived(CompoundIndex compoundIndex, int position) {
-                mAdapter.notifyItemInserted(position);
+                //mAdapter.notifyItemInserted(position);    // this doesn't work
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override

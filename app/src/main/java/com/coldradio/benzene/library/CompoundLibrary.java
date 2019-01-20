@@ -2,7 +2,10 @@ package com.coldradio.benzene.library;
 
 import android.graphics.Bitmap;
 
+import com.android.volley.Response;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.library.local.LocalSearch;
+import com.coldradio.benzene.library.pubchem.PubChemCompoundIndex;
 import com.coldradio.benzene.library.pubchem.PubChemSearch;
 
 import java.util.ArrayList;
@@ -89,5 +92,9 @@ public class CompoundLibrary {
                 break;
             }
         }
+    }
+
+    public void requestCompound(int position, Response.Listener<Compound> listener) {
+        mSearchResults.get(position).requestCompound(listener);
     }
 }

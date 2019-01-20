@@ -44,7 +44,7 @@ public class PubChemSearch implements ICompoundSearch {
                 try {
                     CompoundProperty_JSON.Property_JSON prop = response.PropertyTable.Properties.get(0);
 
-                    CompoundLibrary.instance().arrived(new CompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName));
+                    CompoundLibrary.instance().arrived(new PubChemCompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName));
                 } catch (Exception e) {}
             }
         }, new Response.ErrorListener() {

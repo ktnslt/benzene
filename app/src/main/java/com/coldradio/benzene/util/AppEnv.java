@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coldradio.benzene.library.local.LocalCompounds;
+import com.google.gson.Gson;
 
 import java.io.File;
 
@@ -17,6 +18,7 @@ public class AppEnv {
     private String mTemporaryDir;
     private RequestQueue mRequestQueue;
     private Context mApplicationContext;
+    private Gson mGson = new Gson();
 
     public static AppEnv instance() {
         return msInstance;
@@ -36,6 +38,10 @@ public class AppEnv {
 
     public Context getApplicationContext() {
         return mApplicationContext;
+    }
+
+    public Gson gson() {
+        return mGson;
     }
 
     public String projectFileDir() {

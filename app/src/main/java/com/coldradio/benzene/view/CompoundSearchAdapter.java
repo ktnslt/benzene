@@ -8,12 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
+import com.coldradio.benzene.project.Project;
+import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.project.history.CompoundAddedHistory;
+import com.coldradio.benzene.util.Notifier;
 
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
-    static class CompoundViewHolder extends RecyclerView.ViewHolder {
+    static class CompoundViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
         private TextView mCID;
         private TextView mMF;
@@ -29,6 +35,21 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
             mMW = v.findViewById(R.id.tv_mw);
             mIUPACName = v.findViewById(R.id.tv_iupac);
             mPreview = v.findViewById(R.id.iv_preview);
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            CompoundLibrary.instance().requestCompound(getAdapterPosition(), new Response.Listener<Compound>() {
+                @Override
+                public void onResponse(Compound compound) {
+                    if (compound != null) {
+                        Project.instance().addCompound(compound, true);
+                        Notifier.instance().notification(mTitle.getText().toString() + " is added");
+                        ProjectFileManager.instance().push(new CompoundAddedHistory(compound));
+                    }
+                }
+            });
         }
     }
 
