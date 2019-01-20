@@ -68,9 +68,7 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
         holder.mMF.setText(index.mf);
         holder.mMW.setText(String.valueOf(index.mw));
         holder.mIUPACName.setText(index.IUPAC);
-        if (index.getBitmap() != null) {
-            holder.mPreview.setImageBitmap(index.getBitmap());
-        }
+        holder.mPreview.setImageBitmap(index.getBitmap());  // when getBitmap() returns null, this will reset the Preview
     }
 
     @Override

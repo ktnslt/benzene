@@ -15,7 +15,7 @@ public class LetteringIfNotCarbonRule implements ICompoundRule {
 
             if (an == AtomicNumber.C) {
                 atom.getAtomDecoration().setShowElementName(false);
-            } else if (an != AtomicNumber.H && CompoundInspector.numberOfHydrogen(atom) > 0) {
+            } else if (an != AtomicNumber.H) {
                 atom.getAtomDecoration().lettering(true);
             }
             CompoundArranger.showAllHydrogen(atom, false);

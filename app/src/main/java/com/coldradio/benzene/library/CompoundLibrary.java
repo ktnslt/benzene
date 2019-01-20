@@ -56,7 +56,7 @@ public class CompoundLibrary {
     }
 
     public void search(String keyword) {
-        mSearchResults.clear();
+        clearAll();
 
         for (ICompoundSearch search : mCompoundSearchers) {
             List<CompoundIndex> results = search.search(ICompoundSearch.KeywordType.TEXT, keyword);
@@ -89,12 +89,16 @@ public class CompoundLibrary {
             if (index.cid == cid) {
                 index.setBitmap(bitmap);
                 notifySearchResultListener(ii);
-                break;
+                // don't break here. multiple compounds with the same CID is possible
             }
         }
     }
 
     public void requestCompound(int position, Response.Listener<Compound> listener) {
         mSearchResults.get(position).requestCompound(listener);
+    }
+
+    public void clearAll() {
+        mSearchResults.clear();
     }
 }

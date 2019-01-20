@@ -68,8 +68,11 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         String keyword = v.getText().toString();
 
         if (!keyword.isEmpty()) {
-            CompoundLibrary.instance().search(keyword);
+            // clear the view
+            CompoundLibrary.instance().clearAll();
             mAdapter.notifyDataSetChanged();
+
+            CompoundLibrary.instance().search(keyword);
         } else {
             Notifier.instance().notification("No Search Keywords");
         }
