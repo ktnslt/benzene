@@ -9,12 +9,11 @@ import com.android.volley.toolbox.Volley;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.ICompoundSearch;
-import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.Notifier;
 
 import java.util.List;
 
-/**
+/*
  * PUG Examples. see for details: https://pubchemdocs.ncbi.nlm.nih.gov/pug-rest$_Toc494865567
  * to retrieve name
  *   - https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/2244,112/synonyms/JSON
@@ -40,35 +39,7 @@ import java.util.List;
 public class PubChemSearch implements ICompoundSearch {
     private RequestQueue mRequestQueue;
     private Context mContext;
-
-    private void requestPNG(int cid) {
-        String uri = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + String.valueOf(cid) + "/PNG?image_size=small";
-
-    }
-
-    private void requestPropertyForEachCompound(List<String> compoundNames) {
-        for (final String name : compoundNames) {
-            String uri = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + name + "/property/MolecularFormula,MolecularWeight,IUPACName/JSON";
-            PubChemRequest<CompoundProperty_JSON> request = new PubChemRequest<>(uri, CompoundProperty_JSON.class, new Response.Listener<CompoundProperty_JSON>() {
-                @Override
-                public void onResponse(CompoundProperty_JSON response) {
-                    try {
-                        CompoundProperty_JSON.Property_JSON prop = response.PropertyTable.Properties.get(0);
-                        String camelName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-
-                        CompoundLibrary.instance().arrived(new CompoundIndex(camelName, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName, ""), -1);
-                        requestPNG(prop.CID);
-                    } catch (Exception e) {}
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            });
-
-            mRequestQueue.add(request);
-        }
-    }
+    private PubChemKeywordRequest mRequest;
 
     public PubChemSearch(Context context) {
         mContext = context;
@@ -78,21 +49,27 @@ public class PubChemSearch implements ICompoundSearch {
     @Override
     public List<CompoundIndex> search(KeywordType keywordType, String keyword) {
         mRequestQueue.cancelAll(mContext);
+        if (mRequest != null) {
+            mRequest.cancelAll();
+        }
 
-        String uri = "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/" + keyword + "/json?limit=" + Configuration.MAX_RESPONSE_FOR_SEARCH;
-        PubChemRequest<AutoComplete_JSON> request = new PubChemRequest<>(uri, AutoComplete_JSON.class, new Response.Listener<AutoComplete_JSON>() {
+        mRequest = new PubChemKeywordRequest(keyword, new Response.Listener<CompoundProperty_JSON>() {
             @Override
-            public void onResponse(AutoComplete_JSON response) {
-                requestPropertyForEachCompound(response.dictionary_terms.compound);
+            public void onResponse(CompoundProperty_JSON response) {
+                try {
+                    CompoundProperty_JSON.Property_JSON prop = response.PropertyTable.Properties.get(0);
+
+                    CompoundLibrary.instance().arrived(new CompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName), -1);
+                } catch (Exception e) {}
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Notifier.instance().notification(error.toString());
             }
-        });
+        }, mContext);
 
-        mRequestQueue.add(request);
+        mRequestQueue.add(mRequest);
         return null;
     }
 }

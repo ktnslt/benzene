@@ -91,7 +91,7 @@ public class LocalCompounds {
                         PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
                         Compound cmpd = RuleSet.instance().apply(compoundFromStructure(compound_json));
 
-                        mAllCompounds.add(new CompoundIndex("", -1, "", -1, compound_json.preferredIUPACName(), ""));
+                        mAllCompounds.add(new CompoundIndex("", -1, "", -1, compound_json.preferredIUPACName()));
                     } catch (IllegalAccessException iae) {
                         // skip this resource
                     } finally {

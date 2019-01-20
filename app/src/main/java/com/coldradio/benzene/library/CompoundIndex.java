@@ -6,14 +6,12 @@ public class CompoundIndex {
     final public String mf;
     final public float mw;
     final public String IUPAC;
-    final public String pngPath;
 
-    public CompoundIndex(String title, int cid, String mf, float mw, String IUPAC, String pngPath) {
+    public CompoundIndex(String title, int cid, String mf, float mw, String IUPAC) {
         this.title = title;
         this.cid = cid;
         this.mf = mf;
         this.mw = mw;
         this.IUPAC = IUPAC;
-        this.pngPath = pngPath;
     }
 }

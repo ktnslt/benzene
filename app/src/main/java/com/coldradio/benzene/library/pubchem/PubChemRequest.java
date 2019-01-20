@@ -11,9 +11,9 @@ import com.google.gson.JsonSyntaxException;
 import java.io.UnsupportedEncodingException;
 
 class PubChemRequest<T> extends Request<T> {
-    private final Gson gson = new Gson();
-    private final Class<T> clazz;
-    private final Response.Listener<T> listener;
+    protected final Gson gson = new Gson();
+    protected final Class<T> clazz;
+    protected final Response.Listener<T> listener;
 
     PubChemRequest(String url, Class<T> clazz, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
@@ -24,7 +24,9 @@ class PubChemRequest<T> extends Request<T> {
 
     @Override
     protected void deliverResponse(T response) {
-        listener.onResponse(response);
+        if (listener != null) {
+            listener.onResponse(response);
+        }
     }
 
     @Override
