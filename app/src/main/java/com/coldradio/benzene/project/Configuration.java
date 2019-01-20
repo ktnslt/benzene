@@ -20,5 +20,6 @@ public class Configuration {
     public static Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.PNG;
     public static String IMAGE_FILE_EXT = ".png";
     public static String PROJECT_FILE_EXT = ".bzn";
-    public static int MAX_REQUEST_LIMIT_FOR_SEARCH = 20;
+    public static int MAX_RESPONSE_FOR_SEARCH = 25;
+    public static int REQUEST_IMAGE_QUALITY = 0;    // 0 for small, 1 for medium, 2 for large
 }

@@ -11,6 +11,7 @@ class CompoundProperty_JSON {
         String MolecularFormula;
         float MolecularWeight;
         String IUPACName;
+        String Name;    // custom property not from JSON
     }
     PropertyTable_JSON PropertyTable;
 }
