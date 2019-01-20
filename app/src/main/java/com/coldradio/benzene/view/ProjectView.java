@@ -16,10 +16,8 @@ public class ProjectView extends View {
 
         //compound library settings
         LocalCompounds.instance().parseLibrary(this.getResources());
-        CompoundLibrary.instance().addCompoundSearch(new LocalSearch());
 
         // set context for those needs
-        Notifier.instance().setContext(this.getContext());
         ProjectFileManager.instance().initProjectListAtStartUp();
     }
 }

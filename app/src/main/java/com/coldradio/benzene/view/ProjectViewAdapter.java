@@ -24,6 +24,7 @@ import com.coldradio.benzene.util.EditTextDialog;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.TextUtil;
 
 public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.ProjectViewHolder> {
     private Activity mMainActivity;
@@ -128,7 +129,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
         if (ProjectFileManager.instance().hasFilter()) {
-            holder.mProjectName.setText(Html.fromHtml(ProjectFileManager.instance().getFilter().styleKeyword(projectFile.getName())));
+            holder.mProjectName.setText(Html.fromHtml(TextUtil.styleKeyword(ProjectFileManager.instance().getFilter().getKeyword(), projectFile.getName())));
         } else {
             holder.mProjectName.setText(projectFile.getName());
         }

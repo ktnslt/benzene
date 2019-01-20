@@ -3,6 +3,11 @@ package com.coldradio.benzene.util;
 import android.content.Context;
 import android.os.Environment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.coldradio.benzene.library.local.LocalCompounds;
+
 import java.io.File;
 
 public class AppEnv {
@@ -10,15 +15,27 @@ public class AppEnv {
     private String mProjectFileRootDir;
     private String mScreenShotDir;
     private String mTemporaryDir;
+    private RequestQueue mRequestQueue;
+    private Context mApplicationContext;
 
     public static AppEnv instance() {
         return msInstance;
     }
 
-    public void setContext(Context context) {
-        mProjectFileRootDir = context.getFilesDir().getPath() + File.separator;
-        mScreenShotDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/BenzeneScreenshots/";
-        mTemporaryDir = mProjectFileRootDir + "temp/";
+    public void setContext(Context appContext) {
+        // shall called with Application Context, not with the Activity context
+        if (mProjectFileRootDir == null) {
+            mProjectFileRootDir = appContext.getFilesDir().getPath() + File.separator;
+            mScreenShotDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/BenzeneScreenshots/";
+            mTemporaryDir = mProjectFileRootDir + "temp/";
+            mRequestQueue = Volley.newRequestQueue(appContext);
+            mApplicationContext = appContext;
+            LocalCompounds.instance().parseLibrary(appContext.getResources());
+        }
+    }
+
+    public Context getApplicationContext() {
+        return mApplicationContext;
     }
 
     public String projectFileDir() {
@@ -31,5 +48,13 @@ public class AppEnv {
 
     public String temporaryDir() {
         return mTemporaryDir;
+    }
+
+    public void addToNetworkQueue(Request request) {
+        mRequestQueue.add(request);
+    }
+
+    public void cancelAllNetworkRequest() {
+        mRequestQueue.cancelAll(mApplicationContext);
     }
 }

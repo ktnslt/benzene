@@ -13,7 +13,6 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.OnSearchResultArrived;
-import com.coldradio.benzene.library.pubchem.PubChemSearch;
 import com.coldradio.benzene.util.Notifier;
 
 import java.util.List;
@@ -55,9 +54,12 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
             public void arrived(CompoundIndex compoundIndex, int position) {
                 mAdapter.notifyItemInserted(position);
             }
-        });
 
-        CompoundLibrary.instance().addCompoundSearch(new PubChemSearch(this));
+            @Override
+            public void updated(int position) {
+                mAdapter.notifyItemChanged(position);
+            }
+        });
     }
 
     @Override

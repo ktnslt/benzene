@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.project_toolbar);
         setSupportActionBar(toolbar);
 
-        // call this as early as possible
+        // call this as early as possible. shall be called with the Application context, not an Activity context
         AppEnv.instance().setContext(this.getApplicationContext());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

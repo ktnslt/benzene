@@ -1,14 +1,11 @@
 package com.coldradio.benzene.library.pubchem;
 
-import android.content.Context;
-
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.ICompoundSearch;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 
 import java.util.List;
@@ -37,29 +34,17 @@ import java.util.List;
  *   - https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/ben/json?limit=30
  */
 public class PubChemSearch implements ICompoundSearch {
-    private RequestQueue mRequestQueue;
-    private Context mContext;
-    private PubChemKeywordRequest mRequest;
-
-    public PubChemSearch(Context context) {
-        mContext = context;
-        mRequestQueue = Volley.newRequestQueue(context);
-    }
-
     @Override
     public List<CompoundIndex> search(KeywordType keywordType, String keyword) {
-        mRequestQueue.cancelAll(mContext);
-        if (mRequest != null) {
-            mRequest.cancelAll();
-        }
+        AppEnv.instance().cancelAllNetworkRequest();
 
-        mRequest = new PubChemKeywordRequest(keyword, new Response.Listener<CompoundProperty_JSON>() {
+        PubChemKeywordRequest request = new PubChemKeywordRequest(keyword, new Response.Listener<CompoundProperty_JSON>() {
             @Override
             public void onResponse(CompoundProperty_JSON response) {
                 try {
                     CompoundProperty_JSON.Property_JSON prop = response.PropertyTable.Properties.get(0);
 
-                    CompoundLibrary.instance().arrived(new CompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName), -1);
+                    CompoundLibrary.instance().arrived(new CompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName));
                 } catch (Exception e) {}
             }
         }, new Response.ErrorListener() {
@@ -67,9 +52,9 @@ public class PubChemSearch implements ICompoundSearch {
             public void onErrorResponse(VolleyError error) {
                 Notifier.instance().notification(error.toString());
             }
-        }, mContext);
+        });
 
-        mRequestQueue.add(mRequest);
+        AppEnv.instance().addToNetworkQueue(request);
         return null;
     }
 }
