@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import com.android.volley.Response;
 import com.coldradio.benzene.compound.Compound;
 
+import java.util.List;
+
 public abstract class CompoundIndex {
+    final public String searchKeyword;
     final public String title;
     final public int cid;
     final public String mf;
@@ -13,7 +16,8 @@ public abstract class CompoundIndex {
     final public String IUPAC;
     private Bitmap bitmap;
 
-    public CompoundIndex(String title, int cid, String mf, float mw, String IUPAC) {
+    public CompoundIndex(String searchKeyword, String title, int cid, String mf, float mw, String IUPAC) {
+        this.searchKeyword = searchKeyword;
         this.title = title;
         this.cid = cid;
         this.mf = mf;
@@ -29,5 +33,5 @@ public abstract class CompoundIndex {
         return bitmap;
     }
 
-    public abstract void requestCompound(Response.Listener<Compound> onCompoundReady);
+    public abstract void requestCompound(Response.Listener<List<Compound>> onCompoundReady);
 }

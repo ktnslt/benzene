@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class PubChemSearch implements ICompoundSearch {
     @Override
-    public List<CompoundIndex> search(KeywordType keywordType, String keyword) {
+    public List<CompoundIndex> search(KeywordType keywordType, final String keyword) {
         AppEnv.instance().cancelAllNetworkRequest();
 
         PubChemKeywordRequest request = new PubChemKeywordRequest(keyword, new Response.Listener<CompoundProperty_JSON>() {
@@ -44,7 +44,7 @@ public class PubChemSearch implements ICompoundSearch {
                 try {
                     CompoundProperty_JSON.Property_JSON prop = response.PropertyTable.Properties.get(0);
 
-                    CompoundLibrary.instance().arrived(new PubChemCompoundIndex(prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName));
+                    CompoundLibrary.instance().arrived(new PubChemCompoundIndex(keyword, prop.Name, prop.CID, prop.MolecularFormula, prop.MolecularWeight, prop.IUPACName));
                 } catch (Exception e) {}
             }
         }, new Response.ErrorListener() {

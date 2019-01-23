@@ -7,13 +7,15 @@ import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 
+import java.util.List;
+
 public class PubChemCompoundIndex extends CompoundIndex {
-    PubChemCompoundIndex(String title, int cid, String mf, float mw, String IUPAC) {
-        super(title, cid, mf, mw, IUPAC);
+    PubChemCompoundIndex(String searchKeyword, String title, int cid, String mf, float mw, String IUPAC) {
+        super(searchKeyword, title, cid, mf, mw, IUPAC);
     }
 
     @Override
-    public void requestCompound(Response.Listener<Compound> onCompoundReady) {
+    public void requestCompound(Response.Listener<List<Compound>> onCompoundReady) {
         PubChemCompoundRequest request = new PubChemCompoundRequest(super.cid, onCompoundReady, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

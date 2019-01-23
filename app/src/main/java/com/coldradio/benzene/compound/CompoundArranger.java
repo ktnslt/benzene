@@ -15,10 +15,15 @@ public class CompoundArranger {
         if (compound.size() == 1) {
             return Configuration.BOND_LENGTH;
         } else {
-            Atom a1 = compound.getAtoms().get(0);
-            Atom a2 = a1.getBonds().get(0).getBoundAtom();
+            Atom a1 = CompoundInspector.anySkeletonAtom(compound);
 
-            return Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint());
+            if (a1 != null) {
+                Atom a2 = a1.getBonds().get(0).getBoundAtom();
+
+                return Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint());
+            } else {
+                return Configuration.BOND_LENGTH;
+            }
         }
     }
 
@@ -70,6 +75,12 @@ public class CompoundArranger {
             @Override
             public boolean visit(Atom a1, Atom a2, Object... args) {
                 if (a1.getBondType(a2) == Bond.BondType.DOUBLE && (a1.numberOfBonds() == 1 || a2.numberOfBonds() == 1)) {
+                    // C==O case
+                    a1.setBond(a2, Bond.BondType.DOUBLE_MIDDLE);
+                } else if (a1.numberOfBonds() == 2 && CompoundInspector.allBondsAreDouble(a1)) {
+                    // CH2=C=CH2 case
+                    a1.setBond(a2, Bond.BondType.DOUBLE_MIDDLE);
+                } else if (a2.numberOfBonds() == 2 && CompoundInspector.allBondsAreDouble(a2)) {
                     a1.setBond(a2, Bond.BondType.DOUBLE_MIDDLE);
                 }
                 return false;

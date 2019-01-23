@@ -21,6 +21,7 @@ public class RuleSet {
     public RuleSet() {
         add(new LetteringIfNotSeenRule());
         add(new LetteringIfNotCarbonRule());
+        add(new AdjustDoubleBondTypeRule());
     }
 
     public static RuleSet instance() {

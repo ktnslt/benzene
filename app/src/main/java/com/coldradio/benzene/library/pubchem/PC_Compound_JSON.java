@@ -23,7 +23,11 @@ public class PC_Compound_JSON {
     }
 
     public int bondLength() {
-        return bonds.aid1.length;
+        if (bonds != null && bonds.aid1 != null) {
+            return bonds.aid1.length;
+        } else {
+            return 0;
+        }
     }
 
     public Bond.BondType bondType(int bondIndex) {

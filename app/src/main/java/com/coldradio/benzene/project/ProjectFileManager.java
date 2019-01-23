@@ -290,17 +290,23 @@ public class ProjectFileManager {
         notifyListener(ChangeEventType.CHANGED);
     }
 
-    public void redo() {
+    public boolean redo() {
         Project.instance().getElementSelector().reset();
         if (mHistoryManager.redo()) {
             notifyListener(ChangeEventType.CHANGED);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void undo() {
+    public boolean undo() {
         Project.instance().getElementSelector().reset();
         if (mHistoryManager.undo()) {
             notifyListener(ChangeEventType.CHANGED);
+            return true;
+        } else {
+            return false;
         }
     }
 

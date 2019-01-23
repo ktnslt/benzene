@@ -18,6 +18,8 @@ import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.history.CompoundAddedHistory;
 import com.coldradio.benzene.util.Notifier;
 
+import java.util.List;
+
 public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAdapter.CompoundViewHolder> {
     static class CompoundViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
@@ -40,13 +42,15 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
 
         @Override
         public void onClick(View v) {
-            CompoundLibrary.instance().requestCompound(getAdapterPosition(), new Response.Listener<Compound>() {
+            CompoundLibrary.instance().requestCompound(getAdapterPosition(), new Response.Listener<List<Compound>>() {
                 @Override
-                public void onResponse(Compound compound) {
+                public void onResponse(List<Compound> compound) {
                     if (compound != null) {
-                        Project.instance().addCompound(compound, true);
-                        Notifier.instance().notification(mTitle.getText().toString() + " is added");
-                        ProjectFileManager.instance().push(new CompoundAddedHistory(compound));
+                        for (Compound c : compound) {
+                            Project.instance().addCompound(c, true);
+                            ProjectFileManager.instance().push(new CompoundAddedHistory(c));
+                        }
+                        Notifier.instance().notification(mTitle.getText().toString() + " is added. " + (compound.size() > 1 ? "Total " + compound.size() + " Compounds" : ""));
                     }
                 }
             });

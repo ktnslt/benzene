@@ -5,8 +5,10 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.AppEnv;
+import com.coldradio.benzene.util.Notifier;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -28,6 +30,10 @@ class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
     @Override
     protected void deliverResponse(AutoComplete_JSON response) {
         // nothing to deliver since this is AutoComplete_JSON
+        if (response.total == 0) {
+            Notifier.instance().notification("No Compounds found");
+        }
+        CompoundLibrary.instance().setTotalSearchedCompounds(response.total);
     }
 
     @Override
@@ -36,10 +42,12 @@ class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             AutoComplete_JSON autoComplete_json = gson.fromJson(json, AutoComplete_JSON.class);
 
-            for (final String name : autoComplete_json.dictionary_terms.compound) {
-                PubChemPropertyRequest request = new PubChemPropertyRequest(name, mCompoundPropertyListener, null);
+            if (autoComplete_json.total > 0) {
+                for (final String name : autoComplete_json.dictionary_terms.compound) {
+                    PubChemPropertyRequest request = new PubChemPropertyRequest(name, mCompoundPropertyListener, null);
 
-                AppEnv.instance().addToNetworkQueue(request);
+                    AppEnv.instance().addToNetworkQueue(request);
+                }
             }
             return Response.success(autoComplete_json, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {

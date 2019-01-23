@@ -39,10 +39,12 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         recyclerView.setAdapter(mAdapter);
 
         // set listener for EditText
-        EditText editText = findViewById(R.id.compound_search_edittext);
+        EditText editText = findViewById(R.id.actv_compound_search);
         if (editText != null) {
             editText.setOnEditorActionListener(this);
         }
+
+        CompoundLibrary.instance().setProgressBarForCompoundSearch((TextView) findViewById(R.id.tv_progress));
 
         CompoundLibrary.instance().setSearchResultReadyListener(new OnSearchResultArrived() {
             @Override
@@ -68,7 +70,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         String keyword = v.getText().toString();
 
         if (!keyword.isEmpty()) {
-            // clear the view
+            // clear the view. this cannot be done in CompoundLibrary.search() since it doesn't have reference to mAdapter
             CompoundLibrary.instance().clearAll();
             mAdapter.notifyDataSetChanged();
 
@@ -78,5 +80,11 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         }
 
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CompoundLibrary.instance().setProgressBarForCompoundSearch(null);
     }
 }

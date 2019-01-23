@@ -31,29 +31,30 @@ public class LocalCompounds {
     }
 
     public void parseLibrary(Resources resources) {
-        if (mAllCompounds.isEmpty()) {
-            Field[] fields = R.raw.class.getFields();
-            Gson gson = new Gson();
-
-            for (Field field : fields) {
-                String res_name = field.getName();
-
-                if (res_name.startsWith("structure")) {
-                    Reader reader = null;
-                    try {
-                        reader = new InputStreamReader(resources.openRawResource(field.getInt(field)));
-                        PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
-                        Compound cmpd = RuleSet.instance().apply(PubChemCompoundFactory.create(compound_json));
-
-                        mAllCompounds.add(new LocalCompoundIndex("", -1, "", -1, compound_json.preferredIUPACName()));
-                    } catch (IllegalAccessException iae) {
-                        // skip this resource
-                    } finally {
-                        FileUtil.closeIgnoreException(reader);
-                    }
-                }
-            }
-        }
+        // when raw directory is empty. R.raw is unidentified.
+//        if (mAllCompounds.isEmpty()) {
+//            Field[] fields = R.raw.class.getFields();
+//            Gson gson = new Gson();
+//
+//            for (Field field : fields) {
+//                String res_name = field.getName();
+//
+//                if (res_name.startsWith("structure")) {
+//                    Reader reader = null;
+//                    try {
+//                        reader = new InputStreamReader(resources.openRawResource(field.getInt(field)));
+//                        PC_Compound_JSON compound_json = gson.fromJson(reader, CompoundStructure_JSON.class).PC_Compounds.get(0);
+//                        Compound cmpd = RuleSet.instance().apply(PubChemCompoundFactory.create(compound_json));
+//
+//                        mAllCompounds.add(new LocalCompoundIndex("", -1, "", -1, compound_json.preferredIUPACName()));
+//                    } catch (IllegalAccessException iae) {
+//                        // skip this resource
+//                    } finally {
+//                        FileUtil.closeIgnoreException(reader);
+//                    }
+//                }
+//            }
+//        }
     }
 
     public CompoundIndex getCompoundIndex(int index) {

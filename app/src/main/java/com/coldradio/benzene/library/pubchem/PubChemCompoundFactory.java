@@ -42,9 +42,6 @@ public class PubChemCompoundFactory {
             compound.getAtom(coord.aid[ii]).setPoint(new PointF(xy.x[ii], xy.y[ii]));
         }
 
-        CompoundArranger.zoomToStandard(compound, 0.5f);
-        CompoundArranger.adjustDoubleBondType(compound);
-
         return compound;
     }
 }

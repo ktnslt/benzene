@@ -49,7 +49,7 @@ public class CompoundInspector {
 
     public static Atom anySkeletonAtom(Compound compound) {
         for (Atom atom : compound.getAtoms()) {
-            if (atom.getAtomicNumber() != AtomicNumber.H)
+            if (atom.getAtomicNumber() != AtomicNumber.H && atom.numberOfBonds() > 0)
                 return atom;
         }
         return null;
@@ -183,5 +183,14 @@ public class CompoundInspector {
         }
 
         return splitCompounds;
+    }
+
+    public static boolean allBondsAreDouble(Atom atom) {
+        for (Bond bond : atom.getBonds()) {
+            if (bond.getBondType() != Bond.BondType.DOUBLE && bond.getBondType() != Bond.BondType.DOUBLE_OTHER_SIDE && bond.getBondType() != Bond.BondType.DOUBLE_MIDDLE) {
+                return false;
+            }
+        }
+        return true;
     }
 }

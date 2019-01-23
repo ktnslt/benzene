@@ -108,9 +108,13 @@ public class CanvasActivity extends AppCompatActivity {
                 Notifier.instance().notification("Nothing Copied");
             }
         } else if (id == R.id.action_redo) {
-            ProjectFileManager.instance().redo();
+            if (!ProjectFileManager.instance().redo()) {
+                Notifier.instance().notification("Nothing to Redo");
+            }
         } else if (id == R.id.action_undo) {
-            ProjectFileManager.instance().undo();
+            if (!ProjectFileManager.instance().undo()) {
+                Notifier.instance().notification("Nothing to Undo");
+            }
         } else if (id == R.id.action_save) {
             ProjectFileManager.instance().saveWithoutPreview(Project.instance());
         } else if (id == R.id.action_shot_to_gallery) {
