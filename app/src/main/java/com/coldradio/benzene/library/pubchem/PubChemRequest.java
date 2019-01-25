@@ -5,13 +5,12 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
+import com.coldradio.benzene.util.AppEnv;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
 
 class PubChemRequest<T> extends Request<T> {
-    protected final Gson gson = new Gson();
     protected final Class<T> clazz;
     protected final Response.Listener<T> listener;
 
@@ -33,7 +32,7 @@ class PubChemRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(AppEnv.instance().gson().fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {

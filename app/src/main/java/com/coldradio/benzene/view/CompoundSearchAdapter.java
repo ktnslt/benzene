@@ -2,6 +2,7 @@ package com.coldradio.benzene.view;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.history.CompoundAddedHistory;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.TextUtil;
 
 import java.util.List;
 
@@ -49,6 +52,8 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
                         for (Compound c : compound) {
                             Project.instance().addCompound(c, true);
                             ProjectFileManager.instance().push(new CompoundAddedHistory(c));
+                            // If the CanvasView is shown, it shall be validated. when the user fast-clicks the backbutton, compound can be added when the CanvasView is already shown
+                            AppEnv.instance().invalidateCanvasView();
                         }
                         Notifier.instance().notification(mTitle.getText().toString() + " is added. " + (compound.size() > 1 ? "Total " + compound.size() + " Compounds" : ""));
                     }
@@ -69,7 +74,7 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
 
         holder.mTitle.setText(index.title);
         holder.mCID.setText(String.valueOf(index.cid));
-        holder.mMF.setText(index.mf);
+        holder.mMF.setText(Html.fromHtml(TextUtil.subscriptNumber(index.mf)));
         holder.mMW.setText(String.valueOf(index.mw));
         holder.mIUPACName.setText(index.IUPAC);
         holder.mPreview.setImageBitmap(index.getBitmap());  // when getBitmap() returns null, this will reset the Preview

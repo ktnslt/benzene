@@ -17,6 +17,7 @@ import com.coldradio.benzene.project.FingerSelector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.RectSelector;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
@@ -189,12 +190,14 @@ public class CanvasActivity extends AppCompatActivity {
         super.onResume();
         // after adding compound, the context menu needs to be updated
         mCanvasView.updateContextMenu();
+        AppEnv.instance().setCanvasView(mCanvasView);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         ProjectFileManager.instance().saveWithoutPreview(Project.instance());
+        AppEnv.instance().setCanvasView(null);
     }
 
     @Override

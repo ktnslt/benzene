@@ -1,6 +1,9 @@
 package com.coldradio.benzene.library;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.text.Html;
+import android.text.Spanned;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -17,7 +20,8 @@ public class CompoundLibrary {
     private static CompoundLibrary smInstance = new CompoundLibrary();
     private OnSearchResultArrived mSearchResultListener;
     private int mTotalSearchedCompounds;
-    private int mPropertyRetrievedCompounds;
+    private int mPropertySuccessCompounds;
+    private int mPropertyFailedCompounds;
     private String mSearchKeyword;
     // TODO not sure about below maybe there is something better
     private TextView mCompoundSearchProgressBar;
@@ -45,14 +49,26 @@ public class CompoundLibrary {
         }
     }
 
-    private void updateProgressBar() {
-        if (mCompoundSearchProgressBar != null) {
-            mCompoundSearchProgressBar.setText(mPropertyRetrievedCompounds + "/" + mTotalSearchedCompounds);
+    private Spanned finishMark(String progressText) {
+        if (mTotalSearchedCompounds != 0 && mPropertyFailedCompounds + mPropertySuccessCompounds == mTotalSearchedCompounds) {
+            return Html.fromHtml("<u>" + progressText + "</u>");
+        } else {
+            return Html.fromHtml(progressText);
         }
     }
 
-    private void increasePropertyRetrievedCompounds() {
-        mPropertyRetrievedCompounds++;
+    private void updateProgressBar() {
+        if (mCompoundSearchProgressBar != null) {
+            mCompoundSearchProgressBar.setText(finishMark(mPropertySuccessCompounds + "/" + mTotalSearchedCompounds));
+        }
+    }
+
+    private void propertyRetrieved(boolean success) {
+        if (success) {
+            mPropertySuccessCompounds++;
+        } else {
+            mPropertyFailedCompounds++;
+        }
         updateProgressBar();
     }
 
@@ -97,9 +113,13 @@ public class CompoundLibrary {
         if (compoundIndex != null && compoundIndex.searchKeyword.equals(mSearchKeyword)) {
             // search -> search with new keyword in the middle of the previous search.
             // in this case, the previous results are still coming. keyword comparison is necessary
-            mSearchResults.add(compoundIndex);
-            notifySearchResultListener(compoundIndex, mSearchResults.size() - 1);
-            increasePropertyRetrievedCompounds();
+            if (compoundIndex.cid >= 0) {
+                mSearchResults.add(compoundIndex);
+                notifySearchResultListener(compoundIndex, mSearchResults.size() - 1);
+                propertyRetrieved(true);
+            } else {
+                propertyRetrieved(false);
+            }
         }
     }
 
@@ -122,7 +142,8 @@ public class CompoundLibrary {
     public void clearAll() {
         mSearchResults.clear();
         mTotalSearchedCompounds = 0;
-        mPropertyRetrievedCompounds = 0;
+        mPropertySuccessCompounds = 0;
+        mPropertyFailedCompounds = 0;
         updateProgressBar();
     }
 

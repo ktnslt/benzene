@@ -2,20 +2,9 @@ package com.coldradio.benzene.library.local;
 
 import android.content.res.Resources;
 
-import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.ICompoundSearch;
-import com.coldradio.benzene.library.pubchem.CompoundStructure_JSON;
-import com.coldradio.benzene.library.pubchem.PC_Compound_JSON;
-import com.coldradio.benzene.library.pubchem.PubChemCompoundFactory;
-import com.coldradio.benzene.library.rule.RuleSet;
-import com.coldradio.benzene.util.FileUtil;
-import com.google.gson.Gson;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 

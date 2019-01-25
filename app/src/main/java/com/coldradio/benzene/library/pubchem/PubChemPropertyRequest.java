@@ -46,7 +46,7 @@ class PubChemPropertyRequest extends PubChemRequest<CompoundProperty_JSON> {
     protected Response<CompoundProperty_JSON> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            CompoundProperty_JSON compoundProp = super.gson.fromJson(json, CompoundProperty_JSON.class);
+            CompoundProperty_JSON compoundProp = AppEnv.instance().gson().fromJson(json, CompoundProperty_JSON.class);
             CompoundProperty_JSON.Property_JSON prop = compoundProp.PropertyTable.Properties.get(0);
 
             prop.Name = mCamelName;

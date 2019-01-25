@@ -13,8 +13,6 @@ import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.SearchFilter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -44,7 +42,6 @@ public class ProjectFileManager {
     private static ProjectFileManager smInstance = new ProjectFileManager();
     private List<ProjectFile> mStoredProjectsInDevice = new ArrayList<>();
     private Type mCompoundListType = new TypeToken<List<Compound>>() {}.getType();
-    private Gson mGson = new GsonBuilder().create();
     private List<OnChangeListener> mListener = new ArrayList<>();
     private HistoryManager mHistoryManager = new HistoryManager();
     private boolean mCurrentProjectNeverChanged = true;
@@ -111,7 +108,7 @@ public class ProjectFileManager {
 
             writer = new FileWriter(file);
             project.preSerialization();
-            mGson.toJson(project.getCompounds(), writer);
+            AppEnv.instance().gson().toJson(project.getCompounds(), writer);
 
             if (getProjectFile(projectFile.getName()) == null) {
                 mStoredProjectsInDevice.add(0, projectFile);
@@ -145,7 +142,7 @@ public class ProjectFileManager {
             File file = new File(AppEnv.instance().projectFileDir() + fileName + Configuration.PROJECT_FILE_EXT);
             reader = new FileReader(file);
 
-            List<Compound> readCompounds = mGson.fromJson(reader, mCompoundListType);
+            List<Compound> readCompounds = AppEnv.instance().gson().fromJson(reader, mCompoundListType);
 
             if (readCompounds == null) {
                 ProjectFile projectFile = getProjectFile(fileName);

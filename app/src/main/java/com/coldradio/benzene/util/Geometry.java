@@ -111,18 +111,11 @@ public class Geometry {
         }
     }
 
-    public static float angle(PointF from, PointF to, PointF center) {
-        // this function returns positive or negative value depending on the rotation direction.
-        // clock-wise is positive direction
-        float pointFromX = from.x - center.x, pointFromY = from.y - center.y;
-        float pointToX = to.x - center.x, pointToY = to.y - center.y;
-
-        return (float) (Math.atan2(pointToY, pointToX) - Math.atan2(pointFromY, pointFromX));
-    }
-
     public static float cwAngle(PointF from, PointF to, PointF center) {
         // this function returns always positive value
-        float angle = angle(from, to, center);
+        float Xfrom = from.x - center.x, Yfrom = from.y - center.y;
+        float Xto = to.x - center.x, Yto = to.y - center.y;
+        float angle = (float) (Math.atan2(Yto, Xto) - Math.atan2(Yfrom, Xfrom));
 
         if (angle < 0)
             angle = MathConstant.RADIAN_360 + angle;

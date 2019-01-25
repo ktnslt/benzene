@@ -74,7 +74,7 @@ public class ElementSelector {
     }
 
     private void rotateToPoint(PointF point) {
-        float angle = Geometry.angle(mRotationPivotPoints[mGraspedPivotIndex], point, mSelectedCompound.centerOfRectangle());
+        float angle = Geometry.cwAngle(mRotationPivotPoints[mGraspedPivotIndex], point, mSelectedCompound.centerOfRectangle());
 
         if (mGraspedPivotIndex == 1) {
             // rotation by 10 degree

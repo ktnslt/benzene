@@ -2,6 +2,7 @@ package com.coldradio.benzene.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +20,7 @@ public class AppEnv {
     private RequestQueue mRequestQueue;
     private Context mApplicationContext;
     private Gson mGson = new Gson();
+    private View mCanvasView;
 
     public static AppEnv instance() {
         return msInstance;
@@ -33,6 +35,16 @@ public class AppEnv {
             mRequestQueue = Volley.newRequestQueue(appContext);
             mApplicationContext = appContext;
             LocalCompounds.instance().parseLibrary(appContext.getResources());
+        }
+    }
+
+    public void setCanvasView(View canvasView) {
+        mCanvasView = canvasView;
+    }
+
+    public void invalidateCanvasView() {
+        if (mCanvasView != null) {
+            mCanvasView.invalidate();
         }
     }
 
