@@ -152,6 +152,8 @@ public class CanvasActivity extends AppCompatActivity {
             startActivity(new Intent("com.coldradio.benzene.ATOM_DECO"));
         } else if (id == R.id.action_saturate_h) {
             startActivity(new Intent("com.coldradio.benzene.SATURATE_H"));
+        } else if (id == R.id.action_flip_h) {
+            Project.instance().flipHydrogenForSelected();
         } else if (id == R.id.action_wedge_up) {
             ProjectFileManager.instance().pushForChange();
             Project.instance().bondAnnotation(true);

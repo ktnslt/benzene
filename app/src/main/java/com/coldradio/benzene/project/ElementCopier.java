@@ -8,7 +8,7 @@ import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.compound.CompoundReactor;
-import com.coldradio.benzene.library.rule.LetteringIfNotSeenRule;
+import com.coldradio.benzene.library.rule.LetteringIfCompoundNotSeenRule;
 import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.util.ScreenInfo;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ElementCopier {
     private List<Compound> mCopiedCompound = new ArrayList<>();
-    private LetteringIfNotSeenRule mLetteringIfNotSeenRule = new LetteringIfNotSeenRule();
+    private LetteringIfCompoundNotSeenRule mLetteringIfCompoundNotSeenRule = new LetteringIfCompoundNotSeenRule();
 
     private void restoreBond(Compound compound, List<Atom> selectedAtoms) {
         // here selectedAtoms are assigned with AID that is synchronized in compound as well
@@ -48,7 +48,7 @@ public class ElementCopier {
         restoreBond(tmpCompound, selectedAtoms);
 
         mCopiedCompound = CompoundInspector.split(CompoundReactor.saturateWithHydrogen(tmpCompound));
-        RuleSet.instance().apply(mCopiedCompound, mLetteringIfNotSeenRule);
+        RuleSet.instance().apply(mCopiedCompound, mLetteringIfCompoundNotSeenRule);
     }
 
     public void paste(Project project) {

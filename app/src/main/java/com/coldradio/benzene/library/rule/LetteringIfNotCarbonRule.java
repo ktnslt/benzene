@@ -4,7 +4,6 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
-import com.coldradio.benzene.compound.CompoundInspector;
 
 public class LetteringIfNotCarbonRule implements ICompoundRule {
     @Override

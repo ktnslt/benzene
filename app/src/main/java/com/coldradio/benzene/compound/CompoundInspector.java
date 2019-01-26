@@ -69,7 +69,7 @@ public class CompoundInspector {
         return skeletons.toArray(new Atom[skeletons.size()]);
     }
 
-    public static int numberOfBoundSkeletonAtoms(Atom atom) {
+    public static int numberOfSkeletonAtoms(Atom atom) {
         int boundSkeleton = 0;
 
         for (Bond bond : atom.getBonds()) {
@@ -192,5 +192,19 @@ public class CompoundInspector {
             }
         }
         return true;
+    }
+
+    public static boolean moreHydrogensInRight(Atom atom) {
+        int right = 0;
+
+        for (Bond bond : atom.getBonds()) {
+            Atom boundAtom = bond.getBoundAtom();
+
+            if (boundAtom.getAtomicNumber() == AtomicNumber.H) {
+                right += (atom.getPoint().x <= boundAtom.getPoint().x) ? 1 : -1;
+            }
+        }
+
+        return right >= 0;
     }
 }

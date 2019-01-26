@@ -51,6 +51,7 @@ public class ContextMenuManager {
         showItem(mBottomToolbar, R.id.action_flip_bond, false);
         showItem(mBottomToolbar, R.id.action_saturate_h, false);
         showItem(mBottomToolbar, R.id.action_show_h, false);
+        showItem(mBottomToolbar, R.id.action_flip_h, false);
         return this;
     }
 
@@ -68,7 +69,8 @@ public class ContextMenuManager {
                         show(R.id.action_synthesize).
                         show(R.id.action_func_group).
                         show(R.id.action_saturate_h).
-                        show(R.id.action_delete_selected);
+                        show(R.id.action_delete_selected).
+                        show(R.id.action_flip_h);
                 break;
             case EDGE:
                 hideAll().

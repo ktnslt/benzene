@@ -3,7 +3,7 @@ package com.coldradio.benzene.compound;
 import android.graphics.PointF;
 
 import com.coldradio.benzene.compound.funcgroup.IFunctionalGroup;
-import com.coldradio.benzene.library.rule.LetteringIfNotSeenRule;
+import com.coldradio.benzene.library.rule.LetteringIfCompoundNotSeenRule;
 import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.util.Geometry;
@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundReactor {
-    private static LetteringIfNotSeenRule mLetteringIfNotSeenRule = new LetteringIfNotSeenRule();
+    private static LetteringIfCompoundNotSeenRule mLetteringIfCompoundNotSeenRule = new LetteringIfCompoundNotSeenRule();
 
     private static void splitAndUpdateProject(Compound compound) {
-        Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound), mLetteringIfNotSeenRule));
+        Project.instance().addCompounds(RuleSet.instance().apply(CompoundInspector.split(compound), mLetteringIfCompoundNotSeenRule));
         Project.instance().removeCompound(compound);
     }
 

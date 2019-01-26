@@ -140,7 +140,7 @@ public class CompoundArranger {
     }
 
     public static void adjustHydrogenPosition(Atom atom) {
-        int boundSkeleton = CompoundInspector.numberOfBoundSkeletonAtoms(atom);
+        int boundSkeleton = CompoundInspector.numberOfSkeletonAtoms(atom);
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
 
         if (boundSkeleton == 2) {
@@ -219,6 +219,22 @@ public class CompoundArranger {
             }, fromAtom);
 
             compound.positionModified();
+        }
+    }
+
+    public static void flipHydrogen(Atom atom) {
+        PointF center = atom.getPoint();
+
+        for (Bond bond : atom.getBonds()) {
+            Atom h = bond.getBoundAtom();
+
+            if (h.getPoint().x == atom.getPoint().x) {
+                // in equal case, this h counts for right side. make it + 0.01f since it is flipped to other side by symmetricToPoint();
+                h.getPoint().x += 0.001f;
+            }
+            if (h.getAtomicNumber() == AtomicNumber.H) {
+                h.setPoint(Geometry.symmetricToPoint(h.getPoint(), center));
+            }
         }
     }
 }

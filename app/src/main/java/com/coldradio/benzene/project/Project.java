@@ -170,10 +170,6 @@ public class Project {
         }
     }
 
-    public boolean hasCopiedCompound() {
-        return mElementCopier.hasCopied();
-    }
-
     public void changeSelectedAtom(String atomName) {
         if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
             Atom atom = mElementSelector.getSelectedAtom();
@@ -284,6 +280,12 @@ public class Project {
 
             if (atom.getAtomicNumber() == an)
                 CompoundReactor.saturateWithHydrogen(compound, atom, maxH);
+        }
+    }
+
+    public void flipHydrogenForSelected() {
+        if (mElementSelector.selection() == ElementSelector.Selection.ATOM) {
+            CompoundArranger.flipHydrogen(mElementSelector.getSelectedAtom());
         }
     }
 

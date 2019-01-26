@@ -42,6 +42,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         EditText editText = findViewById(R.id.actv_compound_search);
         if (editText != null) {
             editText.setOnEditorActionListener(this);
+            editText.setText(CompoundLibrary.instance().getSearchKeyword());
         }
 
         CompoundLibrary.instance().setProgressBarForCompoundSearch((TextView) findViewById(R.id.tv_progress));

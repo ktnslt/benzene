@@ -50,9 +50,10 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
                 public void onResponse(List<Compound> compound) {
                     if (compound != null) {
                         for (Compound c : compound) {
-                            Project.instance().addCompound(c, true);
+                            Project.instance().addCompound(c, false);
                             ProjectFileManager.instance().push(new CompoundAddedHistory(c));
-                            // If the CanvasView is shown, it shall be validated. when the user fast-clicks the backbutton, compound can be added when the CanvasView is already shown
+                            // when the user fast-clicks the backbutton after clicking searched compound, compound might be added later when the CanvasView is already shown
+                            // In this case, the Canvas shall be invalidated (if not it is now drawn).
                             AppEnv.instance().invalidateCanvasView();
                         }
                         Notifier.instance().notification(mTitle.getText().toString() + " is added. " + (compound.size() > 1 ? "Total " + compound.size() + " Compounds" : ""));

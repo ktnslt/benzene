@@ -19,9 +19,10 @@ public class RuleSet {
     }
 
     public RuleSet() {
-        add(new LetteringIfNotSeenRule());
+        add(new LetteringIfCompoundNotSeenRule());
         add(new LetteringIfNotCarbonRule());
         add(new AdjustDoubleBondTypeRule());
+        add(new HFirstWhenLetteringRule());
     }
 
     public static RuleSet instance() {

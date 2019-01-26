@@ -1,20 +1,19 @@
 package com.coldradio.benzene.library.rule;
 
 import com.coldradio.benzene.compound.Atom;
-import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
 
-public class LetteringIfNotSeenRule implements ICompoundRule {
+public class HFirstWhenLetteringRule implements ICompoundRule {
     @Override
     public Compound apply(Compound compound) {
+        // H2O, HCl case
         if (CompoundInspector.lessThanTwoSkeletonAtom(compound)) {
-            for (Atom atom : compound.getAtoms()) {
-                if (atom.getAtomicNumber() != AtomicNumber.H) {
-                    atom.getAtomDecoration().lettering(true);
-                    CompoundArranger.showAllHydrogen(atom, false);
-                }
+            Atom atom = CompoundInspector.anySkeletonAtom(compound);
+
+            if (atom != null && CompoundInspector.moreHydrogensInRight(atom)) {
+                CompoundArranger.flipHydrogen(atom);
             }
         }
 

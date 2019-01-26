@@ -157,4 +157,8 @@ public class CompoundLibrary {
         mCompoundSearchProgressBar = progressBar;
         updateProgressBar();
     }
+
+    public String getSearchKeyword() {
+        return mSearchKeyword;
+    }
 }

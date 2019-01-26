@@ -73,7 +73,7 @@ public class AppendPointProducer {
     }
 
     public AppendPointProducer(Atom a_atom) {
-        int numberOfNeighbors = CompoundInspector.numberOfBoundSkeletonAtoms(a_atom);
+        int numberOfNeighbors = CompoundInspector.numberOfSkeletonAtoms(a_atom);
 
         // fill candidates position
         if (numberOfNeighbors == 0) {
@@ -92,7 +92,7 @@ public class AppendPointProducer {
             Atom b_atom = a_atom.getSkeletonAtom();
             PointF a_atom_point = a_atom.getPoint(), b_atom_point = b_atom.getPoint();
 
-            if (CompoundInspector.numberOfBoundSkeletonAtoms(b_atom) > 1) {
+            if (CompoundInspector.numberOfSkeletonAtoms(b_atom) > 1) {
                 // this includes chain cases. In case >= 3. c_atom is assigned randomly
                 Atom c_atom = b_atom.getSkeletonAtomExcept(a_atom);
                 PointF c_atom_point = c_atom.getPoint();

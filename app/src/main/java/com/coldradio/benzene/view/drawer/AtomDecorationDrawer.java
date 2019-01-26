@@ -8,7 +8,6 @@ import android.graphics.PointF;
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.AtomicNumber;
-import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Configuration;
@@ -16,20 +15,6 @@ import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
 
 public class AtomDecorationDrawer implements ICompoundDrawer {
-    private static boolean hydrogenPositionInRight(Atom atom) {
-        int right = 0;
-
-        for (Bond bond : atom.getBonds()) {
-            Atom boundAtom = bond.getBoundAtom();
-
-            if (boundAtom.getAtomicNumber() == AtomicNumber.H) {
-                right += atom.getPoint().x <= bond.getBoundAtom().getPoint().x ? 1 : -1;
-            }
-        }
-
-        return right >= 0;
-    }
-
     private static String atomToString(Atom atom) {
         String text = atom.getAtomicNumber().toString();
 
@@ -37,7 +22,7 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
             text = atom.getArbitraryName();
         } else if (atom.getAtomDecoration().isLettering()) {
             int hNumber = CompoundInspector.numberOfHydrogen(atom);
-            boolean hydrogenInRight = hydrogenPositionInRight(atom);
+            boolean hydrogenInRight = CompoundInspector.moreHydrogensInRight(atom);
 
             if (hNumber == 1) {
                 text = hydrogenInRight ? text + "H" : "H" + text;

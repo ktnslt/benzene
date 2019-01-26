@@ -19,9 +19,17 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_flip_h"
+        android:orderInCategory="30"
+        android:title="Flip H"
+        android:icon="@drawable/ic_menu_flip_hydrogen"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_bond"
         android:orderInCategory="40"
-        android:title="Bond"
+        android:title="Bond Type"
         android:icon="@drawable/ic_menu_bond"
         android:visible="false"
         app:showAsAction="always" />
