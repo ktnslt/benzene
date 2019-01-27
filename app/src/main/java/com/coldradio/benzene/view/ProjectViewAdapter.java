@@ -76,7 +76,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                             Notifier.instance().notification("Invalid Chars " + FileUtil.INVALID_CHARS);
                                         }
                                     }
-                                }).setInitialText(projectNameString);
+                                }).setInitialText(projectNameString).setTitle("New Project Name");
                                 dialog.show();
                             } else if (id == R.id.action_project_share_image) {
                                 if (!FileUtil.share(AppEnv.instance().projectFileDir() + projectNameString + Configuration.IMAGE_FILE_EXT, mAdapter.mMainActivity)) {

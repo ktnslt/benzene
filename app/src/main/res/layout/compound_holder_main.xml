@@ -45,6 +45,7 @@
         app:layout_constraintTop_toTopOf="@id/tv1"/>
 
     <Button
+        android:id="@+id/btn_compound_desc"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text="Desc"

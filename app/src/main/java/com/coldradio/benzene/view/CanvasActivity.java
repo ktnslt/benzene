@@ -193,6 +193,7 @@ public class CanvasActivity extends AppCompatActivity {
         // after adding compound, the context menu needs to be updated
         mCanvasView.updateContextMenu();
         AppEnv.instance().setCanvasView(mCanvasView);
+        AppEnv.instance().setCurrentActivity(this);
     }
 
     @Override
@@ -200,6 +201,7 @@ public class CanvasActivity extends AppCompatActivity {
         super.onPause();
         ProjectFileManager.instance().saveWithoutPreview(Project.instance());
         AppEnv.instance().setCanvasView(null);
+        AppEnv.instance().setCurrentActivity(null);
     }
 
     @Override

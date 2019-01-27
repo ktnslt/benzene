@@ -21,6 +21,7 @@ import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 
 public class AtomDecoActivity extends AppCompatActivity {
@@ -267,6 +268,18 @@ public class AtomDecoActivity extends AppCompatActivity {
                 unsharedElectron(AtomDecoration.Direction.RIGHT, AtomDecoration.UnsharedElectron.DOUBLE);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEnv.instance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEnv.instance().setCurrentActivity(null);
     }
 
     private void offsetCharge(int offset) {

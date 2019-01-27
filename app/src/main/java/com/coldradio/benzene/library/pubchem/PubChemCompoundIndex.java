@@ -1,5 +1,7 @@
 package com.coldradio.benzene.library.pubchem;
 
+import android.text.Spanned;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coldradio.benzene.compound.Compound;
@@ -19,9 +21,17 @@ public class PubChemCompoundIndex extends CompoundIndex {
         PubChemCompoundRequest request = new PubChemCompoundRequest(super.cid, onCompoundReady, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Notifier.instance().notification(PubChemCompoundIndex.this.title + " NOT created");
+                Notifier.instance().notification(PubChemCompoundIndex.this.title + " NOT created. " + error.toString());
             }
         });
+
+        AppEnv.instance().addToNetworkQueue(request);
+        Notifier.instance().notification(PubChemCompoundIndex.this.title + " Requested");
+    }
+
+    @Override
+    public void requestDescription(final Response.Listener<Spanned> listener) {
+        PubChemDescriptionRequest request = new PubChemDescriptionRequest(super.cid, listener);
 
         AppEnv.instance().addToNetworkQueue(request);
     }

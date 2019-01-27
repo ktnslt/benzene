@@ -20,6 +20,13 @@ public class PubChemCompoundFactory {
     public static Compound create(PC_Compound_JSON compound_json) {
         Compound compound = new Compound(compound_json.atoms.aid, toAtomicNumber(compound_json.atoms.element));
 
+        // charge
+        if (compound_json.atoms.charge != null) {
+            for (PC_Compound_JSON.atoms_JSON.charge_JSON charge : compound_json.atoms.charge) {
+                compound.getAtom(charge.aid).getAtomDecoration().setCharge(charge.value);
+            }
+        }
+
         // setup bonds
         for (int ii = 0; ii < compound_json.bondLength(); ++ii) {
             compound.makeBond(compound_json.bonds.aid1[ii], compound_json.bonds.aid2[ii], compound_json.bondType(ii));
@@ -35,10 +42,10 @@ public class PubChemCompoundFactory {
         }
 
         // setup coordinates
-        coords_JSON coord = compound_json.coords.get(0);
+        PC_Compound_JSON.coords_JSON coord = compound_json.coords.get(0);
 
         for (int ii = 0; ii < coord.aid.length; ++ii) {
-            conformer_JSON xy = coord.conformers.get(0);
+            PC_Compound_JSON.coords_JSON.conformer_JSON xy = coord.conformers.get(0);
             compound.getAtom(coord.aid[ii]).setPoint(new PointF(xy.x[ii], xy.y[ii]));
         }
 

@@ -6,6 +6,36 @@ import com.coldradio.benzene.compound.Bond;
 import java.util.List;
 
 public class PC_Compound_JSON {
+    public class ID_JSON {
+        public SID_JSON id;
+    }
+    public class atoms_JSON {
+        public class charge_JSON {
+            int aid;
+            int value;
+        }
+        public int[] aid;
+        public int[] element;
+        public List<charge_JSON> charge;
+    }
+    public class bonds_JSON {
+        public int[] aid1;
+        public int[] aid2;
+        public int[] order;
+    }
+    public class coords_JSON {
+        public class conformer_JSON {
+            public float[] x;
+            public float[] y;
+            public style_JSON style;
+        }
+        public int[] aid;
+        public List<conformer_JSON> conformers;
+    }
+    public class props_JSON {
+        public urn_JSON urn;
+        public value_JSON value;
+    }
     public ID_JSON id;
     public atoms_JSON atoms;
     public bonds_JSON bonds;

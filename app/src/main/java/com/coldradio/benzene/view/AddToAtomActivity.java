@@ -21,6 +21,7 @@ import com.coldradio.benzene.compound.CompoundReactor;
 import com.coldradio.benzene.compound.funcgroup.*;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.AtomDecorationDrawer;
 import com.coldradio.benzene.view.drawer.GenericDrawer;
@@ -36,6 +37,18 @@ public class AddToAtomActivity extends AppCompatActivity {
         // assume the mFuncGroup is already assigned
         mFuncGroupName.setText(mFuncGroup.getName());
         mPreview.setFunctionalGroup(mFuncGroup);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEnv.instance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEnv.instance().setCurrentActivity(null);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.coldradio.benzene.library;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
 import android.widget.TextView;
@@ -10,6 +9,7 @@ import com.android.volley.Response;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.library.local.LocalSearch;
 import com.coldradio.benzene.library.pubchem.PubChemSearch;
+import com.coldradio.benzene.util.Notifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +136,31 @@ public class CompoundLibrary {
     }
 
     public void requestCompound(int position, Response.Listener<List<Compound>> listener) {
-        mSearchResults.get(position).requestCompound(listener);
+        if (position >= 0 && position < mSearchResults.size()) {
+            mSearchResults.get(position).requestCompound(listener);
+        } else {
+            Notifier.instance().notification("Wait. List under construction");
+        }
+    }
+
+    public void requestDescription(final int position, final Response.Listener<Spanned> listener) {
+        if (position >= 0 && position < mSearchResults.size()) {
+            CompoundIndex index = mSearchResults.get(position);
+
+            if (index.description != null && index.description.charAt(0) != 'E') { // error starts with E
+                listener.onResponse(index.description);
+            } else {
+                mSearchResults.get(position).requestDescription(new Response.Listener<Spanned>() {
+                    @Override
+                    public void onResponse(Spanned response) {
+                        mSearchResults.get(position).description = response;
+                        listener.onResponse(response);
+                    }
+                });
+            }
+        } else {
+            Notifier.instance().notification("Wait. List under construction");
+        }
     }
 
     public void clearAll() {

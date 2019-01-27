@@ -19,6 +19,7 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.view.drawer.PaintSet;
@@ -138,6 +139,18 @@ public class AddToBondActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEnv.instance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEnv.instance().setCurrentActivity(null);
     }
 
     private void setEdgeNumber(int edge) {

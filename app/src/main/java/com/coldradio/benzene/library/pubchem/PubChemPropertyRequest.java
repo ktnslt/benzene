@@ -20,6 +20,7 @@ class PubChemPropertyRequest extends PubChemRequest<CompoundProperty_JSON> {
     private String mCamelName;
 
     PubChemPropertyRequest(String name, Response.Listener<CompoundProperty_JSON> listener, Response.ErrorListener errorListener) {
+        // at this point, we don't know the cid. hence request with name
         super("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + name + "/property/MolecularFormula,MolecularWeight,IUPACName/JSON",
                 CompoundProperty_JSON.class, listener, errorListener);
         mCamelName = TextUtil.toCamelStyle(name);

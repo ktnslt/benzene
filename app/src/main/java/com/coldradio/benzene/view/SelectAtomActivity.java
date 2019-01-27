@@ -13,6 +13,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 
 public class SelectAtomActivity extends AppCompatActivity {
@@ -88,5 +89,17 @@ public class SelectAtomActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEnv.instance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEnv.instance().setCurrentActivity(null);
     }
 }

@@ -1,5 +1,6 @@
 package com.coldradio.benzene.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.view.View;
@@ -8,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.coldradio.benzene.library.local.LocalCompounds;
+import com.coldradio.benzene.view.CanvasView;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -21,6 +23,7 @@ public class AppEnv {
     private Context mApplicationContext;
     private Gson mGson = new Gson();
     private View mCanvasView;
+    private Activity mCurrentActivity;
 
     public static AppEnv instance() {
         return msInstance;
@@ -45,6 +48,14 @@ public class AppEnv {
     public void invalidateCanvasView() {
         if (mCanvasView != null) {
             mCanvasView.invalidate();
+        }
+    }
+
+    public void updateContextMenu() {
+        CanvasView canvasView = (CanvasView) mCanvasView;
+
+        if (canvasView != null) {
+            canvasView.updateContextMenu();
         }
     }
 
@@ -74,5 +85,13 @@ public class AppEnv {
 
     public void cancelAllNetworkRequest() {
         mRequestQueue.cancelAll(mApplicationContext);
+    }
+
+    public void setCurrentActivity(Activity activity) {
+        mCurrentActivity = activity;
+    }
+
+    public Activity getCurrentActivity() {
+        return mCurrentActivity;
     }
 }

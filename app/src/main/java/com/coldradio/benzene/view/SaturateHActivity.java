@@ -13,6 +13,7 @@ import com.coldradio.benzene.R;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
+import com.coldradio.benzene.util.AppEnv;
 
 public class SaturateHActivity extends AppCompatActivity {
     private TextView mCarbonHMaxTV, mNitrogenHMaxTV, mOxygenHMaxTV;
@@ -122,5 +123,17 @@ public class SaturateHActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEnv.instance().setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEnv.instance().setCurrentActivity(null);
     }
 }

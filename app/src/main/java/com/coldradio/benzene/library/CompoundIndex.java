@@ -1,6 +1,7 @@
 package com.coldradio.benzene.library;
 
 import android.graphics.Bitmap;
+import android.text.Spanned;
 
 import com.android.volley.Response;
 import com.coldradio.benzene.compound.Compound;
@@ -15,6 +16,7 @@ public abstract class CompoundIndex {
     final public float mw;
     final public String IUPAC;
     private Bitmap bitmap;
+    public Spanned description;
 
     public CompoundIndex(String searchKeyword, String title, int cid, String mf, float mw, String IUPAC) {
         this.searchKeyword = searchKeyword;
@@ -34,4 +36,6 @@ public abstract class CompoundIndex {
     }
 
     public abstract void requestCompound(Response.Listener<List<Compound>> onCompoundReady);
+
+    public abstract void requestDescription(Response.Listener<Spanned> listener);
 }

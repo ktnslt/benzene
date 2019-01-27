@@ -3,6 +3,7 @@ package com.coldradio.benzene.view;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.project.history.CompoundAddedHistory;
 import com.coldradio.benzene.util.AppEnv;
+import com.coldradio.benzene.util.ImageTextViewDialog;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.TextUtil;
 
@@ -41,6 +43,24 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
             mIUPACName = v.findViewById(R.id.tv_iupac);
             mPreview = v.findViewById(R.id.iv_preview);
             v.setOnClickListener(this);
+
+            v.findViewById(R.id.btn_compound_desc).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CompoundLibrary.instance().requestDescription(getAdapterPosition(), new Response.Listener<Spanned>() {
+                        @Override
+                        public void onResponse(Spanned response) {
+                            CompoundIndex index = CompoundLibrary.instance().getCompoundIndex(getAdapterPosition());
+
+                            if (index != null) {
+                                ImageTextViewDialog dialog = new ImageTextViewDialog().setTitle(index.title).setContent(index.description).setImage(index.getBitmap());
+
+                                dialog.show();
+                            }
+                        }
+                    });
+                }
+            });
         }
 
         @Override
@@ -50,11 +70,12 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
                 public void onResponse(List<Compound> compound) {
                     if (compound != null) {
                         for (Compound c : compound) {
-                            Project.instance().addCompound(c, false);
+                            Project.instance().addCompound(c, true);
                             ProjectFileManager.instance().push(new CompoundAddedHistory(c));
                             // when the user fast-clicks the backbutton after clicking searched compound, compound might be added later when the CanvasView is already shown
                             // In this case, the Canvas shall be invalidated (if not it is now drawn).
                             AppEnv.instance().invalidateCanvasView();
+                            AppEnv.instance().updateContextMenu();
                         }
                         Notifier.instance().notification(mTitle.getText().toString() + " is added. " + (compound.size() > 1 ? "Total " + compound.size() + " Compounds" : ""));
                     }
