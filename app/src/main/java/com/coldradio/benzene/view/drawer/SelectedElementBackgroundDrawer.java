@@ -64,9 +64,4 @@ public class SelectedElementBackgroundDrawer implements ICompoundDrawer {
 
         return true;
     }
-
-    @Override
-    public String getID() {
-        return "SelectedElementBackgroundDrawer";
-    }
 }

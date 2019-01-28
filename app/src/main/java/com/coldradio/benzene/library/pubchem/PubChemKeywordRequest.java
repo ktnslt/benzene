@@ -17,6 +17,18 @@ import java.io.UnsupportedEncodingException;
 class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
     private Response.Listener<CompoundProperty_JSON> mCompoundPropertyListener;
     private String mKeyword;
+    private int mKeywordAsCID = -1;
+
+    private void requestCIDSearch(int cid) {
+        PubChemPropertyRequest request = new PubChemPropertyRequest(cid, mCompoundPropertyListener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                CompoundLibrary.instance().arrived(new PubChemCompoundIndex(mKeyword, null, -1, null, -1, null));
+            }
+        });
+
+        AppEnv.instance().addToNetworkQueue(request);
+    }
 
     PubChemKeywordRequest(String keyword, final Response.Listener<CompoundProperty_JSON> propertyListener, Response.ErrorListener propertyErrorListener) {
         // Notice that errorListener is called for AutoComplete request not for the individual CompoundProperty request
@@ -26,11 +38,21 @@ class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
 
         mCompoundPropertyListener = propertyListener;
         mKeyword = keyword;
+
+        // if keyword is number, try CID search
+        try {
+            requestCIDSearch(mKeywordAsCID = Integer.parseInt(keyword));
+        } catch (NumberFormatException nfe) {
+            // do nothing, it is not cid
+        }
     }
 
     @Override
     protected void deliverResponse(AutoComplete_JSON response) {
         // nothing to deliver since this is AutoComplete_JSON
+        if (mKeywordAsCID > 0) {
+            response.total++;   // +1 due to CID search
+        }
         if (response.total == 0) {
             Notifier.instance().notification("No Compounds found");
         }

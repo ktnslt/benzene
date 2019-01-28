@@ -95,9 +95,4 @@ public class SelectedElementAccessoryDrawer implements ICompoundDrawer {
         }
         return false;
     }
-
-    @Override
-    public String getID() {
-        return "SelectedElementAccessoryDrawer";
-    }
 }

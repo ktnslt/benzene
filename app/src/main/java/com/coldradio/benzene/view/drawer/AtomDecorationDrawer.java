@@ -160,9 +160,4 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         }, compound, canvas, paint);
         return true;
     }
-
-    @Override
-    public String getID() {
-        return "AtomDecorationDrawer";
-    }
 }

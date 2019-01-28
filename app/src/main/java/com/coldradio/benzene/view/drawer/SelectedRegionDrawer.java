@@ -2,11 +2,8 @@ package com.coldradio.benzene.view.drawer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PointF;
 
-import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Compound;
-import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.IRegionSelector;
 import com.coldradio.benzene.project.Project;
 
@@ -22,10 +19,5 @@ public class SelectedRegionDrawer implements ICompoundDrawer {
             }
         }
         return true;
-    }
-
-    @Override
-    public String getID() {
-        return "SelectedRegionDrawer";
     }
 }

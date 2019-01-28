@@ -13,26 +13,13 @@ public class DrawerManager {
     private List<ICompoundDrawer> mPreCompoundDrawer = new ArrayList<>();
     private List<ICompoundDrawer> mPostCompoundDrawer = new ArrayList<>();
 
-    private boolean isRegistered(ICompoundDrawer newDrawer) {
-        for (ICompoundDrawer drawer : mPreCompoundDrawer) {
-            if (drawer.getID().equals(newDrawer.getID()))
-                return true;
-        }
-
-        for (ICompoundDrawer drawer : mPostCompoundDrawer) {
-            if (drawer.getID().equals(newDrawer.getID()))
-                return true;
-        }
-        return false;
-    }
-
     public void addPreCompoundDrawer(ICompoundDrawer compoundDrawer) {
-        if (! isRegistered(compoundDrawer))
+        if (!mPreCompoundDrawer.contains(compoundDrawer))
             mPreCompoundDrawer.add(compoundDrawer);
     }
 
     public void addPostCompoundDrawer(ICompoundDrawer compoundDrawer) {
-        if (! isRegistered(compoundDrawer))
+        if (!mPostCompoundDrawer.contains(compoundDrawer))
             mPostCompoundDrawer.add(compoundDrawer);
     }
 
