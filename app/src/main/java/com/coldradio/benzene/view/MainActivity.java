@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         // call this as early as possible. shall be called with the Application context, not an Activity context
-        AppEnv.instance().setContext(this.getApplicationContext());
+        AppEnv.instance().initialize(this.getApplicationContext());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         AppEnv.instance().setCurrentActivity(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppEnv.instance().terminate();
     }
 
     @Override
@@ -150,14 +156,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.help) {
             // Handle the camera action
-        } else if (id == R.id.settings) {
+        } else if (id == R.id.import_project) {
 
         }
 

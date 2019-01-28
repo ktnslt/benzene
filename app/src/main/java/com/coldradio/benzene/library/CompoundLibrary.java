@@ -1,5 +1,6 @@
 package com.coldradio.benzene.library;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.Html;
 import android.text.Spanned;
@@ -9,6 +10,8 @@ import com.android.volley.Response;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.library.local.LocalSearch;
 import com.coldradio.benzene.library.pubchem.PubChemSearch;
+import com.coldradio.benzene.project.preference.OnPreferenceEvent;
+import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
 
 import java.util.ArrayList;
@@ -23,12 +26,24 @@ public class CompoundLibrary {
     private int mPropertySuccessCompounds;
     private int mPropertyFailedCompounds;
     private String mSearchKeyword;
+    private SearchHistory mSearchHistory = new SearchHistory();
     // TODO not sure about below maybe there is something better
     private TextView mCompoundSearchProgressBar;
 
     private CompoundLibrary() {
         mCompoundSearchers.add(new LocalSearch());
         mCompoundSearchers.add(new PubChemSearch());
+        AppEnv.instance().addPreferenceListener(new OnPreferenceEvent() {
+            @Override
+            public void onRestore(SharedPreferences sharedPreferences) {
+                mSearchHistory.onRestore(sharedPreferences);
+            }
+
+            @Override
+            public void onSave(SharedPreferences.Editor editor) {
+                mSearchHistory.onSave(editor);
+            }
+        });
     }
 
     private void notifySearchResultListener(List<CompoundIndex> compoundIndexList, int posStart, int itemCount) {
@@ -103,6 +118,11 @@ public class CompoundLibrary {
                 notifySearchResultListener(results, posStart, results.size());
             }
         }
+        mSearchHistory.add(keyword);
+    }
+
+    public String[] getSearchHistory() {
+        return mSearchHistory.getSearchHistory();
     }
 
     public void setSearchResultReadyListener(OnSearchResultArrived listener) {
@@ -147,7 +167,7 @@ public class CompoundLibrary {
         if (position >= 0 && position < mSearchResults.size()) {
             CompoundIndex index = mSearchResults.get(position);
 
-            if (index.description != null && index.description.charAt(0) != 'E') { // error starts with E
+            if (index.description != null && index.description.length() > 0 && index.description.charAt(0) != 'E') { // error starts with E
                 listener.onResponse(index.description);
             } else {
                 mSearchResults.get(position).requestDescription(new Response.Listener<Spanned>() {
@@ -174,7 +194,6 @@ public class CompoundLibrary {
     public void setTotalSearchedCompounds(int totalSearchedCompounds) {
         mTotalSearchedCompounds = totalSearchedCompounds;
         updateProgressBar();
-
     }
 
     public void setProgressBarForCompoundSearch(TextView progressBar) {

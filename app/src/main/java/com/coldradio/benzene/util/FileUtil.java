@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.util.Date;
@@ -46,6 +47,15 @@ public class FileUtil {
         if (reader != null) {
             try {
                 reader.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void closeIgnoreException(Writer writer) {
+        if (writer != null) {
+            try {
+                writer.close();
             } catch (Exception e) {
             }
         }

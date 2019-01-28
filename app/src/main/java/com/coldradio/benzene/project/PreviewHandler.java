@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.coldradio.benzene.util.AppEnv;
+import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.ImageUtil;
 import com.coldradio.benzene.util.Notifier;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 public class PreviewHandler {
     public static void savePreview(View view, RectF region, String projectName) {
         File file = new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT);
+        FileOutputStream oStream = null;
 
         try {
             Bitmap bitmap = ImageUtil.createBitmap(view, region);
@@ -26,15 +28,15 @@ public class PreviewHandler {
                 return;
             }
             file.createNewFile();
-            FileOutputStream oStream = new FileOutputStream(file, false);
+            oStream = new FileOutputStream(file, false);
 
             bitmap.compress(Configuration.IMAGE_FORMAT, 100, oStream);
-            oStream.flush();
-            oStream.close();
         } catch (IOException e) {
         } catch (IllegalArgumentException iae) {
             // create bitmap may throw this exception
             // do nothing
+        } finally {
+            FileUtil.closeIgnoreException(oStream);
         }
     }
 

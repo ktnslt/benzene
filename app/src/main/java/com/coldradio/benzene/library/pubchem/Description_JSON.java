@@ -1,7 +1,5 @@
 package com.coldradio.benzene.library.pubchem;
 
-import android.text.Spanned;
-
 import java.util.List;
 
 public class Description_JSON {
@@ -13,5 +11,4 @@ public class Description_JSON {
         String DescriptionSourceName;
     }
     InformationList_JSON InformationList;
-    Spanned spannedDescription;
 }

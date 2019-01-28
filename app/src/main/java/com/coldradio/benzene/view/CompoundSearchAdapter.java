@@ -47,18 +47,18 @@ public class CompoundSearchAdapter extends RecyclerView.Adapter<CompoundSearchAd
             v.findViewById(R.id.btn_compound_desc).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CompoundLibrary.instance().requestDescription(getAdapterPosition(), new Response.Listener<Spanned>() {
-                        @Override
-                        public void onResponse(Spanned response) {
-                            CompoundIndex index = CompoundLibrary.instance().getCompoundIndex(getAdapterPosition());
+                    CompoundIndex index = CompoundLibrary.instance().getCompoundIndex(getAdapterPosition());
 
-                            if (index != null) {
-                                ImageTextViewDialog dialog = new ImageTextViewDialog().setTitle(index.title).setContent(index.description).setImage(index.getBitmap());
+                    if (index != null) {
+                        final ImageTextViewDialog dialog = new ImageTextViewDialog().setTitle(index.title).setImage(index.getBitmap()).setContent(Html.fromHtml("Waiting...")).show();
 
-                                dialog.show();
+                        CompoundLibrary.instance().requestDescription(getAdapterPosition(), new Response.Listener<Spanned>() {
+                            @Override
+                            public void onResponse(Spanned response) {
+                                dialog.setContent(response);
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             });
         }

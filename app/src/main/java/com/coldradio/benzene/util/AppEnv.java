@@ -2,13 +2,15 @@ package com.coldradio.benzene.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.coldradio.benzene.library.local.LocalCompounds;
+import com.coldradio.benzene.project.preference.OnPreferenceEvent;
+import com.coldradio.benzene.project.preference.PreferenceManager;
 import com.coldradio.benzene.view.CanvasView;
 import com.google.gson.Gson;
 
@@ -24,12 +26,13 @@ public class AppEnv {
     private Gson mGson = new Gson();
     private View mCanvasView;
     private Activity mCurrentActivity;
+    private PreferenceManager mPreferenceManager = new PreferenceManager();
 
     public static AppEnv instance() {
         return msInstance;
     }
 
-    public void setContext(Context appContext) {
+    public void initialize(Context appContext) {
         // shall called with Application Context, not with the Activity context
         if (mProjectFileRootDir == null) {
             mProjectFileRootDir = appContext.getFilesDir().getPath() + File.separator;
@@ -37,8 +40,14 @@ public class AppEnv {
             mTemporaryDir = mProjectFileRootDir + "temp/";
             mRequestQueue = Volley.newRequestQueue(appContext);
             mApplicationContext = appContext;
-            LocalCompounds.instance().parseLibrary(appContext.getResources());
         }
+    }
+
+    public void terminate() {
+        SharedPreferences.Editor editor = mApplicationContext.getSharedPreferences("BenzenePreference", Context.MODE_PRIVATE).edit();
+
+        mPreferenceManager.save(editor);
+        editor.apply();
     }
 
     public void setCanvasView(View canvasView) {
@@ -93,5 +102,13 @@ public class AppEnv {
 
     public Activity getCurrentActivity() {
         return mCurrentActivity;
+    }
+
+    public void addPreferenceListener(OnPreferenceEvent listener) {
+        // initialize() might be earlier than addPreferenceListener(). Hence, restore at the time of registration.
+        if (listener != null) {
+            mPreferenceManager.add(listener);
+            listener.onRestore(mApplicationContext.getSharedPreferences("BenzenePreference", Context.MODE_PRIVATE));
+        }
     }
 }

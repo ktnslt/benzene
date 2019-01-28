@@ -214,6 +214,7 @@ public class CanvasActivity extends AppCompatActivity {
             mCanvasView.invalidate();
         } else if (elementSelector.hasSelected()) {
             elementSelector.reset();
+            mCanvasView.updateContextMenu();
             mCanvasView.invalidate();
         } else {
             // here Project file is not saved yet. Only preview will be saved. The project file will be saved in onPause() that will be called later after this method

@@ -22,4 +22,5 @@ public class Configuration {
     public static String PROJECT_FILE_EXT = ".bzn";
     public static int MAX_RESPONSE_FOR_SEARCH = 25;
     public static int REQUEST_IMAGE_QUALITY = 0;    // 0 for small, 1 for medium, 2 for large
+    public static int MAX_SEARCH_HISTORY = 20;
 }

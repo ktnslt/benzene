@@ -121,11 +121,7 @@ public class ProjectFileManager {
         } catch (IOException ioe) {
             Notifier.instance().notification("Saving Errors");
         } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (Exception e) {/* ignores this */}
-            }
+            FileUtil.closeIgnoreException(writer);
         }
     }
 

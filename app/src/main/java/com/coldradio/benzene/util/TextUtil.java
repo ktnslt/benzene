@@ -1,5 +1,8 @@
 package com.coldradio.benzene.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class TextUtil {
@@ -85,5 +88,26 @@ public class TextUtil {
             }
         }
         return sb.toString();
+    }
+
+    public static <T> String toCSV(List<T> list) {
+        StringBuilder sb = new StringBuilder();
+
+        for (T o : list) {
+            sb.append(o.toString());
+            sb.append(',');
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        return sb.toString();
+    }
+
+    public static List<String> toList(String text, String delimiter) {
+        if (text.length() == 0) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(Arrays.asList(text.split(delimiter)));
     }
 }

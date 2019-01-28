@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.coldradio.benzene.R;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class CompoundSearchActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private RecyclerView.Adapter mAdapter;
+    private AutoCompleteTextView mEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,13 +41,16 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         mAdapter = new CompoundSearchAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        // set listener for EditText
-        EditText editText = findViewById(R.id.actv_compound_search);
-        if (editText != null) {
-            editText.setOnEditorActionListener(this);
-            editText.setText(CompoundLibrary.instance().getSearchKeyword());
+        // EditText setting
+        mEditText = findViewById(R.id.actv_compound_search);
+        if (mEditText != null) {
+            mEditText.setOnEditorActionListener(this);
+            mEditText.setText(CompoundLibrary.instance().getSearchKeyword());
+
+            mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
         }
 
+        // CompoundLibrary setting
         CompoundLibrary.instance().setProgressBarForCompoundSearch((TextView) findViewById(R.id.tv_progress));
 
         CompoundLibrary.instance().setSearchResultReadyListener(new OnSearchResultArrived() {
@@ -89,6 +94,9 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
             mAdapter.notifyDataSetChanged();
 
             CompoundLibrary.instance().search(keyword);
+            if (mEditText != null) {
+                mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
+            }
         } else {
             Notifier.instance().notification("No Search Keywords");
         }

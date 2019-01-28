@@ -14,7 +14,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
 
-class PubChemDescriptionRequest extends Request<Description_JSON> {
+class PubChemDescriptionRequest extends Request<Spanned> {
     private Response.Listener<Spanned> mListener;
 
     private Spanned buildDescriptionString(Description_JSON desc) {
@@ -28,6 +28,10 @@ class PubChemDescriptionRequest extends Request<Description_JSON> {
                 builder.append(info.DescriptionSourceName);
                 builder.append("</i></p>");
             }
+        }
+
+        if (builder.length() == 0) {
+            builder.append("No Description for this compound");
         }
 
         return Html.fromHtml(builder.toString());
@@ -44,18 +48,17 @@ class PubChemDescriptionRequest extends Request<Description_JSON> {
     }
 
     @Override
-    protected void deliverResponse(Description_JSON response) {
-        mListener.onResponse(response.spannedDescription);
+    protected void deliverResponse(Spanned response) {
+        mListener.onResponse(response);
     }
 
     @Override
-    protected Response<Description_JSON> parseNetworkResponse(NetworkResponse response) {
+    protected Response<Spanned> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             Description_JSON desc = AppEnv.instance().gson().fromJson(json, Description_JSON.class);
 
-            desc.spannedDescription = buildDescriptionString(desc);
-            return Response.success(desc, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(buildDescriptionString(desc), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
