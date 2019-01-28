@@ -10,10 +10,13 @@ import com.coldradio.benzene.project.Configuration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -70,6 +73,15 @@ public class FileUtil {
         }
     }
 
+    public static void closeIgnoreException(InputStream in) {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
     public static boolean rename(String sourcePath, String destPath) {
         return new File(sourcePath).renameTo(new File(destPath));
     }
@@ -78,8 +90,8 @@ public class FileUtil {
         return new File(filePath).delete();
     }
 
-    public static String availableProjectFileName(String name) {
-        return nameWithoutExtension(availableFileNameExt(AppEnv.instance().projectFileDir(), name, Configuration.PROJECT_FILE_EXT), Configuration.PROJECT_FILE_EXT);
+    public static String availableFileName(String name) {
+        return fileNameWithoutExt(availableFileNameExt(AppEnv.instance().projectFileDir(), name, Configuration.PROJECT_FILE_EXT));
     }
 
     public static String availableFileNameExt(String dirPath, String name, String postfix) {
@@ -98,11 +110,35 @@ public class FileUtil {
         }
     }
 
-    public static String nameWithoutExtension(String name, String ext) {
-        if (name.endsWith(ext)) {
-            return name.substring(0, name.length() - ext.length());
-        } else {
+    public static String fileNameWithoutExt(String name) {
+        int dot_index = name.lastIndexOf('.');
+
+        if (dot_index < 0) {
             return name;
+        }
+        return name.substring(0, dot_index);
+    }
+
+    public static boolean copy(Uri sourceUri, String destPath) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+
+        try {
+            inputStream = AppEnv.instance().getApplicationContext().getContentResolver().openInputStream(sourceUri);
+            outputStream = new FileOutputStream(destPath);
+            byte[] bytes = new byte[1024];
+            while (true) {
+                int count = inputStream.read(bytes, 0, 1024);
+                if (count == -1)
+                    break;
+                outputStream.write(bytes, 0, count);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            closeIgnoreException(inputStream);
+            closeIgnoreException(outputStream);
         }
     }
 
@@ -118,11 +154,11 @@ public class FileUtil {
 
             return true;
         } catch (Exception e) {
+            return false;
         } finally {
             closeIgnoreException(sourceChannel);
             closeIgnoreException(destChannel);
         }
-        return false;
     }
 
     public static boolean validFileName(String name) {
@@ -202,5 +238,22 @@ public class FileUtil {
                 file.delete();
             }
         }
+    }
+
+    public static void browseFile(int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        AppEnv.instance().getCurrentActivity().startActivityForResult(intent, requestCode);
+    }
+
+    public static String fileNameExt(String filePath) {
+        int cut = filePath.lastIndexOf('/');
+
+        if (cut < 0) {
+            return filePath;
+        }
+        return filePath.substring(cut + 1);
     }
 }

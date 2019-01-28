@@ -23,6 +23,7 @@ import com.coldradio.benzene.project.ProjectFile;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.EditTextDialog;
+import com.coldradio.benzene.util.FileUtil;
 import com.coldradio.benzene.util.Notifier;
 import com.coldradio.benzene.util.StringSearchFilter;
 
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 Project.instance().createNew(ProjectFileManager.instance().createNew());
-                startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.CANVAS_REQ.ordinal());
+                startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.START_CANVAS_REQ.ordinal());
             }
         });
     }
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.help) {
             // Handle the camera action
         } else if (id == R.id.import_project) {
-
+            FileUtil.browseFile(ActivityRequestCode.BROWSE_FILE_REQ.ordinal());
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -175,11 +176,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ActivityRequestCode.CANVAS_REQ.ordinal()) {
+        if (requestCode == ActivityRequestCode.START_CANVAS_REQ.ordinal()) {
             // Regardless of the resultCode, refresh the list
             // First, I tried to setData(RESULT_OK) in the CanvasActivity.onDestroy(), but this onActivityResult() called first before onDestroy() called.
             // It means, I should call setData() in the event handler such as backPressed() or back arrow in the title bar.
             mProjectViewAdapter.notifyDataSetChanged();
+        } else if (requestCode == ActivityRequestCode.BROWSE_FILE_REQ.ordinal() && resultCode == RESULT_OK) {
+            if (data != null) {
+                if (ProjectFileManager.instance().importProject(data.getData())) {
+                    mProjectViewAdapter.notifyItemInserted(0);
+                    Notifier.instance().notification("Imported at Top");
+                } else {
+                    Notifier.instance().notification("Import Failed");
+                }
+            }
         }
     }
 }

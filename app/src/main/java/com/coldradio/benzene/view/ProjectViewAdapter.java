@@ -109,7 +109,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         @Override
         public void onClick(View v) {
             ProjectFileManager.instance().loadToProject(mProjectName.getText().toString(), Project.instance());
-            mAdapter.mMainActivity.startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.CANVAS_REQ.ordinal());
+            mAdapter.mMainActivity.startActivityForResult(new Intent("com.coldradio.benzene.CANVAS"), ActivityRequestCode.START_CANVAS_REQ.ordinal());
         }
     }
 

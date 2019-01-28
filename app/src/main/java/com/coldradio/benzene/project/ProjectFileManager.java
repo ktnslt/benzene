@@ -1,5 +1,6 @@
 package com.coldradio.benzene.project;
 
+import android.net.Uri;
 import android.view.View;
 
 import com.coldradio.benzene.compound.Compound;
@@ -44,7 +45,7 @@ public class ProjectFileManager {
     private Type mCompoundListType = new TypeToken<List<Compound>>() {}.getType();
     private List<OnChangeListener> mListener = new ArrayList<>();
     private HistoryManager mHistoryManager = new HistoryManager();
-    private boolean mCurrentProjectNeverChanged = true;
+    private boolean mCurrentProjectChanged = false;
     private SortType mSortType = SortType.SORT_BY_RECENT;
     private SearchFilter<ProjectFile> mFilter;
     private List<ProjectFile> mFilteredStoredProjectsInDevice;
@@ -67,7 +68,7 @@ public class ProjectFileManager {
                 listener.saved();
             } else if (eventType == ChangeEventType.CHANGED) {
                 listener.changed();
-                mCurrentProjectNeverChanged = false;
+                mCurrentProjectChanged = true;
             }
         }
     }
@@ -89,8 +90,8 @@ public class ProjectFileManager {
         return smInstance;
     }
 
-    public boolean isCurrentProjectNeverChanged() {
-        return mCurrentProjectNeverChanged;
+    public boolean isCurrentProjectChanged() {
+        return mCurrentProjectChanged;
     }
 
     public void saveWithoutPreview(Project project) {
@@ -126,7 +127,7 @@ public class ProjectFileManager {
     }
 
     public void savePreviewOnly(Project project, View view) {
-        if (!ProjectFileManager.instance().isCurrentProjectNeverChanged()) {
+        if (isCurrentProjectChanged() || !PreviewHandler.hasPreviewFile(project.getProjectFile().getName())) {
             PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
         }
     }
@@ -165,7 +166,7 @@ public class ProjectFileManager {
 
             for (int ii = 0; ii < files.length; ++ii) {
                 if (!files[ii].isDirectory() && files[ii].getName().endsWith(Configuration.PROJECT_FILE_EXT)) {
-                    mStoredProjectsInDevice.add(new ProjectFile(FileUtil.nameWithoutExtension(files[ii].getName(), Configuration.PROJECT_FILE_EXT)));
+                    mStoredProjectsInDevice.add(new ProjectFile(FileUtil.fileNameWithoutExt(files[ii].getName())));
                 }
             }
         }
@@ -173,7 +174,7 @@ public class ProjectFileManager {
     }
 
     public ProjectFile createNew() {
-        String fileName = FileUtil.availableProjectFileName("Untitled");
+        String fileName = FileUtil.availableFileName("Untitled");
 
         return new ProjectFile(fileName, true);
     }
@@ -328,5 +329,15 @@ public class ProjectFileManager {
 
     public SearchFilter<ProjectFile> getFilter() {
         return mFilter;
+    }
+
+    public boolean importProject(Uri uri) {
+        String fileName = FileUtil.availableFileName("Imported");
+
+        if (FileUtil.copy(uri, AppEnv.instance().projectFileDir() + fileName + Configuration.PROJECT_FILE_EXT)) {
+            mStoredProjectsInDevice.add(0, new ProjectFile(fileName));
+            return true;
+        }
+        return false;
     }
 }

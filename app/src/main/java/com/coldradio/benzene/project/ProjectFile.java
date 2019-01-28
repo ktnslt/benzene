@@ -9,10 +9,10 @@ public class ProjectFile {
     public static class NameComparator implements Comparator<ProjectFile> {
         private boolean mReversed = false;
 
-        public NameComparator() {
+        NameComparator() {
         }
 
-        public NameComparator(boolean reversed) {
+        NameComparator(boolean reversed) {
             mReversed = reversed;
         }
 
@@ -24,10 +24,10 @@ public class ProjectFile {
     public static class LastModifiedTimeComparator implements Comparator<ProjectFile> {
         private boolean mReversed = false;
 
-        public LastModifiedTimeComparator() {
+        LastModifiedTimeComparator() {
         }
 
-        public LastModifiedTimeComparator(boolean reversed) {
+        LastModifiedTimeComparator(boolean reversed) {
             mReversed = reversed;
         }
 
@@ -44,12 +44,12 @@ public class ProjectFile {
     private boolean mHasSavedFile = true;
     private long mLastModifiedTime;
 
-    public ProjectFile(String fileName) {
+    ProjectFile(String fileName) {
         mName = fileName;
         mLastModifiedTime = FileUtil.lastModifiedTime(AppEnv.instance().projectFileDir() + mName + Configuration.PROJECT_FILE_EXT);
     }
 
-    public ProjectFile(String fileName, boolean createdNew) {
+    ProjectFile(String fileName, boolean createdNew) {
         mName = fileName;
         mLastModifiedTime = FileUtil.lastModifiedTime(AppEnv.instance().projectFileDir() + mName + Configuration.PROJECT_FILE_EXT);
 
@@ -108,7 +108,7 @@ public class ProjectFile {
 
     public ProjectFile copy() {
         String path = AppEnv.instance().projectFileDir();
-        String copiedName = FileUtil.availableProjectFileName(mName);
+        String copiedName = FileUtil.availableFileName(mName);
 
         FileUtil.copy(path + mName + Configuration.IMAGE_FILE_EXT, path + copiedName + Configuration.IMAGE_FILE_EXT);
         if (FileUtil.copy(path + mName + Configuration.PROJECT_FILE_EXT, path + copiedName + Configuration.PROJECT_FILE_EXT)) {

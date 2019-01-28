@@ -16,6 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class PreviewHandler {
+    public static boolean hasPreviewFile(String projectName) {
+        return new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT).exists();
+    }
+
     public static void savePreview(View view, RectF region, String projectName) {
         File file = new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT);
         FileOutputStream oStream = null;
@@ -47,6 +51,8 @@ public class PreviewHandler {
             Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
 
             imageView.setImageBitmap(myBitmap);
+        } else {
+            imageView.setImageBitmap(null);
         }
     }
 }
