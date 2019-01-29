@@ -17,10 +17,10 @@ public class SearchHistory {
         if (index >= 0) {
             mSearchRecordList.remove(index);
         }
-        mSearchRecordList.add(keyword);
+        mSearchRecordList.add(0, keyword);
 
         if (mSearchRecordList.size() > Configuration.MAX_SEARCH_HISTORY) {
-            mSearchRecordList.remove(0);
+            mSearchRecordList.remove(mSearchRecordList.size() - 1);
         }
     }
 

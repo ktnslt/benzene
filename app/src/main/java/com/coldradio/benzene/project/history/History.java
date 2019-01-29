@@ -1,17 +1,13 @@
 package com.coldradio.benzene.project.history;
 
-public class History {
+public abstract class History {
     protected final short mCID;
 
     public History(short cID) {
         mCID = cID;
     }
 
-    public void undo() {
+    public abstract void undo();
 
-    }
-
-    public void redo() {
-
-    }
+    public abstract void redo();
 }

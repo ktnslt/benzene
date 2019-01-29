@@ -30,6 +30,7 @@ import com.coldradio.benzene.util.StringSearchFilter;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView.Adapter mProjectViewAdapter;
     private MenuItem mRemoveFilterItem;
+    private RecyclerView.LayoutManager mRecyclerVewLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             mProjectViewAdapter = new ProjectViewAdapter(this);
             recyclerView.setAdapter(mProjectViewAdapter);
+            mRecyclerVewLayoutManager = recyclerView.getLayoutManager();
         }
 
         // add FloatingActionBar
@@ -88,12 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         AppEnv.instance().setCurrentActivity(null);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppEnv.instance().terminate();
     }
 
     @Override
@@ -185,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (data != null) {
                 if (ProjectFileManager.instance().importProject(data.getData())) {
                     mProjectViewAdapter.notifyItemInserted(0);
-                    Notifier.instance().notification("Imported at Top");
+                    if (mRecyclerVewLayoutManager != null) {
+                        mRecyclerVewLayoutManager.scrollToPosition(0);
+                    }
                 } else {
                     Notifier.instance().notification("Import Failed");
                 }

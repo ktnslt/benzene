@@ -22,6 +22,10 @@ public class Bond {
         return mBondType;
     }
 
+    public boolean isDoubleBond() {
+        return mBondType == BondType.DOUBLE || mBondType == BondType.DOUBLE_OTHER_SIDE || mBondType == BondType.DOUBLE_MIDDLE;
+    }
+
     public boolean hasBondTo(Atom atom) {
         return mAtom == atom;
     }

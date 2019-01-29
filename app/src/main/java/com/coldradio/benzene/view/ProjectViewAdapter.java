@@ -129,12 +129,12 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         ProjectFile projectFile = ProjectFileManager.instance().getProjectFile(position);
 
         if (ProjectFileManager.instance().hasFilter()) {
-            holder.mProjectName.setText(Html.fromHtml(TextUtil.styleKeyword(ProjectFileManager.instance().getFilter().getKeyword(), projectFile.getName())));
+            holder.mProjectName.setText(Html.fromHtml(TextUtil.styleKeyword(projectFile.getName(), ProjectFileManager.instance().getFilter().getKeyword())));
         } else {
             holder.mProjectName.setText(projectFile.getName());
         }
         holder.mLastModifiedTime.setText(FileUtil.toDateTimeString(projectFile.lastModified()));
-        PreviewHandler.showPreview(holder.mImageView, projectFile.getName());
+        holder.mImageView.setImageBitmap(projectFile.getPreview());
     }
 
     @Override

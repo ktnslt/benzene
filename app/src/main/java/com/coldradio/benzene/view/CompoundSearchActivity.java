@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
@@ -48,6 +49,14 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
             mEditText.setText(CompoundLibrary.instance().getSearchKeyword());
 
             mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
+            mEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mEditText.getText().toString().length() == 0) {
+                        mEditText.showDropDown();
+                    }
+                }
+            });
         }
 
         // CompoundLibrary setting
@@ -82,6 +91,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
     protected void onPause() {
         super.onPause();
         AppEnv.instance().setCurrentActivity(null);
+        AppEnv.instance().saveState();
     }
 
     @Override

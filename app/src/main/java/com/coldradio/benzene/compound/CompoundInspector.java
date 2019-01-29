@@ -194,6 +194,17 @@ public class CompoundInspector {
         return true;
     }
 
+    public static boolean isHalogen(Atom atom) {
+        AtomicNumber an = atom.getAtomicNumber();
+
+        return an == AtomicNumber.F || an == AtomicNumber.Cl || an == AtomicNumber.Br
+                || an == AtomicNumber.I || an == AtomicNumber.At;
+    }
+
+    public static boolean isSkeletonAtom(Atom atom) {
+        return atom.getAtomicNumber() != AtomicNumber.H;
+    }
+
     public static boolean moreHydrogensInRight(Atom atom) {
         int right = 0;
 
@@ -206,5 +217,24 @@ public class CompoundInspector {
         }
 
         return right >= 0;
+    }
+
+    public static Atom returnSkeletonAtomIfOneSkeletonWithDoubleBond(Atom atom) {
+        int skeletonBondNumber = 0;
+        Atom skeletonAtom = null;
+
+        for (Bond bond : atom.getBonds()) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (isSkeletonAtom(that_atom)) {
+                skeletonBondNumber++;
+                skeletonAtom = that_atom;
+
+                if (skeletonBondNumber > 1 || !bond.isDoubleBond()) {
+                    return null;
+                }
+            }
+        }
+        return skeletonAtom;
     }
 }

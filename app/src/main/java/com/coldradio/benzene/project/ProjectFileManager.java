@@ -1,5 +1,6 @@
 package com.coldradio.benzene.project;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 
@@ -128,7 +129,9 @@ public class ProjectFileManager {
 
     public void savePreviewOnly(Project project, View view) {
         if (isCurrentProjectChanged() || !PreviewHandler.hasPreviewFile(project.getProjectFile().getName())) {
-            PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+            Bitmap bitmap = PreviewHandler.savePreview(view, project.rectRegion(), project.getProjectFile().getName());
+
+            project.getProjectFile().setPreview(bitmap);
         }
     }
 
@@ -334,7 +337,7 @@ public class ProjectFileManager {
     public boolean importProject(Uri uri) {
         String fileName = FileUtil.availableFileName("Imported");
 
-        if (FileUtil.copy(uri, AppEnv.instance().projectFileDir() + fileName + Configuration.PROJECT_FILE_EXT)) {
+        if (FileUtil.isValidProjectFile(uri) && FileUtil.copy(uri, AppEnv.instance().projectFileDir() + fileName + Configuration.PROJECT_FILE_EXT)) {
             mStoredProjectsInDevice.add(0, new ProjectFile(fileName));
             return true;
         }

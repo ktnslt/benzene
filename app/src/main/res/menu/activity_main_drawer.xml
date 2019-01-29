@@ -5,13 +5,14 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/help"
-            android:icon="@drawable/ic_menu_help"
-            android:title="Help" />
-
-        <item
             android:id="@+id/import_project"
             android:icon="@drawable/ic_menu_import_file"
-            android:title="Import Project" />
+            android:title="Import Project"
+            android:checkable="false"/>
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/ic_menu_help"
+            android:title="Help"
+            android:checkable="false"/>
     </group>
 </menu>

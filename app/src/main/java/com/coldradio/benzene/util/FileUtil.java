@@ -2,6 +2,8 @@ package com.coldradio.benzene.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
 
@@ -15,13 +17,12 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.util.Date;
 
 public class FileUtil {
     public static String INVALID_CHARS = "\\/:*?\"<>|&%";
+    private static int BUF_SIZE = 1024;
 
     private static String prefixFromName(String name) {
         if (name.endsWith(")")) {
@@ -126,9 +127,10 @@ public class FileUtil {
         try {
             inputStream = AppEnv.instance().getApplicationContext().getContentResolver().openInputStream(sourceUri);
             outputStream = new FileOutputStream(destPath);
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[BUF_SIZE];
+
             while (true) {
-                int count = inputStream.read(bytes, 0, 1024);
+                int count = inputStream.read(bytes, 0, BUF_SIZE);
                 if (count == -1)
                     break;
                 outputStream.write(bytes, 0, count);
@@ -255,5 +257,42 @@ public class FileUtil {
             return filePath;
         }
         return filePath.substring(cut + 1);
+    }
+
+    public static boolean isValidProjectFile(Uri uri) {
+        InputStream inputStream = null;
+
+        try {
+            inputStream = AppEnv.instance().getApplicationContext().getContentResolver().openInputStream(uri);
+            byte[] bytes = new byte[100];
+            int count = inputStream.read(bytes, 0, 100);
+
+            if (count == -1) {
+                return false;
+            }
+
+            String firstLine = new String(bytes);
+
+            if (firstLine.contains("Atom") || firstLine.contains("AID")) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            closeIgnoreException(inputStream);
+        }
+    }
+
+    public static Bitmap loadBitmap(String fileName) {
+        File file = new File(AppEnv.instance().projectFileDir() + fileName + Configuration.IMAGE_FILE_EXT);
+        Bitmap bitmap = null;
+
+        if (file.exists()) {
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+
+        return bitmap;
     }
 }

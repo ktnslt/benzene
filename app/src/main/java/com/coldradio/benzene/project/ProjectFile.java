@@ -1,5 +1,7 @@
 package com.coldradio.benzene.project;
 
+import android.graphics.Bitmap;
+
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.FileUtil;
 
@@ -43,6 +45,7 @@ public class ProjectFile {
     private String mName;
     private boolean mHasSavedFile = true;
     private long mLastModifiedTime;
+    private Bitmap mPreview;
 
     ProjectFile(String fileName) {
         mName = fileName;
@@ -115,5 +118,16 @@ public class ProjectFile {
             return new ProjectFile(copiedName);
         }
         return null;
+    }
+
+    public void setPreview(Bitmap preview) {
+        mPreview = preview;
+    }
+
+    public Bitmap getPreview() {
+        if (mPreview == null) {
+            mPreview = FileUtil.loadBitmap(mName);
+        }
+        return mPreview;
     }
 }

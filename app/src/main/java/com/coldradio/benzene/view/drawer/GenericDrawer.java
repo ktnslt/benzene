@@ -96,8 +96,9 @@ public class GenericDrawer {
         if (before_a1 != null && after_a2 != null && before_a1 == after_a2) {
             // propane case, returns the center of the triangle
             PointF before_a1p = before_a1.getPoint();
+            PointF center = new PointF((a1p.x + a2p.x + before_a1p.x) / 3, (a1p.y + a2p.y + before_a1p.y) / 3);
 
-            return new PointF((a1p.x + a2p.x + before_a1p.x) / 3, (a1p.y + a2p.y + before_a1p.y) / 3);
+            return a1.getBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE ? Geometry.symmetricToLine(center, a1p, a2p) : center;
         } else {
             PointF[] centers = Geometry.regularTrianglePoint(a1p, a2p);
             int centerBiasTo0 = 0;

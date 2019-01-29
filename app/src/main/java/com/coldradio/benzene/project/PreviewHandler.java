@@ -20,39 +20,28 @@ public class PreviewHandler {
         return new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT).exists();
     }
 
-    public static void savePreview(View view, RectF region, String projectName) {
+    public static Bitmap savePreview(View view, RectF region, String projectName) {
         File file = new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT);
         FileOutputStream oStream = null;
 
         try {
             Bitmap bitmap = ImageUtil.createBitmap(view, region);
 
-            if (bitmap == null) {
-                Notifier.instance().notification("Preview can NOT be saved");
-                return;
-            }
-            file.createNewFile();
-            oStream = new FileOutputStream(file, false);
+            if (bitmap != null) {
+                file.createNewFile();
+                oStream = new FileOutputStream(file, false);
+                bitmap.compress(Configuration.IMAGE_FORMAT, 100, oStream);
 
-            bitmap.compress(Configuration.IMAGE_FORMAT, 100, oStream);
+                return bitmap;
+            }
         } catch (IOException e) {
+            // do nothing
         } catch (IllegalArgumentException iae) {
             // create bitmap may throw this exception
             // do nothing
         } finally {
             FileUtil.closeIgnoreException(oStream);
         }
-    }
-
-    public static void showPreview(ImageView imageView, String projectName) {
-        File file = new File(AppEnv.instance().projectFileDir() + projectName + Configuration.IMAGE_FILE_EXT);
-
-        if (file.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            imageView.setImageBitmap(myBitmap);
-        } else {
-            imageView.setImageBitmap(null);
-        }
+        return null;
     }
 }

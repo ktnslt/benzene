@@ -34,7 +34,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
     private boolean mSynthesizing;
     private boolean mFirstDraw = true;
     private Toolbar mTopToolbar;
-    private boolean mDoubleTapped;
 
     private void calcActualClickedPosition(MotionEvent e) {
         mActualClickedPosition.set(e.getX() + getScrollX(), e.getY() + getScrollY());
@@ -109,7 +108,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
             toCenter();
             mFirstDraw = false;
         }
-        //canvas.drawCircle(ScreenInfo.instance().centerPoint().x, ScreenInfo.instance().centerPoint().y, 10, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
         mDrawerManager.draw(canvas);
     }
 
@@ -122,10 +120,8 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (Project.instance().rotateSelectedCompound(mActualClickedPosition, event.getAction())) {
             // this handler shall be the first not to feed the event to GestureDetector
             invalidate();
-            mDoubleTapped = false;
         } else if (elementSelector.onTouchEvent(mActualClickedPosition, event.getAction())) {
             invalidate();
-            mDoubleTapped = false;
         } else if (!mGestureDetector.onTouchEvent(event)) {
             int maskedAction = event.getActionMasked();
 
@@ -137,7 +133,7 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                 // the overall sequence is ACTION_DOWN (first finger) -> ACTION_POINTER_DOWN (second finger)
                 // if makes ACTION_DOWN cannot replace below CASE, causing de-select whatever selected when try to move the selected element.
                 case MotionEvent.ACTION_UP:
-                    if (!mScrolledAfterSelected && !mDoubleTapped) {
+                    if (!mScrolledAfterSelected) {
                         if (mSynthesizing) {
                             // the pushAllChangedHistory for synthesize is handled in synthesize()
                             if (Project.instance().synthesize(mActualClickedPosition)) {
@@ -162,7 +158,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
                     mMoveSelectedElement = false;
                     break;
             }
-            mDoubleTapped = false;
         }
 
         return true;
@@ -225,8 +220,6 @@ public class CanvasView extends View implements GestureDetector.OnGestureListene
         if (!Project.instance().getElementSelector().canSelectAny(mActualClickedPosition)) {
             toCenter();
         }
-
-        mDoubleTapped = true;
         return true;
     }
 

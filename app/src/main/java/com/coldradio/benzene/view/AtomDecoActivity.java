@@ -19,6 +19,7 @@ import com.coldradio.benzene.compound.AtomDecoration;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
 import com.coldradio.benzene.compound.CompoundInspector;
+import com.coldradio.benzene.project.ElementSelector;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.AppEnv;
@@ -37,7 +38,9 @@ public class AtomDecoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.atom_deco_main);
 
-        mSelectedAtom = Project.instance().getElementSelector().getSelectedAtom();
+        ElementSelector elementSelector = Project.instance().getElementSelector();
+
+        mSelectedAtom = elementSelector.getSelectedAtom();
 
         if (mSelectedAtom == null) {
             finish();
@@ -45,8 +48,8 @@ public class AtomDecoActivity extends AppCompatActivity {
             return;
         }
         mSelectedAtomDecoration = mSelectedAtom.getAtomDecoration();
-        // save the originals
-        mOrigCompound = Project.instance().getElementSelector().getSelectedCompound().copy();
+        // save the originals. when copied, the AID is reset and synchronized between compounds
+        mOrigCompound = elementSelector.getSelectedCompound().copy();
 
         setInitialAtomConfiguration();
 
@@ -179,7 +182,11 @@ public class AtomDecoActivity extends AppCompatActivity {
         findViewById(R.id.atom_deco_btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int aid = mSelectedAtom.getAID();
+
                 Project.instance().replaceCompound(mOrigCompound.getID(), mOrigCompound);
+                // reselect the Atom since replacement will mis-point the selected atom
+                Project.instance().getElementSelector().selectAtom(mOrigCompound, mOrigCompound.getAtom(aid));
                 finish();
             }
         });

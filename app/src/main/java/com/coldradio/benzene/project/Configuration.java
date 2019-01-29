@@ -14,7 +14,7 @@ public class Configuration {
     public static char ATOM_MARKER = '*';
     public static float SUBSCRIPT_SIZE_RATIO = 0.7f;
     public static float ELECTRON_RADIUS = 4f;
-    public static float CHARGE_CIRCLE_RADIUS = 10f;
+    public static float CHARGE_CIRCLE_RADIUS = 15f;
     public static int SELECTED_ATOM_BG_CIRCLE_RADIUS = 10;
     public static int MAX_HISTORY_LIST = 50;
     public static Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.PNG;

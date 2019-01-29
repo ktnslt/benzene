@@ -43,7 +43,7 @@ public class AppEnv {
         }
     }
 
-    public void terminate() {
+    public void saveState() {
         SharedPreferences.Editor editor = mApplicationContext.getSharedPreferences("BenzenePreference", Context.MODE_PRIVATE).edit();
 
         mPreferenceManager.save(editor);
