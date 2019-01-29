@@ -110,4 +110,11 @@ public class TextUtil {
         }
         return new ArrayList<>(Arrays.asList(text.split(delimiter)));
     }
+
+    public static String resizeString(String text, int maxLen) {
+        if (text.length() > maxLen) {
+            return text.substring(0, maxLen);
+        }
+        return text;
+    }
 }

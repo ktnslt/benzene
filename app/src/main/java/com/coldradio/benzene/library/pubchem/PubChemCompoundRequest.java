@@ -37,12 +37,11 @@ public class PubChemCompoundRequest extends Request<List<Compound>> {
 
             Compound rawCompound = PubChemCompoundFactory.create(compound_json);
             // to do alignCenter(), the compound shall be large enough. This is why zoomToStandard shall be called first
-            rawCompound = CompoundArranger.alignCenter(CompoundArranger.zoomToStandard(rawCompound, 1), ScreenInfo.instance().centerPoint());
+            rawCompound = CompoundArranger.alignCenter(rawCompound, ScreenInfo.instance().centerPoint());
             List<Compound> compounds = CompoundInspector.split(rawCompound);
 
             for (Compound compound : compounds) {
                 RuleSet.instance().apply(compound);
-                CompoundArranger.zoomToStandard(compound, 1);
             }
 
             return Response.success(compounds, HttpHeaderParser.parseCacheHeaders(response));

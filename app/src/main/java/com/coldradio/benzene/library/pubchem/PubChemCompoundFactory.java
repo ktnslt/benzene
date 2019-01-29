@@ -5,6 +5,7 @@ import android.graphics.PointF;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Compound;
 import com.coldradio.benzene.compound.CompoundArranger;
+import com.coldradio.benzene.project.Configuration;
 
 public class PubChemCompoundFactory {
     private static AtomicNumber[] toAtomicNumber(int[] atomicNumberInts) {
@@ -49,6 +50,7 @@ public class PubChemCompoundFactory {
             compound.getAtom(coord.aid[ii]).setPoint(new PointF(xy.x[ii], xy.y[ii]));
         }
 
+        CompoundArranger.zoom(compound, Configuration.PUBCHEM_ZOOM_RATIO);
         return compound;
     }
 }

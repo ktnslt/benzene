@@ -8,21 +8,43 @@ import com.coldradio.benzene.util.MathConstant;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CompoundArranger {
     private static float atomDistance(Compound compound) {
-        if (compound.size() == 1) {
+        if (compound.size() <= 1) {
             return Configuration.BOND_LENGTH;
+        } else if (compound.size() == 2) {
+            return Geometry.distanceFromPointToPoint(compound.getAtoms().get(0).getPoint(), compound.getAtoms().get(1).getPoint());
         } else {
-            Atom a1 = CompoundInspector.anySkeletonAtom(compound);
+            final List<Float> bondLengths = new ArrayList<>();
 
-            if (a1 != null) {
-                Atom a2 = a1.getBonds().get(0).getBoundAtom();
+            TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
+                @Override
+                public boolean visit(Atom a1, Atom a2, Object... args) {
+                    if (CompoundInspector.isSkeletonAtom(a1) && CompoundInspector.isSkeletonAtom(a2)) {
+                        bondLengths.add(Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint()));
+                    }
+                    return false;
+                }
+            }, compound);
 
-                return Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint());
-            } else {
+            if (bondLengths.size() == 0) {
                 return Configuration.BOND_LENGTH;
+            } else if (bondLengths.size() == 1) {
+                return bondLengths.get(0);
+            } else {
+                Collections.sort(bondLengths);
+                float sum = 0;
+                int num = 0;
+                for (int ii = bondLengths.size() / 3; ii < bondLengths.size() * 2 / 3; ii++) {
+                    // only counts []. 1 [2] 3. 1 [2 3] 4. 1 [2 3] 4 5
+                    sum += bondLengths.get(ii);
+                    num++;
+                }
+                return sum / num;
             }
         }
     }
@@ -61,12 +83,6 @@ public class CompoundArranger {
                 atom.setPoint(Geometry.zoom(point.x, point.y, center, ratio));
             }
         }
-        return compound;
-    }
-
-    public static Compound zoomToStandard(Compound compound, float ratio) {
-        zoom(compound, Configuration.BOND_LENGTH / atomDistance(compound) * ratio);
-
         return compound;
     }
 

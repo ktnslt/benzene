@@ -58,6 +58,8 @@ class PubChemPropertyRequest extends PubChemRequest<CompoundProperty_JSON> {
 
             // in case of cid search, the compound normal name cannot be defined. use IUPACName instead.
             prop.Name = (mCamelName == null ? prop.IUPACName : mCamelName);
+            prop.Name = TextUtil.resizeString(prop.Name, 50);
+
             requestPNG(prop.CID);
 
             return Response.success(compoundProp, HttpHeaderParser.parseCacheHeaders(response));
