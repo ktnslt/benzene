@@ -17,9 +17,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="CanvasToolBarStyle" parent="Theme.AppCompat">
+    <style name="AppTheme.CanvasToolBarStyle" parent="Theme.AppCompat">
+        <item name="colorPrimary">#F6F6F6</item>
+        <item name="colorPrimaryDark">#999999</item>
         <item name="android:textColorPrimary">@android:color/black</item>
-        <item name="actionMenuTextColor">#717171</item>
+        <item name="actionMenuTextColor">#CCCCCC</item>
         <item name="colorControlNormal">#717171</item>
     </style>
 

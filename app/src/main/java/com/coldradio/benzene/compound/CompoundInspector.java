@@ -237,4 +237,14 @@ public class CompoundInspector {
         }
         return skeletonAtom;
     }
+
+    public static boolean isRing(final Atom from, Atom to) {
+        // test whether there exists bonds 'from' -> 'to' ->->-> 'from
+        return null != TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitorWithDistance() {
+            @Override
+            public boolean visit(Atom atom, int distance, Object... args) {
+                return atom == from && distance != 1;
+            }
+        }, to);
+    }
 }

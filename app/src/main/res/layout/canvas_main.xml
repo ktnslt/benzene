@@ -12,14 +12,13 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.CanvasToolBarStyle">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/canvas_top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F6F6F6"
-            app:theme="@style/CanvasToolBarStyle"
+            app:theme="@style/AppTheme.CanvasToolBarStyle"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextAppearance="@style/Toolbar.TitleText" />
     </android.support.design.widget.AppBarLayout>
@@ -28,14 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.CanvasToolBarStyle">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/canvas_bottom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            app:theme="@style/CanvasToolBarStyle"
+            app:theme="@style/AppTheme.CanvasToolBarStyle"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
 

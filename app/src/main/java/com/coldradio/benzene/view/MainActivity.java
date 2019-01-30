@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dialog.setOkListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String inputText = dialog.getInputText();
+                    String inputText = dialog.getInputText().trim();
 
-                    if (inputText != null && !inputText.isEmpty()) {
+                    if (!inputText.isEmpty()) {
                         ProjectFileManager.instance().setFilter(new StringSearchFilter<ProjectFile>(inputText));
                         dialog.dismiss();
                         mProjectViewAdapter.notifyDataSetChanged();

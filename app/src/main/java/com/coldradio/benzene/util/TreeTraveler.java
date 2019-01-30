@@ -16,6 +16,10 @@ public class TreeTraveler {
         boolean visit(Atom atom, Object... args);
     }
 
+    public interface IAtomVisitorWithDistance {
+        boolean visit(Atom atom, int distance, Object... args);
+    }
+
     private static Edge doEdgeRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
         for (Bond bond : parent.getBonds()) {
             /* TODO: since points are used as a key, if the two atoms have exact the same point, this DO NOT work properly, though it is quite rare.
@@ -52,6 +56,27 @@ public class TreeTraveler {
                 visitedAtom.add(next);
 
                 Atom ret = doAtomRecursive(next, atomVisitor, visitedAtom, args);
+
+                if (ret != null) {
+                    return ret;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static Atom doAtomRecursive(Atom atom, IAtomVisitorWithDistance atomVisitor, int distance, HashSet<Atom> visitedAtom, Object[] args) {
+        for (Bond bond : atom.getBonds()) {
+            Atom next = bond.getBoundAtom();
+
+            if (!visitedAtom.contains(next)) {
+                if (atomVisitor.visit(next, distance, args)) {
+                    return next;
+                }
+                visitedAtom.add(next);
+
+                Atom ret = doAtomRecursive(next, atomVisitor, distance + 1, visitedAtom, args);
 
                 if (ret != null) {
                     return ret;
@@ -105,6 +130,17 @@ public class TreeTraveler {
 
         visitedAtom.add(atom);
         return doAtomRecursive(atom, atomVisitor, visitedAtom, args);
+    }
+
+    public static Atom returnFirstAtom(IAtomVisitorWithDistance atomVisitor, Atom atom, Object... args) {
+        if (atomVisitor.visit(atom, 0, args)) {
+            return atom;
+        }
+
+        HashSet<Atom> visitedAtom = new HashSet<>();
+
+        visitedAtom.add(atom);
+        return doAtomRecursive(atom, atomVisitor, 1, visitedAtom, args);
     }
 
     public static void travelIfTrue(IAtomVisitor atomVisitor, Atom atom, Object... args) {
