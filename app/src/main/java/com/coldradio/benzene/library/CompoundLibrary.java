@@ -104,11 +104,10 @@ public class CompoundLibrary {
 
     public void search(String keyword) {
         clearAll();
-
-        mSearchKeyword = keyword;
+        mSearchKeyword = keyword.trim();
 
         for (ICompoundSearch search : mCompoundSearchers) {
-            List<CompoundIndex> results = search.search(ICompoundSearch.KeywordType.TEXT, keyword);
+            List<CompoundIndex> results = search.search(ICompoundSearch.KeywordType.TEXT, mSearchKeyword);
 
             if (results != null) {
                 // in case that results are ready immediately
@@ -118,7 +117,7 @@ public class CompoundLibrary {
                 notifySearchResultListener(results, posStart, results.size());
             }
         }
-        mSearchHistory.add(keyword);
+        mSearchHistory.add(mSearchKeyword);
     }
 
     public String[] getSearchHistory() {

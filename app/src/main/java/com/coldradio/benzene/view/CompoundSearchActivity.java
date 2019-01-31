@@ -96,7 +96,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        String keyword = v.getText().toString();
+        String keyword = v.getText().toString().trim();
 
         if (!keyword.isEmpty()) {
             // clear the view. this cannot be done in CompoundLibrary.search() since it doesn't have reference to mAdapter

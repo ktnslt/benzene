@@ -13,6 +13,7 @@ import com.coldradio.benzene.util.Notifier;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
     private Response.Listener<CompoundProperty_JSON> mCompoundPropertyListener;
@@ -30,10 +31,10 @@ class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
         AppEnv.instance().addToNetworkQueue(request);
     }
 
-    PubChemKeywordRequest(String keyword, final Response.Listener<CompoundProperty_JSON> propertyListener, Response.ErrorListener propertyErrorListener) {
+    PubChemKeywordRequest(String keyword, final Response.Listener<CompoundProperty_JSON> propertyListener, Response.ErrorListener propertyErrorListener) throws UnsupportedEncodingException {
         // Notice that errorListener is called for AutoComplete request not for the individual CompoundProperty request
         super(Method.GET,
-                "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/" + keyword + "/json?limit=" + Configuration.MAX_RESPONSE_FOR_SEARCH,
+                "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/" + URLEncoder.encode(keyword, Configuration.URL_ENCODING).replace("+", "%20") + "/json?limit=" + Configuration.MAX_RESPONSE_FOR_SEARCH,
                 propertyErrorListener);
 
         mCompoundPropertyListener = propertyListener;

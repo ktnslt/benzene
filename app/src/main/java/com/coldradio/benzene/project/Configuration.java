@@ -24,4 +24,5 @@ public class Configuration {
     public static int REQUEST_IMAGE_QUALITY = 0;    // 0 for small, 1 for medium, 2 for large
     public static int MAX_SEARCH_HISTORY = 20;
     public static int PUBCHEM_ZOOM_RATIO = 130;
+    public static String URL_ENCODING = "UTF-8";
 }

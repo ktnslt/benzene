@@ -10,18 +10,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageRequest;
 import com.coldradio.benzene.library.CompoundLibrary;
+import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.TextUtil;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 class PubChemPropertyRequest extends PubChemRequest<CompoundProperty_JSON> {
     private String mCamelName;
 
-    PubChemPropertyRequest(String name, Response.Listener<CompoundProperty_JSON> listener, Response.ErrorListener errorListener) {
+    PubChemPropertyRequest(String name, Response.Listener<CompoundProperty_JSON> listener, Response.ErrorListener errorListener) throws UnsupportedEncodingException {
         // at this point, we don't know the cid. hence request with name
-        super("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + name + "/property/MolecularFormula,MolecularWeight,IUPACName/JSON",
+        super("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + URLEncoder.encode(name, Configuration.URL_ENCODING).replace("+", "%20") + "/property/MolecularFormula,MolecularWeight,IUPACName/JSON",
                 CompoundProperty_JSON.class, listener, errorListener);
         mCamelName = TextUtil.toCamelStyle(name);
     }
