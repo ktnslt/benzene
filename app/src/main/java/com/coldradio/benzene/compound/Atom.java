@@ -15,15 +15,6 @@ public class Atom {
     private String mArbitraryName;
     private AtomDecoration mAtomDecoration = new AtomDecoration();
 
-    private Bond findBond(Atom atom) {
-        for (Bond bond : mBonds) {
-            if (bond.hasBondTo(atom)) {
-                return bond;
-            }
-        }
-        return null;
-    }
-
     public Atom(int aid, AtomicNumber atomicNumber) {
         mAID = aid;
         setAtomicNumber(atomicNumber);
@@ -194,6 +185,15 @@ public class Atom {
         } else if (ele != AtomicNumber.H) {
             mAtomDecoration.setShowElementName(true);
         }
+    }
+
+    public Bond findBond(Atom atom) {
+        for (Bond bond : mBonds) {
+            if (bond.hasBondTo(atom)) {
+                return bond;
+            }
+        }
+        return null;
     }
 
     public Bond.BondType getBondType(Atom atom) {

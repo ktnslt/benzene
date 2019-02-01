@@ -15,39 +15,17 @@ import java.util.List;
 public class CompoundArranger {
     private static PointF msTempPoint = new PointF();
 
-    private static float atomDistance(Compound compound) {
-        if (compound.size() <= 1) {
-            return Configuration.BOND_LENGTH;
-        } else if (compound.size() == 2) {
-            return Geometry.distanceFromPointToPoint(compound.getAtoms().get(0).getPoint(), compound.getAtoms().get(1).getPoint());
-        } else {
-            final List<Float> bondLengths = new ArrayList<>();
+    private static PointF hydrogenPointOfEnd(PointF center, PointF b_atom, int h_num, float degree) {
+        PointF zoomed_b_atom = Geometry.zoom(b_atom, center, Configuration.H_BOND_LENGTH_RATIO);
 
-            TreeTraveler.returnFirstEdge(new TreeTraveler.IEdgeVisitor() {
-                @Override
-                public boolean visit(Atom a1, Atom a2, Object... args) {
-                    if (CompoundInspector.isSkeletonAtom(a1) && CompoundInspector.isSkeletonAtom(a2)) {
-                        bondLengths.add(Geometry.distanceFromPointToPoint(a1.getPoint(), a2.getPoint()));
-                    }
-                    return false;
-                }
-            }, compound);
+        return Geometry.cwRotate(zoomed_b_atom, center, degree * h_num);
+    }
 
-            if (bondLengths.size() == 0) {
-                return Configuration.BOND_LENGTH;
-            } else if (bondLengths.size() == 1) {
-                return bondLengths.get(0);
-            } else {
-                Collections.sort(bondLengths);
-                float sum = 0;
-                int num = 0;
-                for (int ii = bondLengths.size() / 3; ii < bondLengths.size() * 2 / 3; ii++) {
-                    // only counts []. 1 [2] 3. 1 [2 3] 4. 1 [2 3] 4 5
-                    sum += bondLengths.get(ii);
-                    num++;
-                }
-                return sum / num;
-            }
+    private static void setHydrogenPoint(List<Atom> hydrogens, PointF center, PointF rotationStart, float degree) {
+        int hNum = 1;
+
+        for (Atom h : hydrogens) {
+            h.setPoint(hydrogenPointOfEnd(center, rotationStart, hNum++, degree));
         }
     }
 
@@ -126,9 +104,7 @@ public class CompoundArranger {
     }
 
     public static PointF hydrogenPointOfEnd(PointF a_atom, PointF b_atom, int h_num) {
-        PointF zoomed_b_atom = Geometry.zoom(b_atom, a_atom, Configuration.H_BOND_LENGTH_RATIO);
-
-        return Geometry.cwRotate(zoomed_b_atom, a_atom, MathConstant.RADIAN_90 * h_num);
+        return hydrogenPointOfEnd(a_atom, b_atom, h_num, MathConstant.RADIAN_90);
     }
 
     public static PointF hydrogenPointOfBentForm(PointF a_atom, PointF b1_atom, PointF b2_atom, int h_num) {
@@ -163,6 +139,7 @@ public class CompoundArranger {
     public static void adjustHydrogenPosition(Atom atom) {
         int boundSkeleton = CompoundInspector.numberOfSkeletonAtoms(atom);
         List<Atom> hydrogens = CompoundInspector.allHydrogens(atom);
+        boolean notAdjusted = false;
 
         if (boundSkeleton == 2) {
             // Bent form
@@ -180,20 +157,27 @@ public class CompoundArranger {
             }
         } else if (boundSkeleton == 0) {
             // CH4
-            int hNum = 1;
             PointF initPoint = new PointF(atom.getPoint().x, atom.getPoint().y + Configuration.BOND_LENGTH);
 
-            for (Atom h : hydrogens) {
-                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), initPoint, hNum++));
+            setHydrogenPoint(hydrogens, atom.getPoint(), initPoint, MathConstant.RADIAN_90);
+        } else if (boundSkeleton == 1) {
+            Atom boundAtom = atom.getSkeletonAtom();
+            Bond bond = atom.findBond(boundAtom);
+
+            if (bond.getBondType() == Bond.BondType.TRIPLE && hydrogens.size() == 1) {
+                setHydrogenPoint(hydrogens, atom.getPoint(), boundAtom.getPoint(), MathConstant.RADIAN_180);
+            } else if (hydrogens.size() <= 2) {
+                setHydrogenPoint(hydrogens, atom.getPoint(), boundAtom.getPoint(), MathConstant.RADIAN_120);
+            } else {
+                notAdjusted = true;
             }
         } else {
-            // END of chain case, flat triangle, etc.
-            PointF b_atom = atom.getSkeletonAtom().getPoint();
-            int hNum = 1;
+            notAdjusted = true;
+        }
 
-            for (Atom h : hydrogens) {
-                h.setPoint(hydrogenPointOfEnd(atom.getPoint(), b_atom, hNum++));
-            }
+        if (notAdjusted) {
+            // apply default. number of skeleton atom is 1, 3, etc
+            setHydrogenPoint(hydrogens, atom.getPoint(), atom.getSkeletonAtom().getPoint(), MathConstant.RADIAN_90);
         }
     }
 
@@ -245,6 +229,7 @@ public class CompoundArranger {
     }
 
     public static void flipHydrogen(Atom atom) {
+        // TODO: there are exceptional cases; e.g., if NH2 would have one H in right, the other in left, this function has no effects. one H and three Hs are OK
         PointF l1 = atom.getPoint();
         PointF l2 = msTempPoint;
 
