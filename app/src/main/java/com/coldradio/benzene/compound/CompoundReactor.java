@@ -159,6 +159,7 @@ public class CompoundReactor {
         }
 
         CompoundArranger.adjustHydrogenPosition(atom);
+        compound.positionModified();
     }
 
     public static void saturateWithHydrogen(Compound compound, AtomicNumber an, int maxBounds) {

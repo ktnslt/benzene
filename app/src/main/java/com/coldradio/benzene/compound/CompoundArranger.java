@@ -103,8 +103,8 @@ public class CompoundArranger {
         return compound;
     }
 
-    public static PointF hydrogenPointOfEnd(PointF a_atom, PointF b_atom, int h_num) {
-        return hydrogenPointOfEnd(a_atom, b_atom, h_num, MathConstant.RADIAN_90);
+    public static PointF hydrogenPointOfEnd(PointF center, PointF rotationStart, int h_num) {
+        return hydrogenPointOfEnd(center, rotationStart, h_num, MathConstant.RADIAN_90);
     }
 
     public static PointF hydrogenPointOfBentForm(PointF a_atom, PointF b1_atom, PointF b2_atom, int h_num) {
