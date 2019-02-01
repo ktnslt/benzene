@@ -9,9 +9,9 @@ public class CompoundInspector {
     private static Compound splitOne(Compound compound) {
         final Compound splitCompound = new Compound();
 
-        TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
+        TreeTraveler.returnFirstAtom(new TreeTraveler.AtomVisitorAlwaysTravelDown() {
             @Override
-            public boolean visit(Atom atom, Object... args) {
+            public boolean visit(Atom atom, int distanceFromRoot, Object... args) {
                 splitCompound.addAtom(atom);
                 return false;
             }
@@ -219,7 +219,7 @@ public class CompoundInspector {
         return right >= 0;
     }
 
-    public static Atom returnSkeletonAtomIfOneSkeletonWithDoubleBond(Atom atom) {
+    public static Atom returnSkeletonAtomIfOneSkeletonWithBondType(Atom atom) {
         int skeletonBondNumber = 0;
         Atom skeletonAtom = null;
 
@@ -238,12 +238,17 @@ public class CompoundInspector {
         return skeletonAtom;
     }
 
-    public static boolean isRing(final Atom from, Atom to) {
-        // test whether there exists bonds 'from' -> 'to' ->->-> 'from
-        return null != TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitorWithDistance() {
+    public static boolean pathExistsExceptDirect(final Atom from, Atom to) {
+        // test whether there exists bonds 'to' ->->-> 'from
+        return null != TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
             @Override
-            public boolean visit(Atom atom, int distance, Object... args) {
-                return atom == from && distance != 1;
+            public boolean visit(Atom atom, int distanceFromRoot, Object... args) {
+                return atom == from && distanceFromRoot > 1;
+            }
+
+            @Override
+            public boolean travelDown(Atom atom, int distanceFromRoot, Object... args) {
+                return atom != from;
             }
         }, to);
     }

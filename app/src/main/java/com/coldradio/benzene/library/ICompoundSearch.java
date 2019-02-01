@@ -7,5 +7,5 @@ public interface ICompoundSearch {
         TEXT, SMILES, CID
     }
 
-    List<CompoundIndex> search(KeywordType keywordType, String keyword);
+    List<CompoundIndex> search(int searchID, KeywordType keywordType, String keyword);
 }

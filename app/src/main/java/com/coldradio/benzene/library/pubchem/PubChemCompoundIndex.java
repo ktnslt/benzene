@@ -12,8 +12,8 @@ import com.coldradio.benzene.util.Notifier;
 import java.util.List;
 
 public class PubChemCompoundIndex extends CompoundIndex {
-    PubChemCompoundIndex(String searchKeyword, String title, int cid, String mf, float mw, String IUPAC) {
-        super(searchKeyword, title, cid, mf, mw, IUPAC);
+    PubChemCompoundIndex(int searchID, String title, int cid, String mf, float mw, String IUPAC) {
+        super(searchID, title, cid, mf, mw, IUPAC);
     }
 
     @Override

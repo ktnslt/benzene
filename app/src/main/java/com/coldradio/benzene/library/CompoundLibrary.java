@@ -27,6 +27,7 @@ public class CompoundLibrary {
     private int mPropertyFailedCompounds;
     private String mSearchKeyword;
     private SearchHistory mSearchHistory = new SearchHistory();
+    private int mSearchID = 0;
     // TODO not sure about below maybe there is something better
     private TextView mCompoundSearchProgressBar;
 
@@ -105,9 +106,10 @@ public class CompoundLibrary {
     public void search(String keyword) {
         clearAll();
         mSearchKeyword = keyword.trim();
+        mSearchID++;
 
         for (ICompoundSearch search : mCompoundSearchers) {
-            List<CompoundIndex> results = search.search(ICompoundSearch.KeywordType.TEXT, mSearchKeyword);
+            List<CompoundIndex> results = search.search(mSearchID, ICompoundSearch.KeywordType.TEXT, mSearchKeyword);
 
             if (results != null) {
                 // in case that results are ready immediately
@@ -129,7 +131,7 @@ public class CompoundLibrary {
     }
 
     public void arrived(CompoundIndex compoundIndex) {
-        if (compoundIndex != null && compoundIndex.searchKeyword.equals(mSearchKeyword)) {
+        if (compoundIndex != null && compoundIndex.searchID == mSearchID) {
             // search -> search with new keyword in the middle of the previous search.
             // in this case, the previous results are still coming. keyword comparison is necessary
             if (compoundIndex.cid >= 0) {
@@ -187,6 +189,7 @@ public class CompoundLibrary {
         mTotalSearchedCompounds = 0;
         mPropertySuccessCompounds = 0;
         mPropertyFailedCompounds = 0;
+        AppEnv.instance().cancelAllNetworkRequest();
         updateProgressBar();
     }
 

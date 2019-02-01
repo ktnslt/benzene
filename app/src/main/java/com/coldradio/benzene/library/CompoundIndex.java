@@ -9,7 +9,7 @@ import com.coldradio.benzene.compound.Compound;
 import java.util.List;
 
 public abstract class CompoundIndex {
-    final public String searchKeyword;
+    final public int searchID;
     final public String title;
     final public int cid;
     final public String mf;
@@ -18,8 +18,8 @@ public abstract class CompoundIndex {
     private Bitmap bitmap;
     public Spanned description;
 
-    public CompoundIndex(String searchKeyword, String title, int cid, String mf, float mw, String IUPAC) {
-        this.searchKeyword = searchKeyword;
+    public CompoundIndex(int searchID, String title, int cid, String mf, float mw, String IUPAC) {
+        this.searchID = searchID;
         this.title = title;
         this.cid = cid;
         this.mf = mf;

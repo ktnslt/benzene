@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompoundArranger {
+    private static PointF msTempPoint = new PointF();
+
     private static float atomDistance(Compound compound) {
         if (compound.size() <= 1) {
             return Configuration.BOND_LENGTH;
@@ -107,9 +109,12 @@ public class CompoundArranger {
     }
 
     public static Compound rotateByCenterOfRectangle(Compound compound, float angle) {
-        for (Atom atom : compound.getAtoms())
+        for (Atom atom : compound.getAtoms()) {
             atom.setPoint(Geometry.cwRotate(atom.getPoint(), compound.centerOfRectangle(), angle));
-
+        }
+        // here putAllHydrogenOppositeToSkeleton() cannot be called.
+        // basic idea was to align hydrogens for every rotation since rotation can change the alignment (all hydrogens are opposite to the skeleton atoms)
+        // if putAllHydrogenOppositeToSkeleton(), the position of H merges to each other. that is the problem
         return compound;
     }
 
@@ -222,15 +227,16 @@ public class CompoundArranger {
             final PointF l1 = fromAtom.getPoint(), l2 = edgeAtom.getPoint();
 
             // fromAtom and edgeAtom shall have a bond. All atoms linked to fromAtom will be flipped here
-            TreeTraveler.travelIfTrue(new TreeTraveler.IAtomVisitor() {
+            TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
                 @Override
-                public boolean visit(Atom atom, Object... args) {
-                    if (atom != edgeAtom) {
-                        atom.setPoint(Geometry.symmetricToLine(atom.getPoint(), l1, l2));
-                        return true;
-                    } else {
-                        return false;
-                    }
+                public boolean visit(Atom atom, int distanceFromRoot, Object... args) {
+                    atom.setPoint(Geometry.symmetricToLine(atom.getPoint(), l1, l2));
+                    return false;
+                }
+
+                @Override
+                public boolean travelDown(Atom atom, int distanceFromRoot, Object... args) {
+                    return atom != edgeAtom;
                 }
             }, fromAtom);
 
@@ -239,17 +245,45 @@ public class CompoundArranger {
     }
 
     public static void flipHydrogen(Atom atom) {
-        PointF center = atom.getPoint();
+        PointF l1 = atom.getPoint();
+        PointF l2 = msTempPoint;
+
+        l2.set(l1);
+        l2.offset(0, 100);
 
         for (Bond bond : atom.getBonds()) {
             Atom h = bond.getBoundAtom();
 
-            if (h.getPoint().x == atom.getPoint().x) {
-                // in equal case, this h counts for right side. make it + 0.01f since it is flipped to other side by symmetricToPoint();
-                h.getPoint().x += 0.001f;
-            }
             if (h.getAtomicNumber() == AtomicNumber.H) {
-                h.setPoint(Geometry.symmetricToPoint(h.getPoint(), center));
+                h.setPoint(Geometry.symmetricToLine(h.getPoint(), l1, l2));
+            }
+        }
+    }
+
+    public static void putAllHydrogenOppositeToSkeleton(Atom atom) {
+        if (CompoundInspector.numberOfSkeletonAtoms(atom) == 1) {
+            Atom boundSkeletonAtom = atom.getSkeletonAtom();
+
+            if (boundSkeletonAtom != null) {
+                PointF allHShallBeOppositeToThisPoint = boundSkeletonAtom.getPoint();
+                PointF l1 = atom.getPoint();
+                PointF l2 = msTempPoint;
+
+                l2.set(l1);
+                l2.offset(0, -100);
+
+                for (Bond bond : atom.getBonds()) {
+                    Atom h = bond.getBoundAtom();
+
+                    if (h.getAtomicNumber() == AtomicNumber.H) {
+                        if (h.getPoint().x == atom.getPoint().x) {
+                            h.getPoint().x += 0.001f;
+                        }
+                        if (Geometry.sameSideOfLine(allHShallBeOppositeToThisPoint, h.getPoint(), l1, l2)) {
+                            h.setPoint(Geometry.symmetricToLine(h.getPoint(), l1, l2));
+                        }
+                    }
+                }
             }
         }
     }

@@ -143,7 +143,7 @@ public class ElementSelector {
         mRotationPivotPoints[0].set(compound.centerOfRectangle());
         mRotationPivotPoints[0].offset(0, -200);
 
-        mRotationPivotPoints[1].set(mRotationPivotPoints[0]);
+        mRotationPivotPoints[1].set(compound.centerOfRectangle());
         mRotationPivotPoints[1].offset(0, 200);
     }
 

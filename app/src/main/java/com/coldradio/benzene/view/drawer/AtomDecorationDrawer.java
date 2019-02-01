@@ -136,9 +136,9 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
 
     @Override
     public boolean draw(Compound compound, Canvas canvas, Paint paint) {
-        TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
+        TreeTraveler.returnFirstAtom(new TreeTraveler.AtomVisitorAlwaysTravelDown() {
             @Override
-            public boolean visit(Atom atom, Object... args) {
+            public boolean visit(Atom atom, int distanceFromRoot, Object... args) {
                 Canvas canvas = (Canvas) args[0];
                 Paint paint = (Paint) args[1];
                 AtomDecoration atomDecoration = atom.getAtomDecoration();

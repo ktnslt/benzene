@@ -7,7 +7,7 @@ import java.util.List;
 
 public class LocalSearch implements ICompoundSearch {
     @Override
-    public List<CompoundIndex> search(KeywordType keywordType, String keyword) {
+    public List<CompoundIndex> search(int searchID, KeywordType keywordType, String keyword) {
         return LocalCompounds.instance().search(keywordType, keyword);
     }
 }

@@ -17,28 +17,28 @@ import java.net.URLEncoder;
 
 class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
     private Response.Listener<CompoundProperty_JSON> mCompoundPropertyListener;
-    private String mKeyword;
+    private final int mSearchID;
     private int mKeywordAsCID = -1;
 
     private void requestCIDSearch(int cid) {
         PubChemPropertyRequest request = new PubChemPropertyRequest(cid, mCompoundPropertyListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                CompoundLibrary.instance().arrived(new PubChemCompoundIndex(mKeyword, null, -1, null, -1, null));
+                CompoundLibrary.instance().arrived(new PubChemCompoundIndex(mSearchID, null, -1, null, -1, null));
             }
         });
 
         AppEnv.instance().addToNetworkQueue(request);
     }
 
-    PubChemKeywordRequest(String keyword, final Response.Listener<CompoundProperty_JSON> propertyListener, Response.ErrorListener propertyErrorListener) throws UnsupportedEncodingException {
+    PubChemKeywordRequest(int searchID, String keyword, final Response.Listener<CompoundProperty_JSON> propertyListener, Response.ErrorListener propertyErrorListener) throws UnsupportedEncodingException {
         // Notice that errorListener is called for AutoComplete request not for the individual CompoundProperty request
         super(Method.GET,
                 "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/" + URLEncoder.encode(keyword, Configuration.URL_ENCODING).replace("+", "%20") + "/json?limit=" + Configuration.MAX_RESPONSE_FOR_SEARCH,
                 propertyErrorListener);
 
         mCompoundPropertyListener = propertyListener;
-        mKeyword = keyword;
+        mSearchID = searchID;
 
         // if keyword is number, try CID search
         try {
@@ -71,7 +71,7 @@ class PubChemKeywordRequest extends Request<AutoComplete_JSON> {
                     PubChemPropertyRequest request = new PubChemPropertyRequest(name, mCompoundPropertyListener, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            CompoundLibrary.instance().arrived(new PubChemCompoundIndex(mKeyword, null, -1, null, -1, null));
+                            CompoundLibrary.instance().arrived(new PubChemCompoundIndex(mSearchID, null, -1, null, -1, null));
                         }
                     });
 

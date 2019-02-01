@@ -21,8 +21,9 @@ public class RuleSet {
     public RuleSet() {
         add(new LetteringIfCompoundNotSeenRule());
         add(new LetteringIfNotCarbonRule());
-        add(new AdjustDoubleBondTypeRule());
+        add(new DoubleMiddleBondTypeRule());
         add(new HFirstWhenLetteringRule());
+        add(new PutAllHydrogenInOneSideRule());
     }
 
     public static RuleSet instance() {

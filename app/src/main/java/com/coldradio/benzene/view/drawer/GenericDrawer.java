@@ -9,6 +9,7 @@ import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomicNumber;
 import com.coldradio.benzene.compound.Bond;
 import com.coldradio.benzene.compound.Compound;
+import com.coldradio.benzene.compound.CompoundInspector;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
 import com.coldradio.benzene.project.Configuration;
@@ -88,6 +89,17 @@ public class GenericDrawer {
         return bias;
     }
 
+    private static Atom boundAtomWithRing(Atom atom, Atom edgeAtom) {
+        // Edge (atom, edgeAtom)
+        for (Bond bond : atom.getBonds()) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (that_atom != edgeAtom && CompoundInspector.isSkeletonAtom(that_atom) && CompoundInspector.pathExistsExceptDirect(atom, that_atom))
+                return that_atom;
+        }
+        return null;
+    }
+
     private static PointF centerForDoubleBond(Atom a1, Atom a2) {
         PointF a1p = a1.getPoint(), a2p = a2.getPoint();
         Atom before_a1 = a1.getSkeletonAtomExcept(a2);
@@ -101,12 +113,27 @@ public class GenericDrawer {
             return a1.getBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE ? Geometry.symmetricToLine(center, a1p, a2p) : center;
         } else {
             PointF[] centers = Geometry.regularTrianglePoint(a1p, a2p);
-            int centerBiasTo0 = 0;
-            int centerIndex;
+            int centerIndex = 0;
 
-            centerBiasTo0 += centerBias(a1, centers[0], a1p, a2p);
-            centerBiasTo0 += centerBias(a2, centers[0], a1p, a2p);
-            centerIndex = centerBiasTo0 > 0 ? 0 : 1;
+            // first prefer the center side having ring
+            Atom ringAtom = null;//boundAtomWithRing(a1, a2);
+
+            if (ringAtom != null) {
+                //centerIndex = Geometry.sameSideOfLine(ringAtom.getPoint(), centers[0], a1.getPoint(), a2.getPoint()) ? 0 : 1;
+            } else {
+                ringAtom = null;//boundAtomWithRing(a2, a1);
+
+                if (ringAtom != null) {
+                    //centerIndex = Geometry.sameSideOfLine(ringAtom.getPoint(), centers[0], a1.getPoint(), a2.getPoint()) ? 0 : 1;
+                } else {
+                    // next prefer the center side with more substituents
+                    int centerBiasTo0 = 0;
+
+                    centerBiasTo0 += centerBias(a1, centers[0], a1p, a2p);
+                    centerBiasTo0 += centerBias(a2, centers[0], a1p, a2p);
+                    centerIndex = centerBiasTo0 > 0 ? 0 : 1;
+                }
+            }
 
             if (a1.getBondType(a2) == Bond.BondType.DOUBLE_OTHER_SIDE) {
                 centerIndex = (centerIndex + 1) % 2;

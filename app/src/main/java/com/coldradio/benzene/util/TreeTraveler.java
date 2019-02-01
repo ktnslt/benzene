@@ -13,11 +13,16 @@ public class TreeTraveler {
     }
 
     public interface IAtomVisitor {
-        boolean visit(Atom atom, Object... args);
+        boolean visit(Atom atom, int distanceFromRoot, Object... args);
+        // determine whether to go further beyond atom. atom itself is called for visit() regardless of travelDown()
+        boolean travelDown(Atom atom, int distanceFromRoot, Object... args);
     }
 
-    public interface IAtomVisitorWithDistance {
-        boolean visit(Atom atom, int distance, Object... args);
+    public static abstract class AtomVisitorAlwaysTravelDown implements IAtomVisitor {
+        @Override
+        public boolean travelDown(Atom atom, int distanceFromRoot, Object... args) {
+            return true;
+        }
     }
 
     private static Edge doEdgeRecursive(Atom parent, IEdgeVisitor edgeVisitor, HashSet<String> visitedEdge, Object... args) {
@@ -45,61 +50,27 @@ public class TreeTraveler {
         return null;
     }
 
-    private static Atom doAtomRecursive(Atom atom, IAtomVisitor atomVisitor, HashSet<Atom> visitedAtom, Object[] args) {
+    private static Atom doAtomRecursive(Atom atom, IAtomVisitor atomVisitor, int distanceFromRoot, HashSet<Atom> visitedAtom, Object[] args) {
         for (Bond bond : atom.getBonds()) {
             Atom next = bond.getBoundAtom();
 
             if (!visitedAtom.contains(next)) {
-                if (atomVisitor.visit(next, args)) {
+                if (atomVisitor.visit(next, distanceFromRoot, args)) {
                     return next;
                 }
                 visitedAtom.add(next);
 
-                Atom ret = doAtomRecursive(next, atomVisitor, visitedAtom, args);
+                if (atomVisitor.travelDown(next, distanceFromRoot, args)) {
+                    Atom ret = doAtomRecursive(next, atomVisitor, distanceFromRoot + 1, visitedAtom, args);
 
-                if (ret != null) {
-                    return ret;
+                    if (ret != null) {
+                        return ret;
+                    }
                 }
             }
         }
 
         return null;
-    }
-
-    private static Atom doAtomRecursive(Atom atom, IAtomVisitorWithDistance atomVisitor, int distance, HashSet<Atom> visitedAtom, Object[] args) {
-        for (Bond bond : atom.getBonds()) {
-            Atom next = bond.getBoundAtom();
-
-            if (!visitedAtom.contains(next)) {
-                if (atomVisitor.visit(next, distance, args)) {
-                    return next;
-                }
-                visitedAtom.add(next);
-
-                Atom ret = doAtomRecursive(next, atomVisitor, distance + 1, visitedAtom, args);
-
-                if (ret != null) {
-                    return ret;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static void travelIfTrueRecursive(Atom atom, IAtomVisitor atomVisitor, HashSet<Atom> visitedAtom, Object[] args) {
-        for (Bond bond : atom.getBonds()) {
-            Atom next = bond.getBoundAtom();
-
-            if (!visitedAtom.contains(next)) {
-                // add shall be done before the recursive call
-                visitedAtom.add(next);
-
-                if (atomVisitor.visit(next, args)) {
-                    travelIfTrueRecursive(next, atomVisitor, visitedAtom, args);
-                }
-            }
-        }
     }
 
     public static Edge returnFirstEdge(IEdgeVisitor edgeVisitor, Compound compound, Object... args) {
@@ -114,7 +85,7 @@ public class TreeTraveler {
 
     public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Compound compound, Object... args) {
         for (Atom atom : compound.getAtoms()) {
-            if (atomVisitor.visit(atom, args)) {
+            if (atomVisitor.visit(atom, -1, args)) {
                 return atom;
             }
         }
@@ -122,33 +93,16 @@ public class TreeTraveler {
     }
 
     public static Atom returnFirstAtom(IAtomVisitor atomVisitor, Atom atom, Object... args) {
-        if (atomVisitor.visit(atom, args)) {
-            return atom;
-        }
-
-        HashSet<Atom> visitedAtom = new HashSet<>();
-
-        visitedAtom.add(atom);
-        return doAtomRecursive(atom, atomVisitor, visitedAtom, args);
-    }
-
-    public static Atom returnFirstAtom(IAtomVisitorWithDistance atomVisitor, Atom atom, Object... args) {
         if (atomVisitor.visit(atom, 0, args)) {
             return atom;
         }
 
-        HashSet<Atom> visitedAtom = new HashSet<>();
+        if (atomVisitor.travelDown(atom, 0, args)) {
+            HashSet<Atom> visitedAtom = new HashSet<>();
 
-        visitedAtom.add(atom);
-        return doAtomRecursive(atom, atomVisitor, 1, visitedAtom, args);
-    }
-
-    public static void travelIfTrue(IAtomVisitor atomVisitor, Atom atom, Object... args) {
-        // this does NOT do for the atom itself
-        // if atomVisitor() returns false, it will not traverse down into the bound atoms.
-        HashSet<Atom> visitedAtom = new HashSet<>();
-
-        visitedAtom.add(atom);
-        travelIfTrueRecursive(atom, atomVisitor, visitedAtom, args);
+            visitedAtom.add(atom);
+            return doAtomRecursive(atom, atomVisitor, 1, visitedAtom, args);
+        }
+        return null;
     }
 }
