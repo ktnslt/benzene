@@ -7,8 +7,8 @@ This is an organic chemical compound designer running on Android. There already 
 * Easy to use.
 
 ## Documentations
+* [Full Menu Description](FullMenuDescription.md)
 * [Benzene Tree Tutorial](BenzeneTreeTutorial.md)
-* Full Feature Description
 
 ## Version History
 * Version 1.0.0 at some day of Feb 2019.
