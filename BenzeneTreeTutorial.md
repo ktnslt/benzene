@@ -3,6 +3,11 @@
 * [Go Back to Help Root](README.md) 
 * [Full Menu Description](FullMenuDescription.md) 
 
+## Contents
+
+* [Design aspirin from cyclohexane](#design-aspirin-from-cyclohexane)
+* [Other way for aspirin](#Other-way-for-aspirin)
+
 ## Design aspirin from cyclohexane
 
 * Click the Red PLUS button for creating a new project
@@ -50,7 +55,7 @@
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin14.png" height="300">
 
-## Other ways for Aspirin
+## Other way for aspirin
 
 * Sometimes, you may want to letter the COOH functional group. Something like below.
 
