@@ -4,5 +4,6 @@
 
 ## Design aspirin from cyclohexane
 * Touch the Red(+) button for creating a new project
+![alt text]()
 
 * 
