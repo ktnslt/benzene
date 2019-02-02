@@ -7,9 +7,11 @@ This is an organic chemical compound designer running on Android. There already 
 * Easy to use.
 
 ## Documentations
-* Benzene Tree Tutorial
+* [Benzene Tree Tutorial](BenzeneTreeTutorial.md)
 * Full Feature Description
 
 ## Version History
 * Version 1.0.0 at some day of Feb 2019.
 
+## Used Open Source or Libraries
+* [GSon](https://github.com/google/gson#download)
