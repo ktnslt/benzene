@@ -47,8 +47,10 @@ public class DrawingLib {
         return myBounds;
     }
 
+    private static Rect charBounds = new Rect();
     private static void drawText(String text, PointF centerOfFirstLetter, boolean toRight, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
-        Rect charBounds = DrawingLib.atomEnclosingRect(centerOfFirstLetter);
+        charBounds = DrawingLib.atomEnclosingRect("C", centerOfFirstLetter, charBounds);
+        int topOrigTextLine = charBounds.top;
 
         if (toRight) {
             // 2. offset to left by the character's width
@@ -60,6 +62,10 @@ public class DrawingLib {
         for (int ii = (toRight ? 0 : text.length() - 1); ii < text.length() && ii >= 0; ii = ii + (toRight ? 1 : -1)) {
             if (Character.isDigit(text.charAt(ii))) {
                 charBounds = drawTextSubscript(text, ii, ii + 1, charBounds, toRight, bgOn, bgColor, canvas, paint);
+                charBounds.top = topOrigTextLine;
+            } else if (text.charAt(ii) == '+' || text.charAt(ii) == '-') {
+                charBounds = drawTextSuperscript(text, ii, ii + 1, charBounds, toRight, bgOn, bgColor, canvas, paint);
+                charBounds.top = topOrigTextLine;
             } else {
                 charBounds = drawChar(text, ii, ii + 1, charBounds, toRight, bgOn, bgColor, canvas, paint);
             }
@@ -68,12 +74,13 @@ public class DrawingLib {
         }
     }
 
-    public static Rect atomEnclosingRect(PointF atomXY) {
-        Rect charBounds = new Rect(0, 0, PaintSet.instance().fontWidth(PaintSet.PaintType.GENERAL), PaintSet.instance().fontHeight(PaintSet.PaintType.GENERAL));
+    public static Rect atomEnclosingRect(String atomName, PointF atomXY, Rect result) {
+        int oneCharWidth = PaintSet.instance().fontWidth(PaintSet.PaintType.GENERAL), oneCharHeight = PaintSet.instance().fontHeight(PaintSet.PaintType.GENERAL);
 
-        charBounds.offsetTo((int) atomXY.x - charBounds.width() / 2, (int) atomXY.y - charBounds.height() / 2);
+        result.set(0, 0, oneCharWidth * atomName.length(), oneCharHeight);
+        result.offsetTo((int) atomXY.x - oneCharWidth / 2, (int) atomXY.y - oneCharHeight / 2);
 
-        return charBounds;
+        return result;
     }
 
     private static RectF msRectF = new RectF();
@@ -97,7 +104,7 @@ public class DrawingLib {
     public static Rect drawTextSuperscript(String txt, int start, int end, Rect prevBounds, boolean toRight, boolean bgOn, int bgColor, Canvas canvas, Paint paint) {
         float origTextSize = paint.getTextSize();
 
-        paint.setTextSize(origTextSize * Configuration.SUBSCRIPT_SIZE_RATIO);
+        paint.setTextSize(origTextSize * Configuration.SUPERSCRIPT_SIZE_RATIO);
         // when subscripting, the char is overlapped with the previous char. so give some padding
         prevBounds.offset(toRight ? 2 : 0, 0);
 

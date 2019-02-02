@@ -246,27 +246,25 @@ public class CompoundArranger {
     }
 
     public static void putAllHydrogenOppositeToSkeleton(Atom atom) {
-        if (CompoundInspector.numberOfSkeletonAtoms(atom) == 1) {
-            Atom boundSkeletonAtom = atom.getSkeletonAtom();
+        Atom boundSkeletonAtom = atom.getSkeletonAtom();
 
-            if (boundSkeletonAtom != null) {
-                PointF allHShallBeOppositeToThisPoint = boundSkeletonAtom.getPoint();
-                PointF l1 = atom.getPoint();
-                PointF l2 = msTempPoint;
+        if (boundSkeletonAtom != null) {
+            PointF allHShallBeOppositeToThisPoint = boundSkeletonAtom.getPoint();
+            PointF l1 = atom.getPoint();
+            PointF l2 = msTempPoint;
 
-                l2.set(l1);
-                l2.offset(0, -100);
+            l2.set(l1);
+            l2.offset(0, -100);
 
-                for (Bond bond : atom.getBonds()) {
-                    Atom h = bond.getBoundAtom();
+            for (Bond bond : atom.getBonds()) {
+                Atom h = bond.getBoundAtom();
 
-                    if (h.getAtomicNumber() == AtomicNumber.H) {
-                        if (h.getPoint().x == atom.getPoint().x) {
-                            h.getPoint().x += 0.001f;
-                        }
-                        if (Geometry.sameSideOfLine(allHShallBeOppositeToThisPoint, h.getPoint(), l1, l2)) {
-                            h.setPoint(Geometry.symmetricToLine(h.getPoint(), l1, l2));
-                        }
+                if (h.getAtomicNumber() == AtomicNumber.H) {
+                    if (h.getPoint().x == atom.getPoint().x) {
+                        h.getPoint().x += 0.001f;
+                    }
+                    if (Geometry.sameSideOfLine(allHShallBeOppositeToThisPoint, h.getPoint(), l1, l2)) {
+                        h.setPoint(Geometry.symmetricToLine(h.getPoint(), l1, l2));
                     }
                 }
             }

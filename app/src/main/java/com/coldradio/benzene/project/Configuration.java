@@ -13,6 +13,7 @@ public class Configuration {
     public static int FONT_SIZE = 50;
     public static char ATOM_MARKER = '*';
     public static float SUBSCRIPT_SIZE_RATIO = 0.7f;
+    public static float SUPERSCRIPT_SIZE_RATIO = 0.9f;
     public static float ELECTRON_RADIUS = 4f;
     public static float CHARGE_CIRCLE_RADIUS = 15f;
     public static int SELECTED_ATOM_BG_CIRCLE_RADIUS = 10;
@@ -23,6 +24,6 @@ public class Configuration {
     public static int MAX_RESPONSE_FOR_SEARCH = 25;
     public static int REQUEST_IMAGE_QUALITY = 0;    // 0 for small, 1 for medium, 2 for large
     public static int MAX_SEARCH_HISTORY = 20;
-    public static int PUBCHEM_ZOOM_RATIO = 130;
+    public static int PUBCHEM_ZOOM_RATIO = BOND_LENGTH;     // default pubchem bond length is 1 hence this shall be BOND_LENGTH / 1 = 120
     public static String URL_ENCODING = "UTF-8";
 }

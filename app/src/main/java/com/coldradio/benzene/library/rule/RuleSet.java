@@ -23,10 +23,7 @@ public class RuleSet {
         add(new LetteringIfNotCarbonRule());
         add(new DoubleMiddleBondTypeRule());
         add(new HFirstWhenLetteringRule());
-        // need to evaluate the pros cons of PutAllHydrogenInOneSideRule
-        // pros: flip H works more well. but there are exceptional cases such as NH2 (skeleton is in vertical position)
-        // cons: CH3 case, the initial position would be weird.
-        //add(new PutAllHydrogenInOneSideRule());
+        add(new PutAllHydrogenInOneSideRule());
     }
 
     public static RuleSet instance() {

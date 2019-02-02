@@ -42,6 +42,7 @@ public class GenericDrawer {
 
     private static Path path = new Path();
     private static void drawSingleBond(PointF p1, PointF p2, Bond.BondAnnotation bondAnnotation, Canvas canvas, Paint paint) {
+        // (p1, p2) sequence has meaning; the wedge is only from p1 -> p2. one directional.
         if (bondAnnotation == Bond.BondAnnotation.WEDGE_UP) {
             canvas.drawPath(wedgeTrianglePath(p1, p2, path), paint);
         } else if (bondAnnotation == Bond.BondAnnotation.WEDGE_DOWN) {
@@ -181,16 +182,12 @@ public class GenericDrawer {
                 switch (a1.getBondType(a2)) {
                     case SINGLE:
                         Bond.BondAnnotation bondAnnotation = a1.getBondAnnotation(a2);
-
                         if (bondAnnotation != Bond.BondAnnotation.NONE) {
-                            // p2 needs to be cut towards to p1 the Element Name (e.g., O) blocks the wedge
-                            PointF adjusted_p2 = a2.isNameShown() ? Geometry.pointInLine(p1, p2, 0.8f) : p2;
-
-                            drawSingleBond(p1, adjusted_p2, bondAnnotation, canvas, paint);
+                            // (p1, p2) order shall be aligned with bondAnnotation direction (p1 -> p2)
+                            drawSingleBond(p1, p2, bondAnnotation, canvas, paint);
                         } else {
-                            PointF adjusted_p1 = a1.isNameShown() ? Geometry.pointInLine(p2, p1, 0.8f) : p1;
-
-                            drawSingleBond(p2, adjusted_p1, a2.getBondAnnotation(a1), canvas, paint);
+                            // here annotation direction is p2 -> p1 or no annotation
+                            drawSingleBond(p2, p1, a2.getBondAnnotation(a1), canvas, paint);
                         }
                         break;
                     case DOUBLE:

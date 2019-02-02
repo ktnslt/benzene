@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 
 import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.AtomDecoration;
@@ -108,18 +109,20 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         paint.setStyle(origPaintStyle);
     }
 
+    private static Rect rect = new Rect();
     private static void drawChargeAsNumber(Atom atom, Canvas canvas, Paint paint) {
         int charge = atom.getAtomDecoration().getCharge();
         PointF xy = atom.getPoint();
+        String atomName = atom.getAtomicNumber().toString();
 
         if (charge == 1) {
-            DrawingLib.drawTextSuperscript("+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript("+", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
         } else if (charge == -1) {
-            DrawingLib.drawTextSuperscript("-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript("-", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
         } else if (charge > 1) {
-            DrawingLib.drawTextSuperscript(String.valueOf(charge) + "+", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript(String.valueOf(charge) + "+", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
         } else if (charge < -1) {
-            DrawingLib.drawTextSuperscript(String.valueOf(-charge) + "-", DrawingLib.atomEnclosingRect(xy), false, 0, canvas, paint);
+            DrawingLib.drawTextSuperscript(String.valueOf(-charge) + "-", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
         }
     }
 
