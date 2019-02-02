@@ -1,6 +1,7 @@
 # Benzene Tree Tutorial
 
-[Go Back to Help Root](README.md) [Full Menu Description](FullMenuDescription.md) 
+* [Go Back to Help Root](README.md) 
+* [Full Menu Description](FullMenuDescription.md) 
 
 ## Design aspirin from cyclohexane
 
