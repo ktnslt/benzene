@@ -1,7 +1,7 @@
 # Benzene Tree Tutorial
 
 * [Go Back to Help Root](README.md) 
-* [Full Menu Description](FullMenuDescription.md) 
+* [Full Menu Description](FullMenuDescription.md) , *Refer to this page if you not familiar with menus*
 
 ## Contents
 
