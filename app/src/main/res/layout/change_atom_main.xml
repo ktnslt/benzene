@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Change Atom to:"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/selectedAtom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textView"
+        app:layout_constraintTop_toTopOf="@id/textView" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/textView"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintBottom_toTopOf="@+id/okBtn">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/basicElements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Basic Elements"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TableLayout
+                android:id="@+id/basic_element_table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toBottomOf="@id/basicElements">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_H"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="H"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/atom_He"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="He"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Li"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Li"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkali_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Be"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Be"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkaline_earth_metal"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/atom_B"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="B"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_C"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="C"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_N"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="N"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_O"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="O"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_F"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="F"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ne"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Na"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Na"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkali_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Mg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mg"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkaline_earth_metal"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/atom_Al"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Al"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Si"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Si"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_P"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="P"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_S"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="S"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Cl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cl"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ar"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_K"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="K"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkali_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ca"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkaline_earth_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Zn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Zn"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ga"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ga"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ge"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_As"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="As"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_Se"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Se"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Br"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Br"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Kr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kr"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rb"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkali_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Sr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sr"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkaline_earth_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Cd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cd"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_In"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="In"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Sn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sn"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Sb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sb"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_Te"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Te"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_I"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="I"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/reactive_nonmetal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Xe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xe"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Cs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cs"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkali_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ba"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ba"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/alkaline_earth_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Hg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hg"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Tl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tl"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Pb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pb"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Bi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bi"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Po"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Po"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/post_transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_At"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="At"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/metalloid"/>
+
+                    <TextView
+                        android:id="@+id/atom_Rn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rn"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/noble_gas"/>
+                </TableRow>
+            </TableLayout>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@id/basic_element_table_layout"/>
+
+            <TextView
+                android:id="@+id/transitionElements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Transition Elements"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2"/>
+
+            <TableLayout
+                android:id="@+id/transition_element_table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toBottomOf="@id/transitionElements">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Sc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sc"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ti"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ti"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_V"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="V"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Cr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cr"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Mn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mn"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Fe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fe"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Co"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Co"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ni"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ni"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Cu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cu"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_Y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Y"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Zr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Zr"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Nb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nb"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Mo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mo"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Tc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tc"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ru"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ru"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Rh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rh"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Pd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pd"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ag"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/atom_Hf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hf"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ta"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_W"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="W"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Re"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Re"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Os"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Os"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Ir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ir"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Pt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pt"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+
+                    <TextView
+                        android:id="@+id/atom_Au"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Au"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/transition_metal"/>
+                </TableRow>
+            </TableLayout>
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@id/transition_element_table_layout"/>
+
+            <TextView
+                android:id="@+id/arbitraryElement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Unknown Element"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3"/>
+
+            <TableLayout
+                android:id="@+id/unknown_element_table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toBottomOf="@id/arbitraryElement">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/atom_X"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="X"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/Z"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Z"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/R1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R1"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/R2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R2"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/R3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R3"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/R4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R4"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:id="@+id/R5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R5"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:background="#909090"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
+            </TableLayout>
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@id/unknown_element_table_layout"/>
+
+            <TextView
+                android:id="@+id/textElement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Arbitrary"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider4"/>
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="CH2CH2CH3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textElement"/>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/okBtn"/>
+
+    <Button
+        android:id="@+id/okBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    </android.support.constraint.ConstraintLayout>

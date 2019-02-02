@@ -22,8 +22,4 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
-    <AutoCompleteTextView
-        android:id="@+id/compound_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </android.support.v4.widget.DrawerLayout>
