@@ -1,5 +1,8 @@
 # Full Menu Description for Benzene Tree
 
+* [Go Back to Help Root](README.md) 
+* [Benzen Tree Tutorial](BenzeneTreeTutorial.md) 
+
 ## Basic Menu
 
 This menu shows up when nothing selected.
