@@ -9,7 +9,7 @@
 * [Other way for aspirin](#Other-way-for-aspirin)
 * [From benzene to quinoline](#From-benzene-to-quinoline)
 
-## From cyclohexane to asiprin - [Top](#Benzene-tree-tutorial)
+## From cyclohexane to asiprin - [Go to Top](#Benzene-tree-tutorial)
 
 * Click the Red PLUS button for creating a new project
 
@@ -60,7 +60,7 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 <img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin14.png" height="300">
 
-## Other way for aspirin
+## Other way for aspirin - [Go to Top](#Benzene-tree-tutorial)
 
 * Sometimes, you may want to letter the COOH functional group. Something like below.
 
@@ -94,7 +94,7 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 <img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin26.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin27.png" height="300">
 
-## From benzene to quinoline
+## From benzene to quinoline - [Go to Top](#Benzene-tree-tutorial)
 
 * Search and add benzene.
 
