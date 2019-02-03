@@ -14,7 +14,10 @@
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin1.png" height="300">
 
-* **Surely, you can search and add aspirin directly. Try it!. This is just a tutorial.**
+```
+Surely, you can search and add aspirin directly. Try it! This is just a tutorial.
+```
+
 * Click the + button in the bottom toolbar to add compound. Type **cyclohexane** and enter. Click the cyclohexane to add.
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin2.png" height="300">
@@ -72,7 +75,7 @@
 
 * select the **FingerSelect** icon in the bottom toolbar. Select the COOH part, and **Delete** it.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin20.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin21.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin19-1.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin20.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin21.png" height="300">
 
 * Select the atom where the COOH was attached, the add **methyl** to it
 
