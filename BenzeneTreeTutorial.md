@@ -5,11 +5,11 @@
 
 ## Contents
 
-* [Design aspirin from cyclohexane](#design-aspirin-from-cyclohexane)
+* [From cyclohexane to aspirin](#from-cyclohexane-to-aspirin)
 * [Other way for aspirin](#Other-way-for-aspirin)
 * [From benzene to quinoline](#From-benzene-to-quinoline)
 
-## Design aspirin from cyclohexane
+## From cyclohexane to asiprin
 
 * Click the Red PLUS button for creating a new project
 
@@ -94,7 +94,7 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin26.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/aspirin27.png" height="300">
 
-## Design Quinoline from Benzene
+## From benzene to quinoline
 
 * Search and add benzene.
 
@@ -128,7 +128,7 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline12.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline13.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline14.png" height="300">
 
-* If you want to show the unshared electron of the Nitrogen, click **Edit** icon. There, click the unshared electron position that you want to show.
+* If you want to show the **unshared electron** of the Nitrogen, click **Edit** icon. There, click the unshared electron position that you want to show.
 
 <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline15.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline16.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline17.png" height="300">
 
