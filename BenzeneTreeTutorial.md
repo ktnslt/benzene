@@ -7,6 +7,7 @@
 
 * [Design aspirin from cyclohexane](#design-aspirin-from-cyclohexane)
 * [Other way for aspirin](#Other-way-for-aspirin)
+* [From benzene to quinoline](#From-benzene-to-quinoline)
 
 ## Design aspirin from cyclohexane
 
@@ -97,43 +98,43 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 * Search and add benzene.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline1.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline1.png" height="300">
 
 * Select the side bond and click the **FlipBond** icon. 
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline2.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline2.png" height="300">
 
 * The blue dot means the direction where the ring will be added. You can change it by **Add To Opposite** checkbox. Click OK.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline3.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline3.png" height="300">
 
 * Select the atom where the Nitrogen will be placed. Click **Edit** icon. In the window, check the checkbox **Change to ELE**.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline4.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline5.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline4.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline5.png" height="300">
 
 * Select **N** and click OK.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline6.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline7.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline6.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline7.png" height="300">
 
 * Select the bond, and change the bond type to Double
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline8.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline9.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline10.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline8.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline9.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline10.png" height="300">
 
 * It seems that you have quinoline. But, there is one hidden problem. Click the **Show Hydrogen** icon.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline11.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline11.png" height="300">
 
 * It will show your Nitrogen has two hydrogens. Click the **Saturate with hydrogen** icon. Click OK. You will have the correct quinoline now.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline12.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline13.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline14.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline12.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline13.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline14.png" height="300">
 
 * If you want to show the unshared electron of the Nitrogen, click **Edit** icon. There, click the unshared electron position that you want to show.
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline15.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline16.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline17.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline15.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline16.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline17.png" height="300">
 
 * Finally, you can hide the hydrogen again by **Show Hydrogen** icon
 
-<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline18.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/aspirin/quinoline19.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline18.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/tutorial/images/quinoline/quinoline19.png" height="300">
 
 
 
