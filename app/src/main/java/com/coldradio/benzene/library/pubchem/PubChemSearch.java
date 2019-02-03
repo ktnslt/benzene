@@ -1,5 +1,6 @@
 package com.coldradio.benzene.library.pubchem;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.coldradio.benzene.library.CompoundIndex;
@@ -51,7 +52,11 @@ public class PubChemSearch implements ICompoundSearch {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Notifier.instance().notification(error.toString());
+                    if (error instanceof NoConnectionError) {
+                        Notifier.instance().notification("No Network Connections");
+                    } else {
+                        Notifier.instance().notification(error.toString());
+                    }
                 }
             });
 

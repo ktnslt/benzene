@@ -1,6 +1,7 @@
 package com.coldradio.benzene.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -158,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.help) {
-            // Handle the camera action
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ktnslt/benzene/blob/master/BenzeneTreeTutorial.md"));
+            startActivity(intent);
         } else if (id == R.id.import_project) {
             FileUtil.browseFile(ActivityRequestCode.BROWSE_FILE_REQ.ordinal());
         }
