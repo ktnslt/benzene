@@ -2,8 +2,6 @@ package com.coldradio.benzene.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,19 +13,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.coldradio.benzene.R;
-import com.coldradio.benzene.compound.Atom;
 import com.coldradio.benzene.compound.Edge;
 import com.coldradio.benzene.project.Project;
 import com.coldradio.benzene.project.ProjectFileManager;
 import com.coldradio.benzene.util.AppEnv;
-import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.view.drawer.DrawingLib;
 import com.coldradio.benzene.view.drawer.PaintSet;
 
 public class AddToBondActivity extends AppCompatActivity {
     private AddToBondPreview mPreview;
     private EditText mEdgeNumber;
-    private boolean mOppositeSite;
     private boolean mDeleteHydrogenBeforeAdd = true;
     private boolean mSaturateWithHydrogen = true;
 
@@ -56,8 +52,7 @@ public class AddToBondActivity extends AppCompatActivity {
         ((CheckBox)findViewById(R.id.a2b_cb_opposite_site)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mOppositeSite = isChecked;
-                mPreview.setOppositeSite(mOppositeSite);
+                mPreview.toggleOppositeSite();
                 mPreview.invalidate();
             }
         });
@@ -127,7 +122,7 @@ public class AddToBondActivity extends AppCompatActivity {
 
                 if (edgeNumber >= 3) {
                     ProjectFileManager.instance().pushCompoundChangedHistory(Project.instance().getElementSelector().getSelectedCompound());
-                    Project.instance().addCyclicToSelectedBond(edgeNumber, mOppositeSite, mDeleteHydrogenBeforeAdd, mSaturateWithHydrogen);
+                    Project.instance().addCyclicToSelectedBond(edgeNumber, mPreview.getAddSite(), mDeleteHydrogenBeforeAdd, mSaturateWithHydrogen);
                 }
                 finish();
             }
@@ -170,7 +165,7 @@ public class AddToBondActivity extends AppCompatActivity {
 }
 
 class AddToBondPreview extends Preview {
-    private boolean mOppositeSite;
+    private boolean mOppositeSite = true;
     private Edge mSelectedEdge;
     private PointF mAddSite;
 
@@ -181,26 +176,22 @@ class AddToBondPreview extends Preview {
 
         setCenter(center);
         mSelectedEdge = edge;
-        setOppositeSite(mOppositeSite);
+        mAddSite = DrawingLib.centerForDoubleBond(mSelectedEdge.first, mSelectedEdge.second, mOppositeSite);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint paint = PaintSet.instance().paint(PaintSet.PaintType.GENERAL);
-
-        int color = paint.getColor();
-        paint.setColor(Color.BLUE);
-        canvas.drawCircle(mAddSite.x, mAddSite.y, 20, paint);
-        paint.setColor(color);
+        canvas.drawCircle(mAddSite.x, mAddSite.y, 20, PaintSet.instance().paint(PaintSet.PaintType.GUIDE_LINE));
     }
 
-    public void setOppositeSite(boolean oppositeSite) {
-        mOppositeSite = oppositeSite;
+    public void toggleOppositeSite() {
+        mOppositeSite = !mOppositeSite;
+        mAddSite = DrawingLib.centerForDoubleBond(mSelectedEdge.first, mSelectedEdge.second, mOppositeSite);
+    }
 
-        Atom centerAtom = mSelectedEdge.atomInUpperDirection();
-        Atom rotatingAtom = mSelectedEdge.first == centerAtom ? mSelectedEdge.second : mSelectedEdge.first;
-        mAddSite = Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), (float)Math.toRadians(60) * (mOppositeSite ? -1 : 1));
+    public PointF getAddSite() {
+        return mAddSite;
     }
 }

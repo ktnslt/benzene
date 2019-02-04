@@ -58,9 +58,9 @@ public class Project {
         mCompoundList.addAll(compounds);
     }
 
-    public void addCyclicToSelectedBond(int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
+    public void addCyclicToSelectedBond(int edgeNumber, PointF addSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
-            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, oppositeSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
+            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, addSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
         }
     }
 
@@ -77,8 +77,7 @@ public class Project {
     }
 
     public void removeCompound(Compound compound) {
-        if (mElementSelector.selection() == ElementSelector.Selection.COMPOUND
-                && mElementSelector.getSelectedCompound() == compound) {
+        if (mElementSelector.selection() == ElementSelector.Selection.COMPOUND && mElementSelector.getSelectedCompound() == compound) {
             mElementSelector.reset();
         }
         mCompoundList.remove(compound);

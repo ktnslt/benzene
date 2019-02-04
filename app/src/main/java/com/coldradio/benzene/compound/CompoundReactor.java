@@ -183,11 +183,17 @@ public class CompoundReactor {
         return compound;
     }
 
-    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, boolean oppositeSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
-        float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber) * (oppositeSite ? -1 : 1);
+    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, PointF addSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
+        float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber);
         Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation
         Atom rotatingAtom = (centerAtom == edge.first) ? edge.second : edge.first;
         Atom lastAtom = rotatingAtom;
+
+        PointF firstAtomPoint = Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle);
+
+        if (!Geometry.sameSideOfLine(firstAtomPoint, addSite, edge.first.getPoint(), edge.second.getPoint())) {
+            interiorAngle *= -1;
+        }
 
         if (deleteHydrogenBeforeAdd) {
             deleteHydrogen(compound, edge.first, 1);
