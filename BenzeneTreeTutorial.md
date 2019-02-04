@@ -5,23 +5,32 @@
 
 ## Contents
 
+* [Basic operations](#basic-operations)
 * [From cyclohexane to aspirin](#from-cyclohexane-to-aspirin)
 * [Other way for aspirin](#Other-way-for-aspirin)
 * [From benzene to quinoline](#From-benzene-to-quinoline)
+
+## Basic Operations - [Go to Top](#Benzene-tree-tutorial)
+
+<img src="https://github.com/ktnslt/benzene/blob/images/images/menu/basic_operations.png" height="300">
+
+* Double Tap to center the view
+* To scroll, use one finger
+* To move the selected, use two fingers
 
 ## From cyclohexane to asiprin - [Go to Top](#Benzene-tree-tutorial)
 
 * Click the Red PLUS button for creating a new project
 
-<img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin1.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin0.png" height="300">
+
+* Click the + button in the bottom toolbar to add compound. Type **cyclohexane** and enter. Click the cyclohexane to add.
 
 ```
 Surely, you can search and add aspirin directly. Try it! This is just a tutorial.
 ```
 
-* Click the + button in the bottom toolbar to add compound. Type **cyclohexane** and enter. Click the cyclohexane to add.
-
-<img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin2.png" height="300">
+<img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin1.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/aspirin/aspirin2.png" height="300">
 
 * You will see the added cyclohexane. You may rotate by using the yellow circle.
 
