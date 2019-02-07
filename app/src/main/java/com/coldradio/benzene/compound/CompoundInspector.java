@@ -1,5 +1,8 @@
 package com.coldradio.benzene.compound;
 
+import android.graphics.PointF;
+
+import com.coldradio.benzene.project.Configuration;
 import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
 
@@ -281,5 +284,14 @@ public class CompoundInspector {
                 return atom != from;
             }
         }, to);
+    }
+
+    public static Atom findProximityAtom(Compound compound, PointF point) {
+        for (Atom atom : compound.getAtoms()) {
+            if (Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.ATOM_PROXIMITY) {
+                return atom;
+            }
+        }
+        return null;
     }
 }

@@ -183,7 +183,7 @@ public class CompoundReactor {
         return compound;
     }
 
-    public static void addCyclicToBond(Compound compound, Edge edge, int edgeNumber, PointF addSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
+    public static int addCyclicToBond(Compound compound, Edge edge, int edgeNumber, PointF addSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         float interiorAngle = Geometry.interiorAngleOfPolygon(edgeNumber);
         Atom centerAtom = edge.atomInUpperDirection();  // the upper Atom in x axis is the center of the rotation
         Atom rotatingAtom = (centerAtom == edge.first) ? edge.second : edge.first;
@@ -203,15 +203,20 @@ public class CompoundReactor {
         List<Atom> newAtomList = new ArrayList<>();
 
         for (int ii = 0; ii < edgeNumber - 2; ++ii) {
-            Atom newAtom = new Atom(-1, AtomicNumber.C);
+            PointF newAtomPosition = Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle);
+            Atom proximityAtom = CompoundInspector.findProximityAtom(compound, newAtomPosition);
+            Atom newAtom = (proximityAtom != null ? proximityAtom : new Atom(-1, AtomicNumber.C));
 
-            newAtomList.add(newAtom);
-
-            newAtom.setPoint(Geometry.cwRotate(rotatingAtom.getPoint(), centerAtom.getPoint(), interiorAngle));
+            if (proximityAtom == null) {
+                // new Atom is created
+                newAtomList.add(newAtom);
+                newAtom.setPoint(newAtomPosition);
+                newAtom.getAtomDecoration().setShowElementName(false);
+                compound.addAtom(newAtom);
+            }
+            // common to new or existing atom
             newAtom.singleBond(centerAtom);
-            newAtom.getAtomDecoration().setShowElementName(false);
-            compound.addAtom(newAtom);
-
+            // post-iterating jobs
             rotatingAtom = centerAtom;
             centerAtom = newAtom;
         }
@@ -225,6 +230,8 @@ public class CompoundReactor {
                 CompoundArranger.showAllHydrogen(newAtom, false);
             }
         }
+
+        return newAtomList.size();
     }
 
     public static void addFunctionalGroupToAtom(Compound compound, Atom atom, IFunctionalGroup funcGroup, boolean deleteHOfSelectedAtom) {
