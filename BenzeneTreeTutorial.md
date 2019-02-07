@@ -9,6 +9,7 @@
 * [From cyclohexane to aspirin](#from-cyclohexane-to-aspirin)
 * [Other way for aspirin](#Other-way-for-aspirin)
 * [From benzene to quinoline](#From-benzene-to-quinoline)
+* [Saturate with hydrogens](#Saturate-with-hydrogen-go-to-top)
 
 ## Basic Operations - [Go to Top](#Benzene-tree-tutorial)
 
