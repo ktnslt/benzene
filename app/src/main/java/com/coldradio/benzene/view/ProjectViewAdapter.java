@@ -63,10 +63,14 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
                                 dialog.setOkListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (FileUtil.exists(dialog.getInputText())) {
+                                        String newProjName = dialog.getInputText().trim();
+
+                                        if (FileUtil.exists(newProjName)) {
                                             Notifier.instance().notification("Already exists");
-                                        } else if (FileUtil.validFileName(projectNameString)) {
-                                            if (ProjectFileManager.instance().rename(projectNameString, dialog.getInputText())) {
+                                        } else if (newProjName.isEmpty()) {
+                                            Notifier.instance().notification("Empty File Name");
+                                        } else if (FileUtil.validFileName(newProjName)) {
+                                            if (ProjectFileManager.instance().rename(projectNameString, newProjName)) {
                                                 mAdapter.notifyItemChanged(getAdapterPosition());
                                             } else {
                                                 Notifier.instance().notification("Rename File Failed");

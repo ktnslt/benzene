@@ -60,7 +60,9 @@ public class Project {
 
     public void addCyclicToSelectedBond(int edgeNumber, PointF addSite, boolean deleteHydrogenBeforeAdd, boolean saturateWithHydrogen) {
         if (mElementSelector.selection() == ElementSelector.Selection.EDGE) {
-            CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, addSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
+            int addedAtomNum = CompoundReactor.addCyclicToBond(mElementSelector.getSelectedCompound(), mElementSelector.getSelectedEdge(), edgeNumber, addSite, deleteHydrogenBeforeAdd, saturateWithHydrogen);
+
+            Notifier.instance().notification(addedAtomNum + " atoms are added");
         }
     }
 

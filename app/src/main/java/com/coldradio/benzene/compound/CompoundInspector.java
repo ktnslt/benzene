@@ -1,5 +1,9 @@
 package com.coldradio.benzene.compound;
 
+import android.graphics.PointF;
+
+import com.coldradio.benzene.project.Configuration;
+import com.coldradio.benzene.util.Geometry;
 import com.coldradio.benzene.util.TreeTraveler;
 
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class CompoundInspector {
     }
 
     public static boolean lessThanTwoSkeletonAtom(Compound compound) {
+        // this is not like uniqueSkeleton(), that is for only 1 skeleton; while this is for 0 or 1
         Atom skeletonAtom = anySkeletonAtom(compound);
 
         return skeletonAtom == null || skeletonAtom.getSkeletonAtom() == null;
@@ -219,7 +224,7 @@ public class CompoundInspector {
         return right >= 0;
     }
 
-    public static Atom returnSkeletonAtomIfOneSkeletonWithBondType(Atom atom) {
+    public static Atom uniqueSkeletonWithDoubleBond(Atom atom) {
         int skeletonBondNumber = 0;
         Atom skeletonAtom = null;
 
@@ -238,6 +243,34 @@ public class CompoundInspector {
         return skeletonAtom;
     }
 
+    public static Atom uniqueSkeleton(Atom atom) {
+        int skeletonBondNumber = 0;
+        Atom skeletonAtom = null;
+
+        for (Bond bond : atom.getBonds()) {
+            Atom that_atom = bond.getBoundAtom();
+
+            if (isSkeletonAtom(that_atom)) {
+                skeletonBondNumber++;
+                skeletonAtom = that_atom;
+
+                if (skeletonBondNumber > 1) {
+                    return null;
+                }
+            }
+        }
+        return skeletonAtom;
+    }
+
+    public static boolean uniqueSkeletonOnRightSide(Atom atom) {
+        Atom unique = uniqueSkeleton(atom);
+
+        if (unique != null) {
+            return Geometry.onRight(atom.getPoint(), unique.getPoint());
+        }
+        return false;
+    }
+
     public static boolean pathExistsExceptDirect(final Atom from, Atom to) {
         // test whether there exists bonds 'to' ->->-> 'from
         return null != TreeTraveler.returnFirstAtom(new TreeTraveler.IAtomVisitor() {
@@ -251,5 +284,14 @@ public class CompoundInspector {
                 return atom != from;
             }
         }, to);
+    }
+
+    public static Atom findProximityAtom(Compound compound, PointF point) {
+        for (Atom atom : compound.getAtoms()) {
+            if (Geometry.distanceFromPointToPoint(atom.getPoint(), point) < Configuration.ATOM_PROXIMITY) {
+                return atom;
+            }
+        }
+        return null;
     }
 }
