@@ -145,5 +145,20 @@ Surely, you can search and add aspirin directly. Try it! This is just a tutorial
 
 <img src="https://github.com/ktnslt/benzene/blob/images/images/quinoline/quinoline18.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/quinoline/quinoline19.png" height="300">
 
+## Saturate with Hydrogen - [Go to Top](#Benzene-tree-tutorial)
 
+This section explains the **Saturate with Hydrogen** menu. In chemistry, saturation has diverse meaning, but here it specifies the maximum number of hydrogen, that can be bound to a atom. For example, carbon can be saturated with 4 hydrogens in normal condition. 
 
+Hydrogens are not shown by default, and this is what you have learned in the basic chemistry courses in school. Please look at the below images. Compounds only show the skeletons, but it has hidden hydrogens. To see hidden hydrogens, you can click **Show hydrogen** menu
+
+<img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate1.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate1-1.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate2.png" height="300"> 
+
+**Saturate with hydrogen** menu comes up when a compound or an atom is selected. With a compound selected, the saturation will be applied for the whole compound. With an atom selected, it only applied to the atom.
+
+If you click the **Saturate with hydrogen** menu, you will see the below screen. The first three rows is for commonly used atoms; Carbon, Nitrogen and Oxygen. They are set with the basic saturation number. The **Faimly** checkbox means whether it shall be applied for the entire the family. For example, checking **Family** of carbon will apply for C, Si, Ge, Sn, Pb, Fl. With last one, you can saturate for any atoms like saturating B up to 3 hydrogens. 
+
+<img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate3.png" height="300"> 
+
+Here, the carbon saturation will be demonstrated. First, change the maximum bonds of carbon to **2** like below. Then, you will have only one hydrogen in the bottom tail of the toluene. If you change the saturation number of carbon back to **4**, you will have the normal toluene again.
+
+<img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate4.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate5.png" height="300"> <img src="https://github.com/ktnslt/benzene/blob/images/images/saturate/saturate6.png" height="300"> 
