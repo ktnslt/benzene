@@ -19,7 +19,7 @@
 * To scroll, use one finger
 * To move the selected, use two fingers
 
-## From cyclohexane to asiprin - [Go to Top](#Benzene-tree-tutorial)
+## From cyclohexane to aspirin - [Go to Top](#Benzene-tree-tutorial)
 
 * Click the Red PLUS button for creating a new project
 
