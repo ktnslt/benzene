@@ -115,10 +115,14 @@ public class AtomDecorationDrawer implements ICompoundDrawer {
         PointF xy = atom.getPoint();
         String atomName = atom.getAtomicNumber().toString();
 
-        if (charge == 1) {
-            DrawingLib.drawTextSuperscript("+", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
-        } else if (charge == -1) {
-            DrawingLib.drawTextSuperscript("-", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
+        if (charge == 1 || charge == -1) {
+            String sign = (charge == 1 ? "+" : "-");
+
+            if (CompoundInspector.uniqueSkeletonOnRightSide(atom)) {
+                DrawingLib.drawTextSuperscript(sign, 0, 1, DrawingLib.atomEnclosingRect(atomName, xy, rect), false, false, 0, canvas, paint);
+            } else {
+                DrawingLib.drawTextSuperscript(sign, 0, 1, DrawingLib.atomEnclosingRect(atomName, xy, rect), true, false, 0, canvas, paint);
+            }
         } else if (charge > 1) {
             DrawingLib.drawTextSuperscript(String.valueOf(charge) + "+", DrawingLib.atomEnclosingRect(atomName, xy, rect), false, 0, canvas, paint);
         } else if (charge < -1) {

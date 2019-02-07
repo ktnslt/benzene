@@ -178,4 +178,8 @@ public class Geometry {
 
         return rect;
     }
+
+    public static boolean onRight(PointF ref, PointF p) {
+        return p.x > ref.x;
+    }
 }

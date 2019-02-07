@@ -18,7 +18,7 @@ public class DoubleMiddleBondTypeRule implements ICompoundRule {
                 if (atom.numberOfBonds() == 2 && CompoundInspector.allBondsAreDouble(atom)) {
                     atom.getAtomDecoration().setShowElementName(true);
                 }
-                Atom that_atom = CompoundInspector.returnSkeletonAtomIfOneSkeletonWithBondType(atom);
+                Atom that_atom = CompoundInspector.uniqueSkeletonWithDoubleBond(atom);
 
                 if (that_atom != null) {
                     atom.setBond(that_atom, Bond.BondType.DOUBLE_MIDDLE);
