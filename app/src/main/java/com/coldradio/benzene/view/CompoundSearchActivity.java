@@ -5,24 +5,32 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.coldradio.benzene.R;
 import com.coldradio.benzene.library.CompoundIndex;
 import com.coldradio.benzene.library.CompoundLibrary;
 import com.coldradio.benzene.library.OnSearchResultArrived;
 import com.coldradio.benzene.util.AppEnv;
 import com.coldradio.benzene.util.Notifier;
+import com.coldradio.benzene.util.translate.Translator;
 
 import java.util.List;
 
 public class CompoundSearchActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private RecyclerView.Adapter mAdapter;
     private AutoCompleteTextView mEditText;
+    private String mOrigSearch;
+    private String mTranslatedSearch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +63,18 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
                     if (mEditText.getText().toString().length() == 0) {
                         mEditText.showDropDown();
                     }
+                    if (mOrigSearch != null && mTranslatedSearch != null && mEditText.getText().toString().equals(mOrigSearch + " " + mTranslatedSearch)) {
+                        mEditText.setText(mOrigSearch);
+                    }
+                }
+            });
+            mEditText.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (mOrigSearch != null && mTranslatedSearch != null && mEditText.getText().toString().equals(mOrigSearch + " " + mTranslatedSearch)) {
+                        mEditText.setText(mOrigSearch);
+                    }
+                    return false;
                 }
             });
         }
@@ -96,14 +116,31 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        String keyword = v.getText().toString().trim();
+        mOrigSearch = v.getText().toString().trim();
 
-        if (!keyword.isEmpty()) {
+        if (!mOrigSearch.isEmpty()) {
             // clear the view. this cannot be done in CompoundLibrary.search() since it doesn't have reference to mAdapter
             CompoundLibrary.instance().clearAll();
             mAdapter.notifyDataSetChanged();
 
-            CompoundLibrary.instance().search(keyword);
+            if (Translator.isEnglish(mOrigSearch)) {
+                CompoundLibrary.instance().search(mOrigSearch, null);
+            } else {
+                Translator.translateToEnglish(mOrigSearch, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String translatedText) {
+                        mTranslatedSearch = translatedText;
+                        CompoundLibrary.instance().search(translatedText, mOrigSearch);
+                        mEditText.setText(Html.fromHtml(mOrigSearch + " <small><font color=\"grey\">" + translatedText + "</font></small>"));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        CompoundLibrary.instance().search(mOrigSearch, null);
+                        Notifier.instance().notification("Translation Failed. Search the original keyword. " + error.toString());
+                    }
+                });
+            }
             if (mEditText != null) {
                 mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
             }

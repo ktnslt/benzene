@@ -11,7 +11,7 @@ import com.coldradio.benzene.library.rule.RuleSet;
 import com.coldradio.benzene.util.Geometry;
 
 public class Methyl_FG implements IFunctionalGroup {
-    private FunctionalGroup mFuncGroup;
+    private FunctionalGroupCompound mFuncGroup;
     private AppendPointProducer mAppendPointProducer;
     private PointF mAppendPoint;
     private PointF m_a_AtomPoint;
@@ -22,7 +22,7 @@ public class Methyl_FG implements IFunctionalGroup {
         m_a_AtomPoint = a_atom.getPoint();
 
         // create Methyl
-        mFuncGroup = new FunctionalGroup(new int[]{0, 1, 2, 3}, new AtomicNumber[]{AtomicNumber.C, AtomicNumber.H, AtomicNumber.H, AtomicNumber.H});
+        mFuncGroup = new FunctionalGroupCompound(new int[]{0, 1, 2, 3}, new AtomicNumber[]{AtomicNumber.C, AtomicNumber.H, AtomicNumber.H, AtomicNumber.H});
         // the attachment point of the functional group has aid 0
         mFuncGroup.makeBond(0, 1, Bond.BondType.SINGLE);
         mFuncGroup.makeBond(0, 2, Bond.BondType.SINGLE);

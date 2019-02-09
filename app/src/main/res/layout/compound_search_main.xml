@@ -13,7 +13,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:hint="After search, click to add..."
+        android:hint="Aspirin, 아스피린, アスピリン, 阿司匹林"
         android:completionThreshold="0"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/tv_progress"

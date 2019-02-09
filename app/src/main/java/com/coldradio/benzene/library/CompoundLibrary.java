@@ -103,9 +103,9 @@ public class CompoundLibrary {
         return mSearchResults.size();
     }
 
-    public void search(String keyword) {
+    public void search(String keyword, String pushKeyword) {
         clearAll();
-        mSearchKeyword = keyword.trim();
+        mSearchKeyword = keyword;
         mSearchID++;
 
         for (ICompoundSearch search : mCompoundSearchers) {
@@ -119,7 +119,7 @@ public class CompoundLibrary {
                 notifySearchResultListener(results, posStart, results.size());
             }
         }
-        mSearchHistory.add(mSearchKeyword);
+        mSearchHistory.add(pushKeyword != null ? pushKeyword : mSearchKeyword);
     }
 
     public String[] getSearchHistory() {
