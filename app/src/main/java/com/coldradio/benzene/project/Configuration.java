@@ -26,5 +26,6 @@ public class Configuration {
     public static int MAX_SEARCH_HISTORY = 20;
     public static int PUBCHEM_ZOOM_RATIO = BOND_LENGTH;     // default pubchem bond length is 1 hence this shall be BOND_LENGTH / 1 = 120
     public static String URL_ENCODING = "UTF-8";
-    public static float ATOM_PROXIMITY = BOND_LENGTH / 30;
+    public static float ATOM_PROXIMITY = BOND_LENGTH / 7;
+    public static boolean TRANSLATION_FOR_SEARCH = true;
 }
