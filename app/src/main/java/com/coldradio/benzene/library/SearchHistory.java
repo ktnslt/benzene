@@ -44,4 +44,11 @@ public class SearchHistory {
             mSearchRecordList = TextUtil.toList(sharedPreferences.getString("SearchHistory", ""), ",");
         }
     }
+
+    String top() {
+        if (mSearchRecordList.size() > 0) {
+            return mSearchRecordList.get(0);
+        }
+        return "";
+    }
 }

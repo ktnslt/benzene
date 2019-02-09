@@ -25,8 +25,8 @@ public class CompoundLibrary {
     private int mTotalSearchedCompounds;
     private int mPropertySuccessCompounds;
     private int mPropertyFailedCompounds;
-    private String mSearchKeyword;
     private SearchHistory mSearchHistory = new SearchHistory();
+    private String mLastSearchKeywordInThisSession;
     private int mSearchID = 0;
     // TODO not sure about below maybe there is something better
     private TextView mCompoundSearchProgressBar;
@@ -103,13 +103,12 @@ public class CompoundLibrary {
         return mSearchResults.size();
     }
 
-    public void search(String keyword, String pushKeyword) {
+    public void search(String keyword) {
         clearAll();
-        mSearchKeyword = keyword;
         mSearchID++;
 
         for (ICompoundSearch search : mCompoundSearchers) {
-            List<CompoundIndex> results = search.search(mSearchID, ICompoundSearch.KeywordType.TEXT, mSearchKeyword);
+            List<CompoundIndex> results = search.search(mSearchID, ICompoundSearch.KeywordType.TEXT, keyword);
 
             if (results != null) {
                 // in case that results are ready immediately
@@ -119,7 +118,11 @@ public class CompoundLibrary {
                 notifySearchResultListener(results, posStart, results.size());
             }
         }
-        mSearchHistory.add(pushKeyword != null ? pushKeyword : mSearchKeyword);
+    }
+
+    public void pushToHistory(String keyword) {
+        mSearchHistory.add(keyword);
+        mLastSearchKeywordInThisSession = keyword;
     }
 
     public String[] getSearchHistory() {
@@ -203,7 +206,7 @@ public class CompoundLibrary {
         updateProgressBar();
     }
 
-    public String getSearchKeyword() {
-        return mSearchKeyword;
+    public String lastSearchKeyword() {
+        return mLastSearchKeywordInThisSession;
     }
 }

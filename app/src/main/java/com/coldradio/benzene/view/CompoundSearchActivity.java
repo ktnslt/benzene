@@ -5,9 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,6 +30,12 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
     private String mOrigSearch;
     private String mTranslatedSearch;
 
+    private void removeTranslatedText() {
+        if (mOrigSearch != null && mTranslatedSearch != null && mEditText.getText().toString().equals(mOrigSearch + " " + mTranslatedSearch)) {
+            mEditText.setText(mOrigSearch);
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,7 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
         mEditText = findViewById(R.id.actv_compound_search);
         if (mEditText != null) {
             mEditText.setOnEditorActionListener(this);
-            mEditText.setText(CompoundLibrary.instance().getSearchKeyword());
+            mEditText.setText(CompoundLibrary.instance().lastSearchKeyword());
 
             mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
             mEditText.setOnClickListener(new View.OnClickListener() {
@@ -63,18 +67,22 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
                     if (mEditText.getText().toString().length() == 0) {
                         mEditText.showDropDown();
                     }
-                    if (mOrigSearch != null && mTranslatedSearch != null && mEditText.getText().toString().equals(mOrigSearch + " " + mTranslatedSearch)) {
-                        mEditText.setText(mOrigSearch);
-                    }
+                    removeTranslatedText();
                 }
             });
             mEditText.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (mOrigSearch != null && mTranslatedSearch != null && mEditText.getText().toString().equals(mOrigSearch + " " + mTranslatedSearch)) {
-                        mEditText.setText(mOrigSearch);
-                    }
+                    removeTranslatedText();
                     return false;
+                }
+            });
+            mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        removeTranslatedText();
+                    }
                 }
             });
         }
@@ -124,23 +132,24 @@ public class CompoundSearchActivity extends AppCompatActivity implements TextVie
             mAdapter.notifyDataSetChanged();
 
             if (Translator.isEnglish(mOrigSearch)) {
-                CompoundLibrary.instance().search(mOrigSearch, null);
+                CompoundLibrary.instance().search(mOrigSearch);
             } else {
                 Translator.translateToEnglish(mOrigSearch, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String translatedText) {
                         mTranslatedSearch = translatedText;
-                        CompoundLibrary.instance().search(translatedText, mOrigSearch);
+                        CompoundLibrary.instance().search(translatedText);
                         mEditText.setText(Html.fromHtml(mOrigSearch + " <small><font color=\"grey\">" + translatedText + "</font></small>"));
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CompoundLibrary.instance().search(mOrigSearch, null);
+                        CompoundLibrary.instance().search(mOrigSearch);
                         Notifier.instance().notification("Translation Failed. Search the original keyword. " + error.toString());
                     }
                 });
             }
+            CompoundLibrary.instance().pushToHistory(mOrigSearch);
             if (mEditText != null) {
                 mEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CompoundLibrary.instance().getSearchHistory()));
             }
